@@ -78,6 +78,7 @@ public class EmlWriterTest {
       EmlWriter.writeEmlFile(temp, eml);
 
     } catch (Exception e) {
+      e.printStackTrace();
       fail();
     }
   }
@@ -106,6 +107,7 @@ public class EmlWriterTest {
       assertNotNull(eml2.getPubDate());
 
     } catch (Exception e) {
+      e.printStackTrace();
       fail();
     }
   }
@@ -125,6 +127,7 @@ public class EmlWriterTest {
       System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
       EmlWriter.writeEmlFile(temp, eml);
     } catch (Exception e) {
+      e.printStackTrace();
       fail();
     }
   }
@@ -154,6 +157,7 @@ public class EmlWriterTest {
       assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
 
     } catch (Exception e) {
+      e.printStackTrace();
       fail();
     }
   }
