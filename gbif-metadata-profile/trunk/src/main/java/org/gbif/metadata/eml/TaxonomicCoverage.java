@@ -15,18 +15,16 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
-
-import com.google.common.base.Objects;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
 /**
- * The description of the Taxonomic scope that the resource covers
+ * The description of the Taxonomic scope that the resource covers.
  */
 public class TaxonomicCoverage implements Serializable {
 
@@ -38,7 +36,8 @@ public class TaxonomicCoverage implements Serializable {
   /**
    * A description of the range of taxa addressed in the data set or collection
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage .html#generalTaxonomicCoverage">EML
+   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage
+   *      .html#generalTaxonomicCoverage">EML
    *      Coverage generalTaxonomicCoverage keyword</a>
    */
   private String description;
@@ -54,8 +53,36 @@ public class TaxonomicCoverage implements Serializable {
   public TaxonomicCoverage() {
   }
 
+  /**
+   * @return the description
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * @param description the description to set
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  /**
+   * @return the keywords
+   */
+  public List<TaxonKeyword> getTaxonKeywords() {
+    return taxonKeywords;
+  }
+
+  /**
+   * @param keywords the keywords to set
+   */
+  public void setTaxonKeywords(List<TaxonKeyword> keywords) {
+    taxonKeywords = keywords;
+  }
+
   public void addTaxonKeyword(TaxonKeyword keyword) {
-    this.taxonKeywords.add(keyword);
+    taxonKeywords.add(keyword);
   }
 
   /**
@@ -73,8 +100,8 @@ public class TaxonomicCoverage implements Serializable {
       delimiter = "|";
     }
     int count = 0;
-    for (String sciname : StringUtils.split(scientificNames, delimiter)) {
-      sciname = StringUtils.trimToNull(sciname);
+    for (String sciname : Splitter.on(delimiter).split(scientificNames)) {
+      sciname = Strings.emptyToNull(sciname.trim());
       if (sciname != null) {
         taxonKeywords.add(new TaxonKeyword(sciname, null, null));
         count++;
@@ -84,29 +111,15 @@ public class TaxonomicCoverage implements Serializable {
   }
 
   @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof TaxonomicCoverage)) {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
-    TaxonomicCoverage o = (TaxonomicCoverage) other;
-    return equal(description, o.description) && equal(taxonKeywords, o.taxonKeywords);
-  }
-
-  /**
-   * @return the description
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * @return the keywords
-   */
-  public List<TaxonKeyword> getTaxonKeywords() {
-    return taxonKeywords;
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final TaxonomicCoverage other = (TaxonomicCoverage) obj;
+    return Objects.equal(this.description, other.description) && Objects.equal(this.taxonKeywords, other.taxonKeywords);
   }
 
   @Override
@@ -114,23 +127,12 @@ public class TaxonomicCoverage implements Serializable {
     return Objects.hashCode(description, taxonKeywords);
   }
 
-  /**
-   * @param description the description to set
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  /**
-   * @param keywords the keywords to set
-   */
-  public void setTaxonKeywords(List<TaxonKeyword> keywords) {
-    this.taxonKeywords = keywords;
-  }
-
   @Override
   public String toString() {
-    return String.format("Description=%s, %s", description, taxonKeywords.toString());
+    return Objects.toStringHelper(this).
+      add("description", description).
+      add("taxonKeywords", taxonKeywords).
+      toString();
   }
 
 }

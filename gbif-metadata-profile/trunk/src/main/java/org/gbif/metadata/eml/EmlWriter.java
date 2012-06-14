@@ -26,12 +26,9 @@ import java.util.Map;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
-/**
- * @author markus
- */
 public class EmlWriter extends FreemarkerWriter {
 
-  private static final String EML_TEMPLATE = "eml.ftl";
+  private static final String EML_TEMPLATE = "eml.FTL";
 
   /**
    * Writes an {@link Eml} object to an XML file using a Freemarker {@link Configuration}.

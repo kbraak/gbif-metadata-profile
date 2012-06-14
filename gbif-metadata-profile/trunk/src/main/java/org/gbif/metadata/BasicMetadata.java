@@ -18,37 +18,37 @@ package org.gbif.metadata;
 
 import java.util.Date;
 
-/**
- * @author markus
- */
 public interface BasicMetadata {
 
-  public String getCitationString();
+  String getCitationString();
 
-  public String getCreatorEmail();
+  String getCreatorEmail();
 
-  public String getCreatorName();
+  String getCreatorName();
 
-  public String getDescription();
+  String getDescription();
 
-  public String getHomepageUrl();
+  String getHomepageUrl();
 
   @Deprecated
   String getHomeUrl();
 
-  public String getIdentifier();
+  String getIdentifier();
 
-  public String getLogoUrl();
+  String getLogoUrl();
 
-  public Date getPublished();
-  public String getPublisherEmail();
+  Date getPublished();
 
-  public String getPublisherName();
-  public String getRights();
+  String getPublisherEmail();
 
-  /** concatenated keywords
-   * @return
+  String getPublisherName();
+
+  String getRights();
+
+  /**
+   * concatenated keywords
    */
-  public String getSubject();
-  public String getTitle();
+  String getSubject();
+
+  String getTitle();
 }

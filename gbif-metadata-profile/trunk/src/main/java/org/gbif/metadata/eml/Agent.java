@@ -12,13 +12,10 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
-
-import org.apache.commons.lang.StringUtils;
-
-import java.io.Serializable;
+import com.google.common.base.Strings;
 
 /**
  * Encapsulates all the information for an Agent
@@ -37,87 +34,132 @@ public class Agent implements Serializable {
   private String role;
   private String homepage;
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof Agent)) {
-      return false;
-    }
-    Agent o = (Agent) other;
-    return equal(firstName, o.firstName) && equal(lastName, o.lastName) && equal(organisation, o.organisation) &&
-           equal(position, o.position) && equal(address, o.address) && equal(phone, o.phone) && equal(email, o.email) &&
-           equal(role, o.role) && equal(homepage, o.homepage);
-  }
-
   public Address getAddress() {
     return address;
   }
 
+  public void setAddress(Address address) {
+    this.address = address;
+  }
+
   public String getEmail() {
-    if (email == null || email.length() == 0) {
+    if (email == null || email.isEmpty()) {
       return null;
     }
     return email;
   }
 
-  public String getFullName() {
-	  String name="";
-	    if (firstName != null && firstName.length() > 0) {
-	    	name+=firstName;
-	    }
-	    if (lastName != null && lastName.length() > 0) {
-	    	name+=" "+lastName;
-	    }
-	    return StringUtils.trimToNull(name);
-	  }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  
   public String getFirstName() {
-    if (firstName == null || firstName.length() == 0) {
+    if (firstName == null || firstName.isEmpty()) {
       return null;
     }
     return firstName;
   }
 
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
   public String getHomepage() {
-    if (homepage == null || homepage.length() == 0) {
+    if (homepage == null || homepage.isEmpty()) {
       return null;
     }
     return homepage;
   }
 
+  public void setHomepage(String homepage) {
+    this.homepage = homepage;
+  }
+
   public String getLastName() {
-    if (lastName == null || lastName.length() == 0) {
+    if (lastName == null || lastName.isEmpty()) {
       return null;
     }
     return lastName;
   }
 
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
   public String getOrganisation() {
-    if (organisation == null || organisation.length() == 0) {
+    if (organisation == null || organisation.isEmpty()) {
       return null;
     }
     return organisation;
   }
 
+  public void setOrganisation(String organisation) {
+    this.organisation = organisation;
+  }
+
   public String getPhone() {
-    if (phone == null || phone.length() == 0) {
+    if (phone == null || phone.isEmpty()) {
       return null;
     }
     return phone;
   }
 
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
   public String getPosition() {
-    if (position == null || position.length() == 0) {
+    if (position == null || position.isEmpty()) {
       return null;
     }
     return position;
   }
 
+  public void setPosition(String position) {
+    this.position = position;
+  }
+
   public String getRole() {
     return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  public String getFullName() {
+    String name = "";
+    if (firstName != null && !firstName.isEmpty()) {
+      name += firstName;
+    }
+    if (lastName != null && !lastName.isEmpty()) {
+      name += " " + lastName;
+    }
+    return Strings.emptyToNull(name.trim());
+  }
+
+  public boolean isEmpty() {
+    return Strings.nullToEmpty(firstName).trim().isEmpty() && Strings.nullToEmpty(lastName).trim().isEmpty() &&
+           Strings.nullToEmpty(organisation).trim().isEmpty() && Strings.nullToEmpty(position).trim().isEmpty() &&
+           address.isEmpty() && Strings.nullToEmpty(phone).trim().isEmpty() &&
+           Strings.nullToEmpty(email).trim().isEmpty() && Strings.nullToEmpty(role).trim().isEmpty() &&
+           Strings.nullToEmpty(homepage).trim().isEmpty();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Agent other = (Agent) obj;
+    return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName) && Objects
+      .equal(this.organisation, other.organisation) && Objects.equal(this.position, other.position) && Objects
+      .equal(this.address, other.address) && Objects.equal(this.phone, other.phone) && Objects
+      .equal(this.email, other.email) && Objects.equal(this.role, other.role) && Objects
+      .equal(this.homepage, other.homepage);
   }
 
   @Override
@@ -125,52 +167,19 @@ public class Agent implements Serializable {
     return Objects.hashCode(firstName, lastName, organisation, position, address, phone, email, role, homepage);
   }
 
-  public boolean isEmpty() {
-    return StringUtils.trimToNull(firstName) == null && StringUtils.trimToNull(lastName) == null &&
-           StringUtils.trimToNull(organisation) == null && StringUtils.trimToNull(position) == null &&
-           StringUtils.trimToNull(phone) == null && StringUtils.trimToNull(email) == null &&
-           StringUtils.trimToNull(homepage) == null && address.isEmpty();
-  }
-
-  public void setAddress(Address address) {
-    this.address = address;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public void setHomepage(String homepage) {
-    this.homepage = homepage;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public void setOrganisation(String organisation) {
-    this.organisation = organisation;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public void setPosition(String position) {
-    this.position = position;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
   @Override
   public String toString() {
-    return String.format("FirstName=%s, LastName=%s, Role=%s", firstName, lastName, role);
+    return Objects.toStringHelper(this).
+      add("firstName", firstName).
+      add("lastName", lastName).
+      add("organisation", organisation).
+      add("position", position).
+      add("address", address).
+      add("phone", phone).
+      add("email", email).
+      add("role", role).
+      add("homepage", homepage).
+      toString();
   }
 
 }

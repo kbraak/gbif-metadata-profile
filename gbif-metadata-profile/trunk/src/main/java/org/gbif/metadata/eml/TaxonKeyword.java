@@ -15,14 +15,12 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
-
 /**
- * This class can be used to encapsulate taxonomic keyword information
+ * This class can be used to encapsulate taxonomic keyword information.
  */
 public class TaxonKeyword implements Serializable {
 
@@ -65,42 +63,11 @@ public class TaxonKeyword implements Serializable {
     this.commonName = commonName;
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof TaxonKeyword)) {
-      return false;
-    }
-    TaxonKeyword o = (TaxonKeyword) other;
-    return equal(scientificName, o.scientificName) && equal(rank, o.rank) && equal(commonName, o.commonName);
-  }
-
   /**
    * @return the commonName
    */
   public String getCommonName() {
     return commonName;
-  }
-
-  /**
-   * @return the rank
-   */
-  public String getRank() {
-    return rank;
-  }
-
-  /**
-   * @return the scientificName
-   */
-  public String getScientificName() {
-    return scientificName;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(scientificName, rank, commonName);
   }
 
   /**
@@ -111,10 +78,24 @@ public class TaxonKeyword implements Serializable {
   }
 
   /**
+   * @return the rank
+   */
+  public String getRank() {
+    return rank;
+  }
+
+  /**
    * @param rank the rank to set
    */
   public void setRank(String rank) {
     this.rank = rank;
+  }
+
+  /**
+   * @return the scientificName
+   */
+  public String getScientificName() {
+    return scientificName;
   }
 
   /**
@@ -125,7 +106,30 @@ public class TaxonKeyword implements Serializable {
   }
 
   @Override
-  public String toString() {
-    return String.format("scientificName=%s, rank=%s, commonName=%s", scientificName, rank, commonName);
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final TaxonKeyword other = (TaxonKeyword) obj;
+    return Objects.equal(this.scientificName, other.scientificName) && Objects.equal(this.rank, other.rank) && Objects
+      .equal(this.commonName, other.commonName);
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(scientificName, rank, commonName);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("scientificName", scientificName).
+      add("rank", rank).
+      add("commonName", commonName).
+      toString();
+  }
+
 }

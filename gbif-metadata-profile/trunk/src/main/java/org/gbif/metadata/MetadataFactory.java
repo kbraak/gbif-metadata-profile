@@ -5,10 +5,6 @@ import org.gbif.metadata.handler.DcHandler;
 import org.gbif.metadata.handler.EmlHandler;
 import org.gbif.utils.file.BomSafeInputStreamWrapper;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,9 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MetadataFactory {
 
@@ -43,12 +42,9 @@ public class MetadataFactory {
    */
 
   private boolean hasContent(BasicMetadataImpl bm) {
-    if (bm != null &&
-        (bm.getTitle() != null || bm.getDescription() != null || bm.getSubject() != null || bm.getSourceId() != null ||
-         bm.getHomeUrl() != null || bm.getPublished() != null)) {
-      return true;
-    }
-    return false;
+    return bm != null && (bm.getTitle() != null || bm.getDescription() != null || bm.getSubject() != null
+                          || bm.getSourceId() != null ||
+                          bm.getHomeUrl() != null || bm.getPublished() != null);
   }
 
   public BasicMetadataImpl read(File metadataFile) throws MetadataException {

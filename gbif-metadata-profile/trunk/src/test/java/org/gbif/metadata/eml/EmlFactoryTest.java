@@ -1,19 +1,24 @@
 package org.gbif.metadata.eml;
 
-import junit.framework.TestCase;
+import org.gbif.utils.file.FileUtils;
 
-import org.junit.Test;
-
-import java.io.FileInputStream;
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
 
-public class EmlFactoryTest extends TestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class EmlFactoryTest {
 
   @Test
   public void testAlternateJGTIBuild() {
     try {
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample2.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample2.xml"));
 
       assertNotNull(eml);
 
@@ -34,7 +39,7 @@ public class EmlFactoryTest extends TestCase {
   @Test
   public void testBuild() {
     try {
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
       Calendar cal = Calendar.getInstance();
       cal.clear();
 
@@ -165,22 +170,22 @@ public class EmlFactoryTest extends TestCase {
       assertEquals(2, eml.getGeospatialCoverages().size());
       assertEquals("Bounding Box 1", eml.getGeospatialCoverages().get(0).getDescription());
       assertEquals(new Double("23.975"),
-          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLatitude());
+        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLatitude());
       assertEquals(new Double("0.703"),
-          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLongitude());
+        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLongitude());
       assertEquals(new Double("-22.745"),
-          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLatitude());
+        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLatitude());
       assertEquals(new Double("-1.564"),
-          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLongitude());
+        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLongitude());
       assertEquals("Bounding Box 2", eml.getGeospatialCoverages().get(1).getDescription());
       assertEquals(new Double("43.975"),
-          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLatitude());
+        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLatitude());
       assertEquals(new Double("11.564"),
-          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLongitude());
+        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLongitude());
       assertEquals(new Double("-32.745"),
-          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLatitude());
+        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLatitude());
       assertEquals(new Double("-10.703"),
-          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLongitude());
+        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLongitude());
 
       // temporal coverages tests
       assertEquals(4, eml.getTemporalCoverages().size());
@@ -197,12 +202,14 @@ public class EmlFactoryTest extends TestCase {
 
       // taxonomic coverages tests
       assertEquals(2, eml.getTaxonomicCoverages().size());
-      assertEquals("This is a general taxon coverage with only the scientific name", eml.getTaxonomicCoverages().get(0).getDescription());
+      assertEquals("This is a general taxon coverage with only the scientific name",
+        eml.getTaxonomicCoverages().get(0).getDescription());
       assertEquals("Mammalia", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(0).getScientificName());
       assertEquals("Reptilia", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(1).getScientificName());
       assertEquals("Coleoptera", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(2).getScientificName());
 
-      assertEquals("This is a second taxon coverage with all fields", eml.getTaxonomicCoverages().get(1).getDescription());
+      assertEquals("This is a second taxon coverage with all fields",
+        eml.getTaxonomicCoverages().get(1).getDescription());
       assertEquals("Class", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getRank());
       assertEquals("Aves", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getScientificName());
       assertEquals("Birds", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getCommonName());
@@ -218,8 +225,7 @@ public class EmlFactoryTest extends TestCase {
       assertNotNull(eml.getStudyExtent());
       assertEquals("Daily Obersevation of Pigeons Eating Habits", eml.getStudyExtent());
       assertNotNull(eml.getSampleDescription());
-      assertEquals("44KHz is what a CD has... I was more like one a day if I felt like it",
-          eml.getSampleDescription());
+      assertEquals("44KHz is what a CD has... I was more like one a day if I felt like it", eml.getSampleDescription());
       assertNotNull(eml.getQualityControl());
       assertEquals("None", eml.getQualityControl());
 
@@ -237,14 +243,10 @@ public class EmlFactoryTest extends TestCase {
       assertEquals("en", eml.getMetadataLanguage());
       cal.clear();
       // 2002-10-23T18:13:51
-      SimpleTimeZone tz = new SimpleTimeZone(1000*60*60,"berlin");
+      SimpleTimeZone tz = new SimpleTimeZone(1000 * 60 * 60, "berlin");
       cal.setTimeZone(tz);
       cal.set(2002, Calendar.OCTOBER, 23, 18, 13, 51);
       cal.set(Calendar.MILLISECOND, 235);
-      System.out.println(cal.getTimeZone());
-      System.out.println(cal.getTimeInMillis());
-      System.out.println(eml.getDateStamp().getTimezoneOffset());
-      System.out.println(eml.getDateStamp().getTime());
       assertEquals(cal.getTime(), eml.getDateStamp());
 
       // bibliographic citations tests
@@ -265,15 +267,15 @@ public class EmlFactoryTest extends TestCase {
       assertEquals("shapefile", eml.getPhysicalData().get(0).getFormat());
       assertEquals("2.0", eml.getPhysicalData().get(0).getFormatVersion());
       assertEquals(
-          "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
-          eml.getPhysicalData().get(0).getDistributionUrl());
+        "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
+        eml.getPhysicalData().get(0).getDistributionUrl());
       assertEquals("INV-GCEM-0305a1_1_2.shp", eml.getPhysicalData().get(1).getName());
       assertEquals("ASCII", eml.getPhysicalData().get(1).getCharset());
       assertEquals("shapefile", eml.getPhysicalData().get(1).getFormat());
       assertEquals("2.0", eml.getPhysicalData().get(1).getFormatVersion());
       assertEquals(
-          "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_2.TXT",
-          eml.getPhysicalData().get(1).getDistributionUrl());
+        "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_2.TXT",
+        eml.getPhysicalData().get(1).getDistributionUrl());
 
       // JGTI curatorial unit tests
       // A separate for the alternate JGTI structure that includes uncertainty
@@ -291,7 +293,6 @@ public class EmlFactoryTest extends TestCase {
       assertEquals("Mammals", eml.getCollectionName());
 
     } catch (Exception e) {
-      e.printStackTrace();
       fail();
     }
   }

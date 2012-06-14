@@ -4,10 +4,10 @@ import org.gbif.metadata.DateUtils;
 import org.gbif.utils.text.EmailUtils;
 import org.gbif.utils.text.EmailUtils.EmailWithName;
 
-import org.apache.commons.lang.StringUtils;
-import org.xml.sax.SAXException;
-
 import java.util.Date;
+
+import com.google.common.base.Strings;
+import org.xml.sax.SAXException;
 
 public class DcHandler extends BasicMetadataSaxHandler {
 
@@ -21,23 +21,14 @@ public class DcHandler extends BasicMetadataSaxHandler {
       if (localName.equalsIgnoreCase("title")) {
         bm.setTitle(content);
 
-      } else if (localName.equalsIgnoreCase("description")) {
+      } else if (localName.equalsIgnoreCase("description")
+                 || localName.equalsIgnoreCase("abstract") && bm.getDescription() == null) {
         bm.setDescription(content);
-      } else if (localName.equalsIgnoreCase("abstract") && bm.getDescription()==null) {
-        // use abstracts if no full description is found
-        bm.setDescription(content);
-
-      } else if (localName.equalsIgnoreCase("subject")) {
+      } else if (localName.equalsIgnoreCase("subject") || localName.equalsIgnoreCase("coverage") || localName
+        .equalsIgnoreCase("spatial") || localName.equalsIgnoreCase("temporal")) {
         bm.addSubject(content);
-      } else if (localName.equalsIgnoreCase("coverage")) {
-        bm.addSubject(content);
-      } else if (localName.equalsIgnoreCase("spatial")) {
-        bm.addSubject(content);
-      } else if (localName.equalsIgnoreCase("temporal")) {
-        bm.addSubject(content);
-
       } else if (localName.equalsIgnoreCase("created")) {
-        Date published = DateUtils.parse(content, DateUtils.isoDateFormat);
+        Date published = DateUtils.parse(content, DateUtils.ISO_DATE_FORMAT);
         bm.setPublished(published);
 
       } else if (localName.equalsIgnoreCase("relation")) {
@@ -53,20 +44,11 @@ public class DcHandler extends BasicMetadataSaxHandler {
       } else if (localName.equalsIgnoreCase("bibliographicCitation")) {
         bm.setCitationString(content);
 
-      } else if (localName.equalsIgnoreCase("creator")) {
+      } else if (localName.equalsIgnoreCase("creator") || localName.equalsIgnoreCase("publisher")) {
         // try to parse our email and name
-        String creator = StringUtils.trimToNull(content);
-        if (creator!=null){
+        String creator = Strings.emptyToNull(content.trim());
+        if (creator != null) {
           EmailWithName n = EmailUtils.parseEmail(creator);
-          bm.setCreatorEmail(n.email);
-          bm.setCreatorName(n.name);
-        }
-
-      } else if (localName.equalsIgnoreCase("publisher")) {
-        // try to parse our email and name
-        String publisher = StringUtils.trimToNull(content);
-        if (publisher!=null){
-          EmailWithName n = EmailUtils.parseEmail(publisher);
           bm.setCreatorEmail(n.email);
           bm.setCreatorName(n.name);
         }
@@ -75,9 +57,8 @@ public class DcHandler extends BasicMetadataSaxHandler {
         bm.setHomepageUrl(content);
 
       }
-    } else if (uri == null && localName.equalsIgnoreCase("onlineurl")) {
-      bm.setHomepageUrl(content);
-    } else if (uri == null && localName.equalsIgnoreCase("homepage")) {
+    } else if (uri == null && localName.equalsIgnoreCase("onlineurl") || uri == null && localName
+      .equalsIgnoreCase("homepage")) {
       bm.setHomepageUrl(content);
     }
   }

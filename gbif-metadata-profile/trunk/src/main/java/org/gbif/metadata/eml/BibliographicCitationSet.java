@@ -15,10 +15,11 @@
  */
 package org.gbif.metadata.eml;
 
-import com.google.common.collect.Lists;
-
 import java.io.Serializable;
 import java.util.List;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 /**
  * Simple POJO container for an ordered list of bibliographic citations.
@@ -53,6 +54,14 @@ public class BibliographicCitationSet implements Serializable {
     this.bibliographicCitations = citations;
   }
 
+  public List<Citation> getBibliographicCitations() {
+    return bibliographicCitations;
+  }
+
+  public void setBibliographicCitations(List<Citation> citations) {
+    this.bibliographicCitations = citations;
+  }
+
   /**
    * Adds a bibliographic citation to the list. This was added to simplify the Digester based rules definitions
    *
@@ -62,12 +71,28 @@ public class BibliographicCitationSet implements Serializable {
     bibliographicCitations.add(new Citation(citation, identifier));
   }
 
-  public List<Citation> getBibliographicCitations() {
-    return bibliographicCitations;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final BibliographicCitationSet other = (BibliographicCitationSet) obj;
+    return Objects.equal(this.bibliographicCitations, other.bibliographicCitations);
   }
 
-  public void setBibliographicCitations(List<Citation> citations) {
-    this.bibliographicCitations = citations;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(bibliographicCitations);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("bibliographicCitations", bibliographicCitations).
+      toString();
   }
 
 }

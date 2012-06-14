@@ -2,22 +2,24 @@ package org.gbif.metadata;
 
 import org.gbif.utils.file.FileUtils;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class MetadataFactoryTest extends TestCase {
-  @Override
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
+
+public class MetadataFactoryTest {
+
+  @Test
   public void testMetadataStreams() throws MetadataException {
     MetadataFactory mf = new MetadataFactory();
     BasicMetadataImpl bm;
 
     // quick eml test
     bm = mf.read(FileUtils.getClasspathFile("metadata/eml.xml"));
-    assertTrue(bm != null);
-    System.out.println(bm.toString());
+    assertNotNull(bm);
 
     // utf16 little endian encoded file with BOM
     bm = mf.read(FileUtils.getClasspathFile("metadata/eml-utf16LE.xml"));
@@ -42,7 +44,7 @@ public class MetadataFactoryTest extends TestCase {
 
     bm = mf.read(FileUtils.getClasspathFile("metadata/clb_eml.xml"));
     assertEquals("ITIS", bm.getTitle());
-    assertEquals("2010-02-24", DateUtils.isoDateFormat.format(bm.getPublished()));
+    assertEquals("2010-02-24", DateUtils.ISO_DATE_FORMAT.format(bm.getPublished()));
     assertNull(bm.getAdditionalMetadata("recordLinkUrl"));
     assertEquals(0, bm.getAdditionalMetadata().size());
     assertNull(bm.getSourceId());
@@ -60,17 +62,17 @@ public class MetadataFactoryTest extends TestCase {
     // test as file
     bm = mf.read(FileUtils.getClasspathFile("metadata/worms_dc.xml"));
     assertEquals("World Register of Marine Species", bm.getTitle());
-//    assertEquals(
-//        "The aim of a World Register of Marine Species (WoRMS) is to provide an authoritative and comprehensive list of names of marine organisms, including information on synonymy. While highest priority goes to valid names, other names in use are included so that this register can serve as a guide to interpret taxonomic literature.",
-//        bm.getDescription());
+    //    assertEquals(
+    //        "The aim of a World Register of Marine Species (WoRMS) is to provide an authoritative and comprehensive list of names of marine organisms, including information on synonymy. While highest priority goes to valid names, other names in use are included so that this register can serve as a guide to interpret taxonomic literature.",
+    //        bm.getDescription());
     assertEquals("Marine;Taxonomy;Species Checklist;Authoritative;Specimens", bm.getSubject());
-    assertEquals("2010-08-09", DateUtils.isoDateFormat.format(bm.getPublished()));
+    assertEquals("2010-08-09", DateUtils.ISO_DATE_FORMAT.format(bm.getPublished()));
 
     bm = mf.read(FileUtils.getClasspathFile("metadata/worms_eml2.1.xml"));
     assertEquals("World Register of Marine Species", bm.getTitle());
     assertEquals(1, bm.getAdditionalMetadata().size());
     assertEquals("http://www.marinespecies.org/aphia.php?p=taxdetails&id=146230",
-        bm.getAdditionalMetadata("recordLinkUrl"));
+      bm.getAdditionalMetadata("recordLinkUrl"));
   }
 
 }

@@ -12,20 +12,18 @@
  */
 package org.gbif.metadata.eml;
 
+import java.util.Map;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
-import java.util.Map;
-
 /**
  * This class can be used for unit testing {@link Attribute}.
- * 
  */
 public class AttributeTest {
 
@@ -33,20 +31,17 @@ public class AttributeTest {
     return create(null, category, localeBundle, name, value);
   }
 
-  private static Attribute create(String failMsg, String category, LocaleBundle localeBundle, String name, String value) {
+  private static Attribute create(String failMsg, String category, LocaleBundle localeBundle, String name,
+    String value) {
     Attribute m = null;
     try {
       m = Attribute.create(category, localeBundle, name, value);
       if (failMsg != null) {
         fail(failMsg);
-      } else {
-        System.out.printf("Success as expected: create(%s)\n", m);
       }
     } catch (Exception e) {
       if (failMsg == null) {
         fail(e.getMessage());
-      } else {
-        System.out.printf("Failure as expected: %s\n", e.getMessage());
       }
     }
     return m;
@@ -113,6 +108,8 @@ public class AttributeTest {
   public final void testToString() {
     LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
     Attribute a = create("c", lb, "n", "v");
-    assertEquals("Category=c, LocaleBundle=Country=USA, Language=en, Charset=UTF-8, Name=n, Value=v", a.toString());
+    assertEquals(
+      "Attribute{category=c, localeBundle=LocaleBundle{country=USA, language=en, charset=UTF-8}, name=n, value=v}",
+      a.toString());
   }
 }

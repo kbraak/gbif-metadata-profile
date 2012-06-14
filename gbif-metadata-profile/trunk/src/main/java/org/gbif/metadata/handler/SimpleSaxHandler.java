@@ -1,25 +1,24 @@
 package org.gbif.metadata.handler;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.regex.Pattern;
+
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.regex.Pattern;
-
 /**
  * A simple metadata sax base handler that collects all character data inside elements into a string buffer, resetting
  * the buffer with every element start and storing the string version of the buffer in this.content when the end of the
  * element is reached.
  * Make sure to call the super methods when implementing this handler!
- * 
- * @author markus
- * 
  */
 public abstract class SimpleSaxHandler extends DefaultHandler {
+
   protected final Logger log = LoggerFactory.getLogger(getClass());
+
   protected String content;
   private StringBuffer chars;
   private Pattern normWhitespace = Pattern.compile("\\s+");
@@ -32,7 +31,7 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
 
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
-    content = StringUtils.trimToNull(chars.toString());
+    content = Strings.emptyToNull(chars.toString().trim());
     // norm whitespace
     if (content != null) {
       content = normWhitespace.matcher(content).replaceAll(" ");
@@ -49,11 +48,6 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
     chars = new StringBuffer();
     parents += "/" + localName.toLowerCase();
-//    System.out.println();
-//    System.out.println("LN  " + localName);
-//    System.out.println("URI " + uri);
-//    System.out.println("QN  " + qName);
-//    System.out.println(parents);
   }
 
   @Override

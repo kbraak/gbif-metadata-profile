@@ -15,29 +15,33 @@
  */
 package org.gbif.metadata.eml;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.io.Serializable;
+
+import com.google.common.base.Objects;
 
 
 /**
  * There are several formats for writing degrees, all of them appearing in the same Lat, Long order. In DD Decimal
  * Degrees (49.5000°,-123.5000°), generally with 4-6 decimal numbers. Latitude (Lat. or φ) N positive, S negative. Is
- * the angle from a point on the Earth's surface and the equatorial plane, measured from the centre of the sphere. Lines
- * joining points of the same latitude are called parallels, which trace concentric circles on the surface of the Earth,
+ * the angle from a point on the Earth's surface and the equatorial plane, measured from the centre of the sphere.
+ * Lines
+ * joining points of the same latitude are called parallels, which trace concentric circles on the surface of the
+ * Earth,
  * parallel to the equator. The north pole is 90° N; the south pole is 90° S. The 0° parallel of latitude is designated
- * the equator. The equator is the fundamental plane of all geographic coordinate systems. The equator divides the globe
- * into Northern and Southern Hemispheres. Longitude (Long. or λ) E positive, W negative. Is the angle east or west of a
- * reference meridian between the two geographical poles to another meridian that passes through an arbitrary point. All
+ * the equator. The equator is the fundamental plane of all geographic coordinate systems. The equator divides the
+ * globe
+ * into Northern and Southern Hemispheres. Longitude (Long. or λ) E positive, W negative. Is the angle east or west of
+ * a
+ * reference meridian between the two geographical poles to another meridian that passes through an arbitrary point.
+ * All
  * meridians are halves of great circles, and are not parallel. They converge at the north and south poles.
  */
 public class Point implements Serializable {
 
-  public static final Double MAX_LONGITUDE = new Double(180);
-  public static final Double MIN_LONGITUDE = new Double(-180);
-  public static final Double MAX_LATITUDE = new Double(90);
-  public static final Double MIN_LATITUDE = new Double(-90);
+  public static final Double MAX_LONGITUDE = 180.0d;
+  public static final Double MIN_LONGITUDE = -180.0d;
+  public static final Double MAX_LATITUDE = 90.0d;
+  public static final Double MIN_LATITUDE = -90.0d;
   // x (east/west), -180/180
   private Double longitude;
   // y (north/south), -90/90
@@ -46,14 +50,37 @@ public class Point implements Serializable {
   public Point() {
   }
 
+  public Point(Point p) {
+    setLatitude(p.latitude);
+    setLongitude(p.longitude);
+  }
+
   public Point(Double latitude, Double longitude) {
     setLatitude(latitude);
     setLongitude(longitude);
   }
 
-  public Point(Point p) {
-    setLatitude(p.latitude);
-    setLongitude(p.longitude);
+  /**
+   * Copied from com.vividsolutions.jts.geom.Coordinate:
+   * Compares this {@link Point} with the specified {@link Point} for order. This method ignores the z value when
+   * making
+   * the comparison. Returns: <UL> <LI> -1 : this.x < other.x || ((this.x == other.x) && (this.y < other.y)) <LI> 0 :
+   * this.x == other.x && this.y = other.y <LI> 1 : this.x > other.x || ((this.x == other.x) && (this.y > other.y))
+   * </UL> Note: This method assumes that ordinate values are valid numbers.  NaN values are not handled correctly.
+   *
+   * @param o the <code>Point</code> with which this <code>Point</code> is being compared
+   *
+   * @return -1, zero, or 1 as this <code>Point</code> is less than, equal to, or greater than the specified
+   *         <code>Point</code>
+   */
+  public int compareTo(Object o) {
+    Point other = (Point) o;
+
+    if (longitude < other.longitude) return -1;
+    if (longitude > other.longitude) return 1;
+    if (latitude < other.latitude) return -1;
+    if (latitude > other.latitude) return 1;
+    return 0;
   }
 
   public double distance(Point p) {
@@ -66,18 +93,6 @@ public class Point implements Serializable {
 
   public double distanceY(Point p) {
     return Math.abs(getY() - p.getY());
-  }
-
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof Point)) {
-      return false;
-    }
-    Point rhs = (Point) object;
-    return new EqualsBuilder().append(this.longitude, rhs.longitude).append(this.latitude, rhs.latitude).isEquals();
   }
 
   public Double getLatitude() {
@@ -96,23 +111,12 @@ public class Point implements Serializable {
     return getLatitude();
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(1842455565, -1433355773).append(this.longitude).append(this.latitude).toHashCode();
-  }
-
   public boolean isValid() {
     return latitude != null && longitude != null;
   }
 
-  public void setLatitude(Double latitude) {
-    if (latitude != null && (latitude < MIN_LATITUDE || latitude > MAX_LATITUDE)) {
-      throw new IllegalArgumentException();
-    }
-    this.latitude = latitude == null ? null : latitude;
+  public void setX(Double x) {
+    setLongitude(x);
   }
 
   public void setLongitude(Double longitude) {
@@ -122,17 +126,15 @@ public class Point implements Serializable {
     this.longitude = longitude == null ? null : longitude;
   }
 
-  public void setX(Double x) {
-    setLongitude(x);
-  }
-
   public void setY(Double y) {
     setLatitude(y);
   }
 
-  @Override
-  public String toString() {
-    return String.format("%s,%s", latitude, longitude);
+  public void setLatitude(Double latitude) {
+    if (latitude != null && (latitude < MIN_LATITUDE || latitude > MAX_LATITUDE)) {
+      throw new IllegalArgumentException();
+    }
+    this.latitude = latitude == null ? null : latitude;
   }
 
   public String toStringShort(int decimals) {
@@ -143,29 +145,29 @@ public class Point implements Serializable {
     return String.format("%s %s", latitude, longitude);
   }
 
-
-  /**
-   * Copied from com.vividsolutions.jts.geom.Coordinate:
-   *
-   *
-   * Compares this {@link Point} with the specified {@link Point} for order. This method ignores the z value when making
-   * the comparison. Returns: <UL> <LI> -1 : this.x < other.x || ((this.x == other.x) && (this.y < other.y)) <LI> 0 :
-   * this.x == other.x && this.y = other.y <LI> 1 : this.x > other.x || ((this.x == other.x) && (this.y > other.y))
-   *
-   * </UL> Note: This method assumes that ordinate values are valid numbers.  NaN values are not handled correctly.
-   *
-   * @param o the <code>Point</code> with which this <code>Point</code> is being compared
-   *
-   * @return -1, zero, or 1 as this <code>Point</code> is less than, equal to, or greater than the specified
-   *         <code>Point</code>
-   */
-  public int compareTo(Object o) {
-    Point other = (Point) o;
-
-    if (longitude < other.longitude) return -1;
-    if (longitude > other.longitude) return 1;
-    if (latitude < other.latitude) return -1;
-    if (latitude > other.latitude) return 1;
-    return 0;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Point other = (Point) obj;
+    return Objects.equal(this.longitude, other.longitude) && Objects.equal(this.latitude, other.latitude);
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(longitude, latitude);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("longitude", longitude).
+      add("latitude", latitude).
+      toString();
+  }
+
 }

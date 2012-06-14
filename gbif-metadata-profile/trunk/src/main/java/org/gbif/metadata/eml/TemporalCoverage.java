@@ -14,13 +14,11 @@ package org.gbif.metadata.eml;
 
 import org.gbif.metadata.DateUtils;
 
-import static com.google.common.base.Objects.equal;
-
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
+
+import com.google.common.base.Objects;
 
 /**
  * This class can be used to encapsulate temporal coverage information.
@@ -67,6 +65,36 @@ public class TemporalCoverage implements Serializable {
   public TemporalCoverage() {
   }
 
+  public String getFormationPeriod() {
+    if (formationPeriod == null || formationPeriod.length() == 0) {
+      return null;
+    }
+    return formationPeriod;
+  }
+
+  public void setFormationPeriod(String formationPeriod) {
+    this.formationPeriod = formationPeriod != null && formationPeriod.isEmpty() ? null : formationPeriod;
+  }
+
+  public String getLivingTimePeriod() {
+    if (livingTimePeriod == null || livingTimePeriod.length() == 0) {
+      return null;
+    }
+    return livingTimePeriod;
+  }
+
+  public void setLivingTimePeriod(String livingTimePeriod) {
+    this.livingTimePeriod = livingTimePeriod != null && livingTimePeriod.isEmpty() ? null : livingTimePeriod;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
+
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
   public void correctDateOrder() {
     if (startDate == null && endDate != null) {
       startDate = endDate;
@@ -79,38 +107,11 @@ public class TemporalCoverage implements Serializable {
     }
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof TemporalCoverage)) {
-      return false;
-    }
-    TemporalCoverage o = (TemporalCoverage) other;
-    return equal(formationPeriod, o.formationPeriod) && equal(endDate, o.endDate) &&
-           equal(livingTimePeriod, o.livingTimePeriod) && equal(startDate, o.startDate);
-  }
-
   public Date getEndDate() {
     if (endDate == null) {
       return endDate;
     }
     return new Date(endDate.getTime());
-  }
-
-  public String getFormationPeriod() {
-    if (formationPeriod == null || formationPeriod.length() == 0) {
-      return null;
-    }
-    return formationPeriod;
-  }
-
-  public String getLivingTimePeriod() {
-    if (livingTimePeriod == null || livingTimePeriod.length() == 0) {
-      return null;
-    }
-    return livingTimePeriod;
   }
 
   public Date getStartDate() {
@@ -121,28 +122,22 @@ public class TemporalCoverage implements Serializable {
   }
 
   public TemporalCoverageType getType() {
-    if (this.formationPeriod != null && this.formationPeriod.length() > 0) {
+    if (formationPeriod != null && !formationPeriod.isEmpty()) {
       return TemporalCoverageType.FORMATION_PERIOD;
     }
-    if (this.livingTimePeriod != null && this.livingTimePeriod.length() > 0) {
+    if (livingTimePeriod != null && !livingTimePeriod.isEmpty()) {
       return TemporalCoverageType.LIVING_TIME_PERIOD;
     }
-    if (this.startDate != null && this.endDate != null && this.startDate.compareTo(endDate) != 0) {
+    if (startDate != null && endDate != null && startDate.compareTo(endDate) != 0) {
       return TemporalCoverageType.DATE_RANGE;
     }
     return TemporalCoverageType.SINGLE_DATE;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(livingTimePeriod, endDate, formationPeriod, startDate);
-  }
-
   /**
    * Utility to set the date with a textual format
    *
-   * @param dateString To set
-   * @param format     That the string is in
+   * @param start to set
    *
    * @throws ParseException Should it be an erroneous format
    */
@@ -150,31 +145,10 @@ public class TemporalCoverage implements Serializable {
     endDate = DateUtils.calendarDate(start);
   }
 
-  public void setEndDate(Date endDate) {
-    this.endDate = endDate;
-  }
-
-  public void setFormationPeriod(String formationPeriod) {
-    if (formationPeriod != null && formationPeriod.length() == 0) {
-      this.formationPeriod = null;
-    } else {
-      this.formationPeriod = formationPeriod;
-    }
-  }
-
-  public void setLivingTimePeriod(String livingTimePeriod) {
-    if (livingTimePeriod != null && livingTimePeriod.length() == 0) {
-      this.livingTimePeriod = null;
-    } else {
-      this.livingTimePeriod = livingTimePeriod;
-    }
-  }
-
   /**
    * Utility to set the date with a textual format
    *
-   * @param dateString To set
-   * @param format     That the string is in
+   * @param start To set
    *
    * @throws ParseException Should it be an erroneous format
    */
@@ -182,13 +156,33 @@ public class TemporalCoverage implements Serializable {
     startDate = DateUtils.calendarDate(start);
   }
 
-  public void setStartDate(Date startDate) {
-    this.startDate = startDate;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final TemporalCoverage other = (TemporalCoverage) obj;
+    return Objects.equal(this.startDate, other.startDate) && Objects.equal(this.endDate, other.endDate) && Objects
+      .equal(this.formationPeriod, other.formationPeriod) && Objects
+      .equal(this.livingTimePeriod, other.livingTimePeriod);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(startDate, endDate, formationPeriod, livingTimePeriod);
   }
 
   @Override
   public String toString() {
-    return String.format("StartDate=%s, EndDate=%s, Formation Period=%s, Living Time Period=%s", startDate, endDate,
-      formationPeriod, livingTimePeriod);
+    return Objects.toStringHelper(this).
+      add("startDate", startDate).
+      add("endDate", endDate).
+      add("formationPeriod", formationPeriod).
+      add("livingTimePeriod", livingTimePeriod).
+      toString();
   }
+
 }

@@ -1,17 +1,19 @@
 package org.gbif.metadata;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
+
 public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   private static final long serialVersionUID = 12073642352837495L;
+  private static final Joiner SUBJECT_JOINER = Joiner.on("; ").useForNull("");
 
   private String title;
   private String sourceId;
@@ -28,217 +30,214 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   private Date published;
   private Map<String, String> additionalMetadata = new HashMap<String, String>();
 
-  public void addAdditionalMetadata(String key, String value) {
-    this.additionalMetadata.put(key, value);
-  }
-
-  /** adds more subjects/keywords, concatenating it to the existing one
-   * @param subject
-   */
-  public void addSubject(String subject) {
-    if (StringUtils.isBlank(this.subject)){
-      this.subject = subject;
-    }else{
-      this.subject += "; "+StringUtils.trimToEmpty(subject);
-    }
-  }
-
   public Map<String, String> getAdditionalMetadata() {
     return additionalMetadata;
-  }
-
-  public String getAdditionalMetadata(String key) {
-    return additionalMetadata.get(key);
-  }
-
-  public String getCitationString() {
-    return citation;
-  }
-
-  public void getCitationString(String citation) {
-    this.citation = citation;
-  }
-
-  public String getCreatorEmail() {
-    return creatorEmail;
-  }
-
-  public String getCreatorName() {
-    return creatorName;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getDescription()
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  public String getHomepageUrl() {
-    return homeUrl;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getHomeUrl()
-   */
-  public String getHomeUrl() {
-    return homeUrl;
-  }
-
-  public String getIdentifier() {
-    return sourceId;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getLogoUrl()
-   */
-  public String getLogoUrl() {
-    return logoUrl;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getPublished()
-   */
-  public Date getPublished() {
-    return published;
-  }
-
-  public String getPublisherEmail() {
-    return publisherEmail;
-  }
-
-  public String getPublisherName() {
-    return publisherName;
-  }
-
-  public String getRights() {
-    return rights;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getSourceId()
-   */
-  public String getSourceId() {
-    return sourceId;
-  }
-
-  public String getSubject() {
-    return subject;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#getTitle()
-   */
-  public String getTitle() {
-    return title;
   }
 
   public void setAdditionalMetadata(Map<String, String> additionalMetadata) {
     this.additionalMetadata = additionalMetadata;
   }
 
-  public void setCitationString(String citation) {
-    this.citation = citation;
+  @Override
+  public String getCreatorEmail() {
+    return creatorEmail;
   }
 
   public void setCreatorEmail(String creatorEmail) {
     this.creatorEmail = creatorEmail;
   }
 
+  @Override
+  public String getCreatorName() {
+    return creatorName;
+  }
+
   public void setCreatorName(String creatorName) {
     this.creatorName = creatorName;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setDescription(java.lang.String)
-   */
+  @Override
+  public String getDescription() {
+    return description;
+  }
+
   public void setDescription(String description) {
     this.description = description;
   }
 
-  public void setHomepageUrl(String homeUrl) {
-    this.homeUrl = homeUrl;
+  @Override
+  public String getHomeUrl() {
+    return homeUrl;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setHomeUrl(java.lang.String)
-   */
   public void setHomeUrl(String homeUrl) {
     this.homeUrl = homeUrl;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setLogoUrl(java.lang.String)
-   */
+  @Override
+  public String getLogoUrl() {
+    return logoUrl;
+  }
+
   public void setLogoUrl(String logoUrl) {
     this.logoUrl = logoUrl;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setPublished(java.util.Date)
-   */
+  @Override
+  public Date getPublished() {
+    return published;
+  }
+
   public void setPublished(Date published) {
     this.published = published;
+  }
+
+  @Override
+  public String getPublisherEmail() {
+    return publisherEmail;
   }
 
   public void setPublisherEmail(String publisherEmail) {
     this.publisherEmail = publisherEmail;
   }
 
+  @Override
+  public String getPublisherName() {
+    return publisherName;
+  }
+
   public void setPublisherName(String publisherName) {
     this.publisherName = publisherName;
+  }
+
+  @Override
+  public String getRights() {
+    return rights;
   }
 
   public void setRights(String rights) {
     this.rights = rights;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setSourceId(java.lang.String)
-   */
+  public String getSourceId() {
+    return sourceId;
+  }
+
   public void setSourceId(String sourceId) {
     this.sourceId = sourceId;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.BasicMetadata#setSubject(java.util.Collection)
-   */
-  public void setSubject(List<String> keywords) {
-    setSubject(StringUtils.join(keywords, "; "));
+  @Override
+  public String getSubject() {
+    return subject;
   }
+
   public void setSubject(String subject) {
     this.subject = subject;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.gbif.metadata.Metadata#setTitle(java.lang.String)
-   */
+  @Override
+  public String getTitle() {
+    return title;
+  }
+
   public void setTitle(String title) {
     this.title = title;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this).append("title", this.title).append("sourceId", this.sourceId)
-    .append("published", this.published).append("logoUrl", this.logoUrl).append("homeUrl", this.homeUrl)
-    .append("keywords", this.subject).append("description", this.description).toString();
+  public String getCitationString() {
+    return citation;
   }
 
+  @Override
+  public String getHomepageUrl() {
+    return homeUrl;
+  }
+
+  @Override
+  public String getIdentifier() {
+    return sourceId;
+  }
+
+  public void addAdditionalMetadata(String key, String value) {
+    this.additionalMetadata.put(key, value);
+  }
+
+  /**
+   * adds more subjects/keywords, concatenating it to the existing one
+   */
+  public void addSubject(String newSubject) {
+    if (Strings.isNullOrEmpty(subject)) {
+      subject = newSubject;
+    } else {
+      subject += "; " + newSubject.trim();
+    }
+  }
+
+  public String getAdditionalMetadata(String key) {
+    return additionalMetadata.get(key);
+  }
+
+  public void getCitationString(String citation) {
+    this.citation = citation;
+  }
+
+  public void setCitationString(String citation) {
+    this.citation = citation;
+  }
+
+  public void setHomepageUrl(String homeUrl) {
+    this.homeUrl = homeUrl;
+  }
+
+  public void setSubject(List<String> keywords) {
+    subject = SUBJECT_JOINER.join(keywords);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final BasicMetadataImpl other = (BasicMetadataImpl) obj;
+    return Objects.equal(this.title, other.title) && Objects.equal(this.sourceId, other.sourceId) && Objects
+      .equal(this.description, other.description) && Objects.equal(this.homeUrl, other.homeUrl) && Objects
+      .equal(this.logoUrl, other.logoUrl) && Objects.equal(this.subject, other.subject) && Objects
+      .equal(this.rights, other.rights) && Objects.equal(this.citation, other.citation) && Objects
+      .equal(this.creatorName, other.creatorName) && Objects.equal(this.creatorEmail, other.creatorEmail) && Objects
+      .equal(this.publisherName, other.publisherName) && Objects.equal(this.publisherEmail, other.publisherEmail)
+           && Objects.equal(this.published, other.published) && Objects
+      .equal(this.additionalMetadata, other.additionalMetadata);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects
+      .hashCode(title, sourceId, description, homeUrl, logoUrl, subject, rights, citation, creatorName, creatorEmail,
+        publisherName, publisherEmail, published, additionalMetadata);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("title", title).
+      add("sourceId", sourceId).
+      add("description", description).
+      add("homeUrl", homeUrl).
+      add("logoUrl", logoUrl).
+      add("subject", subject).
+      add("rights", rights).
+      add("citation", citation).
+      add("creatorName", creatorName).
+      add("creatorEmail", creatorEmail).
+      add("publisherName", publisherName).
+      add("publisherEmail", publisherEmail).
+      add("published", published).
+      add("additionalMetadata", additionalMetadata).
+      toString();
+  }
 
 }

@@ -15,15 +15,13 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
-
 /**
  * Joint GeoTaxonomic Index (JGTI) Curatorial Unit A quantitative descriptor (number of specimens, samples or batches).
- * The actual quantification could be covered by 1) an exact number of �JGI-units� in the collection plus a measure of
+ * The actual quantification could be covered by 1) an exact number of JGI-units in the collection plus a measure of
  * uncertainty (+/- x); 2) a range of numbers (x to x), with the lower value representing an exact number, when the
  * higher value is omitted.
  */
@@ -46,19 +44,6 @@ public class JGTICuratorialUnit implements Serializable {
   public JGTICuratorialUnit() {
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof JGTICuratorialUnit)) {
-      return false;
-    }
-    JGTICuratorialUnit o = (JGTICuratorialUnit) other;
-    return equal(rangeStart, o.rangeStart) && equal(rangeEnd, o.rangeEnd) && equal(rangeMean, o.rangeMean) &&
-           equal(uncertaintyMeasure, o.uncertaintyMeasure) && equal(unitType, o.unitType);
-  }
-
   public String getUnitType() {
     return unitType;
   }
@@ -79,8 +64,8 @@ public class JGTICuratorialUnit implements Serializable {
     return uncertaintyMeasure;
   }
 
-  public void setUnitType(String unittype) {
-    this.unitType = unittype;
+  public void setUnitType(String unitType) {
+    this.unitType = unitType;
   }
 
   public void setRangeStart(Integer rangeStart) {
@@ -100,7 +85,7 @@ public class JGTICuratorialUnit implements Serializable {
   }
 
   public JGTICuratorialUnitType getType() {
-    if (this.uncertaintyMeasure != null) {
+    if (uncertaintyMeasure != null) {
       return JGTICuratorialUnitType.COUNT_WITH_UNCERTAINTY;
     }
     return JGTICuratorialUnitType.COUNT_RANGE;
@@ -108,13 +93,31 @@ public class JGTICuratorialUnit implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(rangeStart, rangeEnd, rangeMean, uncertaintyMeasure, unitType);
+    return Objects.hashCode(unitType, rangeStart, rangeEnd, rangeMean, uncertaintyMeasure);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final JGTICuratorialUnit other = (JGTICuratorialUnit) obj;
+    return Objects.equal(this.unitType, other.unitType) && Objects.equal(this.rangeStart, other.rangeStart) && Objects
+      .equal(this.rangeEnd, other.rangeEnd) && Objects.equal(this.rangeMean, other.rangeMean) && Objects
+      .equal(this.uncertaintyMeasure, other.uncertaintyMeasure);
   }
 
   @Override
   public String toString() {
-    return String
-      .format("RangeStart=%s, RangeEnd=%s, RangeMean=%s, UncertaintyMeasure=%s, UnitType=%s", rangeStart, rangeEnd,
-        rangeMean, uncertaintyMeasure, unitType);
+    return Objects.toStringHelper(this).
+      add("unitType", unitType).
+      add("rangeStart", rangeStart).
+      add("rangeEnd", rangeEnd).
+      add("rangeMean", rangeMean).
+      add("uncertaintyMeasure", uncertaintyMeasure).
+      toString();
   }
 }

@@ -15,14 +15,12 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
-
 /**
- * Encapsulates all the information for a StudyAreaDescription
+ * Encapsulates all the information for a StudyAreaDescription.
  */
 public class StudyAreaDescription implements Serializable {
 
@@ -34,35 +32,25 @@ public class StudyAreaDescription implements Serializable {
   private String citableClassificationSystem = "false";
   private String descriptorValue;
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof StudyAreaDescription)) {
-      return false;
-    }
-    StudyAreaDescription o = (StudyAreaDescription) other;
-    return equal(name, o.name) && equal(citableClassificationSystem, o.citableClassificationSystem) &&
-           equal(descriptorValue, o.descriptorValue);
-  }
-
-  public StudyAreaDescriptor getName() {
-    if (name == null) return StudyAreaDescriptor.GENERIC;
-    return name;
-  }
-
   public String getCitableClassificationSystem() {
     return citableClassificationSystem;
+  }
+
+  public void setCitableClassificationSystem(String citableClassificationSystem) {
+    this.citableClassificationSystem = citableClassificationSystem;
   }
 
   public String getDescriptorValue() {
     return descriptorValue;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(name, citableClassificationSystem, descriptorValue);
+  public void setDescriptorValue(String descriptorValue) {
+    this.descriptorValue = descriptorValue;
+  }
+
+  public StudyAreaDescriptor getName() {
+    if (name == null) return StudyAreaDescriptor.GENERIC;
+    return name;
   }
 
   public void setName(StudyAreaDescriptor name) {
@@ -73,19 +61,32 @@ public class StudyAreaDescription implements Serializable {
     name = StudyAreaDescriptor.fromString(nameStr);
   }
 
-  public void setCitableClassificationSystem(String citableClassificationSystem) {
-    this.citableClassificationSystem = citableClassificationSystem;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final StudyAreaDescription other = (StudyAreaDescription) obj;
+    return Objects.equal(this.name, other.name) && Objects
+      .equal(this.citableClassificationSystem, other.citableClassificationSystem) && Objects
+      .equal(this.descriptorValue, other.descriptorValue);
   }
 
-  public void setDescriptorValue(String descriptorValue) {
-    this.descriptorValue = descriptorValue;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(name, citableClassificationSystem, descriptorValue);
   }
 
   @Override
   public String toString() {
-    return String
-      .format("Name=%s, CitableClassificationSystem=%s, DescriptorValue=%s", name, citableClassificationSystem,
-        descriptorValue);
+    return Objects.toStringHelper(this).
+      add("name", name).
+      add("citableClassificationSystem", citableClassificationSystem).
+      add("descriptorValue", descriptorValue).
+      toString();
   }
 
 }
