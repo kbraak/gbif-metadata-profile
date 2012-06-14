@@ -1,14 +1,11 @@
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
-import java.io.Serializable;
+import static com.google.common.base.Objects.equal;
 
 /**
  * This class is used to represent an address with address, city, province and postal-code information.
@@ -24,6 +21,64 @@ public class Address implements Serializable {
   private String country;
   private String postalCode;
 
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public String getCity() {
+    if (city == null || city.isEmpty()) {
+      return null;
+    }
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getCountry() {
+    if (country == null || country.isEmpty()) {
+      return null;
+    }
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
+  public String getPostalCode() {
+    if (postalCode == null || postalCode.isEmpty()) {
+      return null;
+    }
+    return postalCode;
+  }
+
+  public void setPostalCode(String postalCode) {
+    this.postalCode = postalCode;
+  }
+
+  public String getProvince() {
+    if (province == null || province.isEmpty()) {
+      return null;
+    }
+    return province;
+  }
+
+  public void setProvince(String province) {
+    this.province = province;
+  }
+
+  public boolean isEmpty() {
+    return Strings.nullToEmpty(address).trim().isEmpty() && Strings.nullToEmpty(city).trim().isEmpty() && Strings
+      .nullToEmpty(province).trim().isEmpty() && Strings.nullToEmpty(postalCode).trim().isEmpty() && Strings
+      .nullToEmpty(country).trim().isEmpty();
+  }
+
   @Override
   public boolean equals(Object other) {
     if (this == other) {
@@ -37,67 +92,9 @@ public class Address implements Serializable {
            equal(country, o.country) && equal(postalCode, o.postalCode);
   }
 
-  public String getAddress() {
-    return address;
-  }
-
-  public String getCity() {
-    if (city == null || city.length() == 0) {
-      return null;
-    }
-    return city;
-  }
-
-  public String getCountry() {
-    if (country == null || country.length() == 0) {
-      return null;
-    }
-    return country;
-  }
-
-  public String getPostalCode() {
-    if (postalCode == null || postalCode.length() == 0) {
-      return null;
-    }
-    return postalCode;
-  }
-
-  public String getProvince() {
-    if (province == null || province.length() == 0) {
-      return null;
-    }
-    return province;
-  }
-
   @Override
   public int hashCode() {
     return Objects.hashCode(address, city, province, country, postalCode);
-  }
-
-  public boolean isEmpty() {
-    return StringUtils.trimToNull(address) == null && StringUtils.trimToNull(city) == null &&
-           StringUtils.trimToNull(province) == null && StringUtils.trimToNull(country) == null &&
-           StringUtils.trimToNull(postalCode) == null;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public void setCity(String city) {
-    this.city = city;
-  }
-
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public void setPostalCode(String postalCode) {
-    this.postalCode = postalCode;
-  }
-
-  public void setProvince(String province) {
-    this.province = province;
   }
 
   /**
@@ -107,8 +104,8 @@ public class Address implements Serializable {
    */
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("country", this.country)
-      .append("address", this.address).append("province", this.province).append("postalCode", this.postalCode)
-      .append("city", this.city).toString();
+    return Objects.toStringHelper(this).add("country", country).add("address", address).add("province", province)
+      .add("postalCode", postalCode).add("city", city).toString();
   }
+
 }

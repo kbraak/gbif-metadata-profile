@@ -15,23 +15,26 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
 
-import java.io.Serializable;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * This class can be used to encapsulate generic attribute information. Each attribute has a category, a name, and a
  * type within the context of a {@link LocaleBundle}.
- *
  * Note that this class is immuatable. New instances can be created using the create method.
  */
 public class Attribute implements Serializable {
 
   private static final long serialVersionUID = 8805087340650428951L;
+
+  private final String category;
+  private final LocaleBundle localeBundle;
+  private final String name;
+  private final String value;
 
   /**
    * Creates a new Attribute instance. Throws {@link NullPointerException} if any of the arguments are null. Throws
@@ -55,29 +58,11 @@ public class Attribute implements Serializable {
     return new Attribute(category, localeBundle, name, value);
   }
 
-  private final String category;
-  private final LocaleBundle localeBundle;
-  private final String name;
-  private final String value;
-
   private Attribute(String category, LocaleBundle localeBundle, String name, String value) {
     this.category = category;
     this.localeBundle = localeBundle;
     this.name = name;
     this.value = value;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof Attribute)) {
-      return false;
-    }
-    Attribute o = (Attribute) other;
-    return equal(category, o.category) && equal(localeBundle, o.localeBundle) && equal(name, o.name) &&
-           equal(value, o.value);
   }
 
   public String getCategory() {
@@ -97,12 +82,31 @@ public class Attribute implements Serializable {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Attribute other = (Attribute) obj;
+    return Objects.equal(this.category, other.category) && Objects.equal(this.localeBundle, other.localeBundle)
+           && Objects.equal(this.name, other.name) && Objects.equal(this.value, other.value);
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hashCode(category, localeBundle, name, value);
   }
 
   @Override
   public String toString() {
-    return String.format("Category=%s, LocaleBundle=%s, Name=%s, Value=%s", category, localeBundle, name, value);
+    return Objects.toStringHelper(this).
+      add("category", category).
+      add("localeBundle", localeBundle).
+      add("name", name).
+      add("value", value).
+      toString();
   }
+
 }

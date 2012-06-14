@@ -1,10 +1,8 @@
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
-
-import java.io.Serializable;
 
 /**
  * A single literature citation with an optional identifier TODO Documentation
@@ -30,23 +28,15 @@ public class Citation implements Serializable {
     this.identifier = identifier;
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof Citation)) {
-      return false;
-    }
-    Citation o = (Citation) other;
-    return equal(identifier, o.identifier) && equal(citation, o.citation);
-  }
-
   /**
    * @return the name
    */
   public String getCitation() {
     return citation;
+  }
+
+  public void setCitation(String citation) {
+    this.citation = citation;
   }
 
   /**
@@ -56,21 +46,33 @@ public class Citation implements Serializable {
     return identifier;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(citation, identifier);
-  }
-
-  public void setCitation(String citation) {
-    this.citation = citation;
-  }
-
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
   }
 
   @Override
-  public String toString() {
-    return String.format("Citation=%s, Identifier=%s", citation, identifier);
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Citation other = (Citation) obj;
+    return Objects.equal(this.identifier, other.identifier) && Objects.equal(this.citation, other.citation);
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(identifier, citation);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("identifier", identifier).
+      add("citation", citation).
+      toString();
+  }
+
 }

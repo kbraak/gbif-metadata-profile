@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,13 +15,11 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
+import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * Encapsulates the descriptive elements of the geospatial coverage
@@ -55,28 +53,18 @@ public class GeospatialCoverage implements Serializable {
   public GeospatialCoverage() {
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof GeospatialCoverage)) {
-      return false;
-    }
-    GeospatialCoverage o = (GeospatialCoverage) other;
-    return equal(description, o.description) && equal(keywords, o.keywords) &&
-           equal(boundingCoordinates, o.boundingCoordinates);
+  /**
+   * @return the boundingCoordinates
+   */
+  public BBox getBoundingCoordinates() {
+    return boundingCoordinates;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(description, keywords, boundingCoordinates);
-  }
-
-  @Override
-  public String toString() {
-    return String
-      .format("Description=%s, Keywords=[%s], BoundingCoordinates=%s", description, keywords, boundingCoordinates);
+  /**
+   * @param boundingCoordinates the boundingCoordinates to set
+   */
+  public void setBoundingCoordinates(BBox boundingCoordinates) {
+    this.boundingCoordinates = boundingCoordinates;
   }
 
   /**
@@ -107,17 +95,31 @@ public class GeospatialCoverage implements Serializable {
     this.keywords = keywords;
   }
 
-  /**
-   * @return the boundingCoordinates
-   */
-  public BBox getBoundingCoordinates() {
-    return boundingCoordinates;
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final GeospatialCoverage other = (GeospatialCoverage) obj;
+    return Objects.equal(this.description, other.description) && Objects.equal(this.keywords, other.keywords) && Objects
+      .equal(this.boundingCoordinates, other.boundingCoordinates);
   }
 
-  /**
-   * @param boundingCoordinates the boundingCoordinates to set
-   */
-  public void setBoundingCoordinates(BBox boundingCoordinates) {
-    this.boundingCoordinates = boundingCoordinates;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(description, keywords, boundingCoordinates);
   }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("description", description).
+      add("keywords", keywords).
+      add("boundingCoordinates", boundingCoordinates).
+      toString();
+  }
+
 }

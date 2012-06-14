@@ -15,27 +15,29 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import com.google.common.base.Objects;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * This class can be used to bundle a {@link Locale} with a {@link Charset} encoding.
- *
  * Note that this class is immutable. New instances can be created using the static create method.
  */
 public class LocaleBundle implements Serializable {
 
   private static final long serialVersionUID = 4602721372582246629L;
 
+  private final Locale locale;
+  private final Charset charset;
+
   /**
-   * Creates a new LocaleBundle instance. Throws {@link NullPointerException} or {@link IllegalArgumentException} if any
+   * Creates a new LocaleBundle instance. Throws {@link NullPointerException} or {@link IllegalArgumentException} if
+   * any
    * of the parameters are null or if the language or country parameters are the empty string.
    *
    * @param language the language
@@ -46,31 +48,16 @@ public class LocaleBundle implements Serializable {
    */
   public static LocaleBundle create(String language, String country, Charset charset) {
     checkNotNull(language, "Language was null");
-    checkArgument(language.trim().length() != 0, "Language was empty");
+    checkArgument(!language.trim().isEmpty(), "Language was empty");
     checkNotNull(country, "Country was null");
-    checkArgument(country.trim().length() != 0, "Country was empty");
+    checkArgument(!country.trim().isEmpty(), "Country was empty");
     checkNotNull(charset, "Charset was null");
     return new LocaleBundle(language, country, charset);
   }
 
-  private final Locale locale;
-  private final Charset charset;
-
   private LocaleBundle(String language, String country, Charset charset) {
     locale = new Locale(language, country);
     this.charset = charset;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof LocaleBundle)) {
-      return false;
-    }
-    LocaleBundle lb = (LocaleBundle) other;
-    return equal(locale, lb.locale) && equal(charset, lb.charset);
   }
 
   public String getCharset() {
@@ -86,12 +73,29 @@ public class LocaleBundle implements Serializable {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final LocaleBundle other = (LocaleBundle) obj;
+    return Objects.equal(this.locale, other.locale) && Objects.equal(this.charset, other.charset);
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hashCode(locale, charset);
   }
 
   @Override
   public String toString() {
-    return String.format("Country=%s, Language=%s, Charset=%s", getCountry(), getLanguage(), getCharset());
+    return Objects.toStringHelper(this).
+      add("country", getCountry()).
+      add("language", getLanguage()).
+      add("charset", charset).
+      toString();
   }
+
 }

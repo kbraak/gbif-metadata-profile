@@ -15,12 +15,12 @@
  */
 package org.gbif.metadata.eml;
 
-import com.google.common.collect.Lists;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import java.util.List;
+
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 /**
  * Simple POJO container for an ordered list of keywords and optionally, a thesaurus to which those keywords are
@@ -36,10 +36,11 @@ public class KeywordSet implements Serializable {
   /**
    * The name of the official keyword thesaurus from which keyword was derived.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keywordThesaurus">EML Resource
+   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keywordThesaurus">EML
+   *      Resource
    *      keywordThesaurus element</a>
    */
-  protected String keywordThesaurus;
+  private String keywordThesaurus;
 
   /**
    * A keyword or key phrase that concisely describes the resource or is related to the resource. Each keyword field
@@ -48,7 +49,7 @@ public class KeywordSet implements Serializable {
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keyword">EML Resource keyword
    *      element</a>
    */
-  protected List<String> keywords = Lists.newArrayList();
+  private List<String> keywords = Lists.newArrayList();
 
   /**
    * Default constructor required by Struts2
@@ -118,8 +119,8 @@ public class KeywordSet implements Serializable {
    */
   public void setKeywordsString(String keywords, String seperator) {
     this.keywords.clear();
-    for (String k : StringUtils.split(keywords, seperator)) {
-      k = StringUtils.trimToNull(k);
+    for (String k : Splitter.on(seperator).split(keywords)) {
+      k = Strings.emptyToNull(k.trim());
       this.keywords.add(k);
     }
   }
@@ -129,16 +130,16 @@ public class KeywordSet implements Serializable {
   }
 
   public String getKeywordsString(String seperator) {
-    String kstring = "";
+    StringBuilder sb = new StringBuilder();
     boolean b = false;
     for (String keyword : keywords) {
       if (b && seperator != null) {
-        kstring = kstring.concat(seperator).concat(keyword);
+        sb.append(seperator).append(keyword);
       } else {
-        kstring = kstring.concat(keyword);
+        sb.append(keyword);
         b = true;
       }
     }
-    return kstring;
+    return sb.toString();
   }
 }

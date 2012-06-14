@@ -12,18 +12,16 @@
  */
 package org.gbif.metadata.eml;
 
+import java.nio.charset.Charset;
+
 import com.google.common.base.Charsets;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-
-import java.nio.charset.Charset;
-
 /**
  * This class can be used for unit testing {@link LocaleBundle}.
- * 
  */
 public class LocaleBundleTest {
 
@@ -93,11 +91,12 @@ public class LocaleBundleTest {
   @Test
   public final void testHashCode() {
     assertEquals(LocaleBundle.create("l", "c", Charsets.UTF_8).hashCode(),
-        LocaleBundle.create("l", "c", Charsets.UTF_8).hashCode());
+      LocaleBundle.create("l", "c", Charsets.UTF_8).hashCode());
   }
 
   @Test
   public final void testToString() {
-    assertEquals("Country=C, Language=l, Charset=UTF-8", LocaleBundle.create("l", "c", Charsets.UTF_8).toString());
+    assertEquals("LocaleBundle{country=C, language=l, charset=UTF-8}",
+      LocaleBundle.create("l", "c", Charsets.UTF_8).toString());
   }
 }

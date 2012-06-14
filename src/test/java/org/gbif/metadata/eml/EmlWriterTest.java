@@ -13,25 +13,26 @@
 
 package org.gbif.metadata.eml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
+import org.gbif.utils.file.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
 
-/**
- * @author markus
- */
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 public class EmlWriterTest {
+
   @Test
   public void testRoundtrip() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
       assertNotNull(eml);
 
       // write EML
@@ -54,7 +55,7 @@ public class EmlWriterTest {
       assertEquals(eml2.getPubDate(), eml.getPubDate());
       // TODO: fix timezone parsing/writing
       // Sth unknown does go wrong here...
-// assertEquals(eml2.getDateStamp(), eml.getDateStamp());
+      // assertEquals(eml2.getDateStamp(), eml.getDateStamp());
       assertEquals(eml2.getCitation(), eml.getCitation());
       assertEquals(eml2.getLogoUrl(), eml.getLogoUrl());
       assertEquals(eml2.getHomeUrl(), eml.getHomeUrl());
@@ -77,7 +78,6 @@ public class EmlWriterTest {
       EmlWriter.writeEmlFile(temp, eml);
 
     } catch (Exception e) {
-      e.printStackTrace();
       fail();
     }
   }
@@ -86,9 +86,9 @@ public class EmlWriterTest {
   public void testSetNonNullPubDate() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample3.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample3.xml"));
       assertNotNull(eml);
-      assertEquals(null, eml.getPubDate());
+      assertNull(eml.getPubDate());
 
       String pubDate = "2011-02-07";
       eml.setPubDateAsString(pubDate);
@@ -106,7 +106,6 @@ public class EmlWriterTest {
       assertNotNull(eml2.getPubDate());
 
     } catch (Exception e) {
-      e.printStackTrace();
       fail();
     }
   }
@@ -115,7 +114,7 @@ public class EmlWriterTest {
   public void testSetNullPubDate() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
       assertNotNull(eml);
 
       Date pubDate = null;
@@ -126,7 +125,6 @@ public class EmlWriterTest {
       System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
       EmlWriter.writeEmlFile(temp, eml);
     } catch (Exception e) {
-      e.printStackTrace();
       fail();
     }
   }
@@ -135,7 +133,7 @@ public class EmlWriterTest {
   public void testXmlEscaping() {
     try {
       // read EML to have some defaults
-      Eml eml = EmlFactory.build(new FileInputStream("./src/test/resources/eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
       assertNotNull(eml);
 
       // use ampersand values
@@ -156,7 +154,6 @@ public class EmlWriterTest {
       assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
 
     } catch (Exception e) {
-      e.printStackTrace();
       fail();
     }
   }

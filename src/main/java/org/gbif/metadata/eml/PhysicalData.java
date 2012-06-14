@@ -15,11 +15,9 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
-
-import java.io.Serializable;
 
 /**
  * This class can be used to encapsulate information about physical data.
@@ -35,7 +33,8 @@ public class PhysicalData implements Serializable {
    * This element contains the name of the character encoding. This is typically ASCII or UTF-8, or one of the other
    * common encodings.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#characterEncoding">EML Physical
+   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#characterEncoding">EML
+   *      Physical
    *      characterEncoding keyword</a>
    */
   private String charset;
@@ -76,19 +75,6 @@ public class PhysicalData implements Serializable {
    * Required by Struts2
    */
   public PhysicalData() {
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof PhysicalData)) {
-      return false;
-    }
-    PhysicalData o = (PhysicalData) other;
-    return equal(charset, o.charset) && equal(distributionUrl, o.distributionUrl) && equal(format, o.format) &&
-           equal(formatVersion, o.formatVersion) && equal(name, o.name);
   }
 
   public String getCharset() {
@@ -137,9 +123,27 @@ public class PhysicalData implements Serializable {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final PhysicalData other = (PhysicalData) obj;
+    return Objects.equal(this.charset, other.charset) && Objects.equal(this.distributionUrl, other.distributionUrl)
+           && Objects.equal(this.format, other.format) && Objects.equal(this.formatVersion, other.formatVersion)
+           && Objects.equal(this.name, other.name);
+  }
+
+  @Override
   public String toString() {
-    return String
-      .format("Charset=%s, DistributionUrl=%s, Format=%s, FormatVersion=%s, Name=%s", charset, distributionUrl, format,
-        formatVersion, name);
+    return Objects.toStringHelper(this).
+      add("charset", charset).
+      add("distributionUrl", distributionUrl).
+      add("format", format).
+      add("formatVersion", formatVersion).
+      add("name", name).
+      toString();
   }
 }

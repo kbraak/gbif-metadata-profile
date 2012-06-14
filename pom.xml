@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.gbif</groupId>
     <artifactId>motherpom</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
 
   <groupId>org.gbif</groupId>
@@ -20,14 +20,13 @@
   <url>http://sites.gbif.org/common-resources/gbif-metadata-profile</url>
 
   <properties>
-  	<gbif-common.version>0.4</gbif-common.version>
     <commons-digester.version>2.1</commons-digester.version>
-    <commons-io.version>2.0.1</commons-io.version>
-    <commons-lang.version>2.6</commons-lang.version>
-    <guava.version>10.0.1</guava.version>
-    <freemarker.version>2.3.16</freemarker.version>
-    <slf4j.version>1.6.1</slf4j.version>
-    <junit.version>4.9</junit.version>
+    <commons-io.version>2.3</commons-io.version>
+    <freemarker.version>2.3.19</freemarker.version>
+    <gbif-common.version>0.5</gbif-common.version>
+    <guava.version>12.0</guava.version>
+    <junit.version>4.10</junit.version>
+    <slf4j.version>1.6.5</slf4j.version>
   </properties>
 
   <scm>
@@ -63,11 +62,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.gbif</groupId>
-      <artifactId>gbif-common</artifactId>
-      <version>${gbif-common.version}</version>
-    </dependency>
-    <dependency>
       <groupId>commons-digester</groupId>
       <artifactId>commons-digester</artifactId>
       <version>${commons-digester.version}</version>
@@ -78,9 +72,10 @@
       <version>${commons-io.version}</version>
     </dependency>
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commons-lang.version}</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -93,15 +88,14 @@
       <version>${freemarker.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.gbif</groupId>
+      <artifactId>gbif-common</artifactId>
+      <version>${gbif-common.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

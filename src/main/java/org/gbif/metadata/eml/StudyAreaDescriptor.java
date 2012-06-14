@@ -15,21 +15,18 @@
  */
 package org.gbif.metadata.eml;
 
-import com.google.common.collect.Maps;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * TODO: Documentation.
- */
+import com.google.common.collect.Maps;
+
 public enum StudyAreaDescriptor implements Serializable {
   THEMATIC("thematic"),
   GEOGRAPHIC("geographic"),
   GENERIC("generic");
 
-  public static final Map<String, String> htmlSelectMap;
+  public static final Map<String, String> HTML_SELECT_MAP;
   private final String name;
 
   static {
@@ -37,7 +34,7 @@ public enum StudyAreaDescriptor implements Serializable {
     for (StudyAreaDescriptor sad : StudyAreaDescriptor.values()) {
       map.put(sad.name(), "studyAreaDescriptorType." + sad.name());
     }
-    htmlSelectMap = Collections.unmodifiableMap(map);
+    HTML_SELECT_MAP = Collections.unmodifiableMap(map);
   }
 
   /**

@@ -15,11 +15,10 @@
  */
 package org.gbif.metadata.eml;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import java.io.Serializable;
 import java.util.Arrays;
+
+import com.google.common.base.Objects;
 
 /**
  * Bounding box representation with 2 points. P1 has maximum latitude and longitude, while p2 represents the minimum
@@ -27,20 +26,24 @@ import java.util.Arrays;
  */
 public class BBox implements Serializable {
 
-
-  public static BBox newWorldInstance() {
-    BBox world = new BBox(new Point(-90.0, -180.0), new Point(90.0, 180.0));
-    return world;
-  }
-
   // x = east/west=longitude, -180/180
   // y = north/south = latitude, -90/90
   private Point max;
 
   private Point min;
 
+  public static BBox newWorldInstance() {
+    return new BBox(new Point(-90.0, -180.0), new Point(90.0, 180.0));
+  }
+
   public BBox() {
     this(-90d, -180d, 90d, 180d);
+  }
+
+  public BBox(Point min, Point max) {
+    this.min = new Point(min);
+    this.max = new Point(max);
+    setOrderedBounds(min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
   }
 
   public BBox(Double minY, Double minX, Double maxY, Double maxX) {
@@ -48,15 +51,17 @@ public class BBox implements Serializable {
     minX = minX == null ? -180 : minX;
     maxY = maxY == null ? 90 : maxY;
     maxX = maxX == null ? 180 : maxX;
-    this.min = new Point(minY, minX);
-    this.max = new Point(maxY, maxX);
+    min = new Point(minY, minX);
+    max = new Point(maxY, maxX);
     setOrderedBounds(minY, minX, maxY, maxX);
   }
 
-  public BBox(Point min, Point max) {
-    this.min = new Point(min);
-    this.max = new Point(max);
-    setOrderedBounds(min.getLatitude(), min.getLongitude(), max.getLatitude(), max.getLongitude());
+  public Point getMax() {
+    return max;
+  }
+
+  public Point getMin() {
+    return min;
   }
 
   /**
@@ -74,24 +79,12 @@ public class BBox implements Serializable {
    */
   public boolean contains(Point p) {
     if (p != null && p.isValid() && isValid()) {
-      if (p.getLatitude() <= getMax().getLatitude() && p.getLatitude() >= getMin().getLatitude() &&
-          p.getLongitude() <= getMax().getLongitude() && p.getLongitude() >= getMin().getLongitude()) {
+      if (p.getLatitude() <= max.getLatitude() && p.getLatitude() >= min.getLatitude() &&
+          p.getLongitude() <= max.getLongitude() && p.getLongitude() >= min.getLongitude()) {
         return true;
       }
     }
     return false;
-  }
-
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
-  @Override
-  public boolean equals(Object object) {
-    if (!(object instanceof BBox)) {
-      return false;
-    }
-    BBox rhs = (BBox) object;
-    return new EqualsBuilder().append(this.min, rhs.min).append(this.max, rhs.max).isEquals();
   }
 
   /**
@@ -100,23 +93,23 @@ public class BBox implements Serializable {
   public void expandBox(Point p) {
     if (p != null && p.isValid()) {
       if (!contains(p)) {
-        if (!isValid()) {
+        if (isValid()) {
+          if (p.getLatitude() > max.getLatitude()) {
+            max.setLatitude(p.getLatitude());
+          }
+          if (p.getLatitude() < min.getLatitude()) {
+            min.setLatitude(p.getLatitude());
+          }
+          if (p.getLongitude() > max.getLongitude()) {
+            max.setLongitude(p.getLongitude());
+          }
+          if (p.getLongitude() < min.getLongitude()) {
+            min.setLongitude(p.getLongitude());
+          }
+        } else {
           // this BBox doesnt yet contain any points. Use this point for min+max
           setMin(p);
           setMax(p);
-        } else {
-          if (p.getLatitude() > getMax().getLatitude()) {
-            max.setLatitude(p.getLatitude());
-          }
-          if (p.getLatitude() < getMin().getLatitude()) {
-            min.setLatitude(p.getLatitude());
-          }
-          if (p.getLongitude() > getMax().getLongitude()) {
-            max.setLongitude(p.getLongitude());
-          }
-          if (p.getLongitude() < getMin().getLongitude()) {
-            min.setLongitude(p.getLongitude());
-          }
         }
       }
     }
@@ -153,8 +146,8 @@ public class BBox implements Serializable {
           minX = Point.MAX_LONGITUDE - width * mapRatio;
           maxX = Point.MAX_LONGITUDE;
         } else {
-          minX = minX - equalWidthIncrease;
-          maxX = maxX + equalWidthIncrease;
+          minX -= equalWidthIncrease;
+          maxX += equalWidthIncrease;
         }
         min.setLongitude(minX);
         max.setLongitude(maxX);
@@ -171,29 +164,13 @@ public class BBox implements Serializable {
           minY = Point.MAX_LATITUDE - width * mapRatio;
           maxY = Point.MAX_LATITUDE;
         } else {
-          minY = minY - equalHeightIncrease;
-          maxY = maxY + equalHeightIncrease;
+          minY -= equalHeightIncrease;
+          maxY += equalHeightIncrease;
         }
         min.setLatitude(minY);
         max.setLatitude(maxY);
       }
     }
-  }
-
-  public Point getMax() {
-    return max;
-  }
-
-  public Point getMin() {
-    return min;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(1425547953, 342545271).append(this.min).append(this.max).toHashCode();
   }
 
   public double height() {
@@ -219,11 +196,8 @@ public class BBox implements Serializable {
     // heights of the two boxes,
     // then the two boxes overlap! A shared boundary is not considered an
     // overlap here.
-    if (c1.distanceX(c2) < (this.width() / 2.0 + bbox.width() / 2.0) &&
-        (c1.distanceY(c2) < (this.height() / 2.0 + bbox.height() / 2.0))) {
-      return true;
-    }
-    return false;
+    return c1.distanceX(c2) < (this.width() / 2.0 + bbox.width() / 2.0) && (c1.distanceY(c2) < (this.height() / 2.0
+                                                                                                + bbox.height() / 2.0));
   }
 
   /**
@@ -248,14 +222,14 @@ public class BBox implements Serializable {
     // detect maximum possible expand factor
     double[] maxFactors =
       {(factor - 1) / 2f, (Point.MAX_LATITUDE - maxY) / height, (Point.MAX_LATITUDE + minY) / height,
-       (Point.MAX_LONGITUDE - maxX) / width, (Point.MAX_LONGITUDE + minX) / width};
+        (Point.MAX_LONGITUDE - maxX) / width, (Point.MAX_LONGITUDE + minX) / width};
     Arrays.sort(maxFactors);
     double expandFactor = maxFactors[0];
     // change bbox
-    minX = minX - (expandFactor * width);
-    maxX = maxX + (expandFactor * width);
-    minY = minY - (expandFactor * height);
-    maxY = maxY + (expandFactor * height);
+    minX -= (expandFactor * width);
+    maxX += (expandFactor * width);
+    minY -= (expandFactor * height);
+    maxY += (expandFactor * height);
     min.setLongitude(minX);
     min.setLatitude(minY);
     max.setLongitude(maxX);
@@ -266,11 +240,11 @@ public class BBox implements Serializable {
     if (max == null) {
       this.max = null;
     } else {
-      if (this.min == null) {
-        this.min = new Point(max.getX(), max.getY());
+      if (min == null) {
+        min = new Point(max.getX(), max.getY());
       }
-      setOrderedX(this.min.getX(), max.getX());
-      setOrderedY(this.min.getY(), max.getY());
+      setOrderedX(min.getX(), max.getX());
+      setOrderedY(min.getY(), max.getY());
     }
   }
 
@@ -300,8 +274,8 @@ public class BBox implements Serializable {
     if (min == null) {
       this.min = null;
     } else {
-      if (this.max == null) {
-        this.max = new Point(min.getX(), min.getY());
+      if (max == null) {
+        max = new Point(min.getX(), min.getY());
       }
       setOrderedX(this.min.getX(), max.getX());
       setOrderedY(this.min.getY(), max.getY());
@@ -377,12 +351,6 @@ public class BBox implements Serializable {
     return width() * height();
   }
 
-  @Override
-  public String toString() {
-    // minY,minX maxY,maxX
-    return String.format("%s %s", min, max);
-  }
-
   /*
    * @See http://georss.org/simple
    *
@@ -413,4 +381,30 @@ public class BBox implements Serializable {
     }
     return max.getX() - min.getX();
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(max, min);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final BBox other = (BBox) obj;
+    return Objects.equal(this.max, other.max) && Objects.equal(this.min, other.min);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("max", max).
+      add("min", min).
+      toString();
+  }
+
 }

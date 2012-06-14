@@ -15,11 +15,11 @@
  */
 package org.gbif.metadata.eml;
 
-import com.google.common.collect.Maps;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 /**
  * Enumeration of temporal coverage types.
@@ -30,7 +30,7 @@ public enum TemporalCoverageType implements Serializable {
   FORMATION_PERIOD("formationPeriod"),
   LIVING_TIME_PERIOD("livingTimePeriod");
 
-  public static final Map<String, String> htmlSelectMap;
+  public static final Map<String, String> HTML_SELECT_MAP;
   private final String name;
 
   static {
@@ -38,19 +38,20 @@ public enum TemporalCoverageType implements Serializable {
     for (TemporalCoverageType rt : TemporalCoverageType.values()) {
       map.put(rt.name(), "temporalCoverageType." + rt.name());
     }
-    htmlSelectMap = Collections.unmodifiableMap(map);
+    HTML_SELECT_MAP = Collections.unmodifiableMap(map);
   }
 
-  private TemporalCoverageType(String name) {
+  TemporalCoverageType(String name) {
     this.name = name;
   }
 
 
   /**
-   * Returns a TemporalCoverageType created from a string description of the type. If the description is null or if it's
+   * Returns a TemporalCoverageType created from a string description of the type. If the description is null or if
+   * it's
    * not a valid TemporalCoverageType name, null is returned.
    *
-   * @param temporalCoverageType the temporal coverage type as a string
+   * @param type the temporal coverage type as a string
    *
    * @return TemporalCoverageType
    */

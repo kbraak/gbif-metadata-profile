@@ -1,36 +1,35 @@
 package org.gbif.metadata;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * @author markus
- */
+import com.google.common.base.Strings;
+
 public class DateUtils {
 
-  public static ThreadSafeSimpleDateFormat isoDateFormat = new ThreadSafeSimpleDateFormat("yyyy-MM-dd");  //2010-02-22
+  public static final ThreadSafeSimpleDateFormat ISO_DATE_FORMAT = new ThreadSafeSimpleDateFormat("yyyy-MM-dd");
+  //2010-02-22
 
-  public static List<ThreadSafeSimpleDateFormat> allDateFormats = new ArrayList<ThreadSafeSimpleDateFormat>(10);
+  public static final List<ThreadSafeSimpleDateFormat> ALL_DATE_FORMATS = new ArrayList<ThreadSafeSimpleDateFormat>(10);
 
   static {
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));  // 2001-07-04T12:08:56.235-0700
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"));  // 2001-07-04 12:08:56.235-0700
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"));  // 2001-07-04T12:08:56.235
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));  // 2001-07-04 12:08:56.235
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));  // 2001-07-04T12:08:56
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss"));  // 2001-07-04 12:08:56
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"));  // Wed, 4 Jul 2001 12:08:56 -0700
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"));  // Wed, 4 Jul 2001 12:08:56
-    allDateFormats.add(isoDateFormat);
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy.MM.dd"));  // 2010.03.22
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("dd.MM.yyyy"));  // 22.03.2010
-    allDateFormats.add(new ThreadSafeSimpleDateFormat("yyyy/MM/dd"));  // 2010/02/24
-//allDateFormats.add(new ThreadSafeSimpleDateFormat("MM/dd/yyyy"));  // 02/24/2010
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ"));  // 2001-07-04T12:08:56.235-0700
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ"));  // 2001-07-04 12:08:56.235-0700
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"));  // 2001-07-04T12:08:56.235
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"));  // 2001-07-04 12:08:56.235
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));  // 2001-07-04T12:08:56
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy-MM-dd HH:mm:ss"));  // 2001-07-04 12:08:56
+    ALL_DATE_FORMATS
+      .add(new ThreadSafeSimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"));  // Wed, 4 Jul 2001 12:08:56 -0700
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"));  // Wed, 4 Jul 2001 12:08:56
+    ALL_DATE_FORMATS.add(ISO_DATE_FORMAT);
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy.MM.dd"));  // 2010.03.22
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("dd.MM.yyyy"));  // 22.03.2010
+    ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("yyyy/MM/dd"));  // 2010/02/24
+    //ALL_DATE_FORMATS.add(new ThreadSafeSimpleDateFormat("MM/dd/yyyy"));  // 02/24/2010
   }
 
   /**
@@ -45,7 +44,7 @@ public class DateUtils {
    *      calendarDate keyword</a>
    */
   public static Date calendarDate(String dateString) throws ParseException {
-    if (StringUtils.isBlank(dateString)) {
+    if (dateString == null || Strings.isNullOrEmpty(dateString.trim())) {
       return null;
     }
     // kill whitespace
@@ -73,11 +72,11 @@ public class DateUtils {
    * @param x the date as a string or null if not parsable
    */
   public static Date parse(String x) {
-    if (StringUtils.isBlank(x)){
+    if (x == null || Strings.isNullOrEmpty(x.trim())) {
       return null;
     }
     Date date = null;
-    for (ThreadSafeSimpleDateFormat df : allDateFormats) {
+    for (ThreadSafeSimpleDateFormat df : ALL_DATE_FORMATS) {
       try {
         // alternatively try others
         date = df.parse(x);
@@ -117,7 +116,7 @@ public class DateUtils {
    * @param x the date as a string
    */
   public static Date parseIso(String x) {
-    return parse(x, isoDateFormat);
+    return parse(x, ISO_DATE_FORMAT);
   }
 
   /**
@@ -128,7 +127,7 @@ public class DateUtils {
    * @throws ParseException Should it be an erroneous format
    */
   public static Date schemaDateTime(String dateString) throws ParseException {
-    dateString = StringUtils.trimToEmpty(dateString);
+    dateString = Strings.nullToEmpty(dateString).trim();
     Date date;
     try {
       Pattern timezone = Pattern.compile("([+-]\\d\\d:\\d\\d)$");
@@ -144,5 +143,9 @@ public class DateUtils {
       }
     }
     return date;
+  }
+
+  private DateUtils() {
+    throw new UnsupportedOperationException("Can't initialize class");
   }
 }

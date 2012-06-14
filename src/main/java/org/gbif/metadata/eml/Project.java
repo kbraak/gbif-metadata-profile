@@ -15,11 +15,9 @@
  */
 package org.gbif.metadata.eml;
 
-import static com.google.common.base.Objects.equal;
+import java.io.Serializable;
 
 import com.google.common.base.Objects;
-
-import java.io.Serializable;
 
 /**
  * A class encapsulating the project information
@@ -43,7 +41,8 @@ public class Project implements Serializable {
    * The Personnel field extends ResponsibleParty with role information and is used to document people involved in a
    * research project by providing contact information and their role in the project.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#personnel">EML Project personnel
+   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#personnel">EML Project
+   *      personnel
    *      keyword</a>
    */
   private Agent personnel = new Agent();
@@ -81,50 +80,18 @@ public class Project implements Serializable {
     personnel.setRole("ResponsibleParty");
   }
 
-  @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof Project)) {
-      return false;
-    }
-    Project o = (Project) other;
-    return equal(title, o.title) && equal(funding, o.funding) && equal(studyAreaDescription, o.studyAreaDescription) &&
-           equal(designDescription, o.designDescription) && equal(personnel, o.personnel);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(title, funding, studyAreaDescription, designDescription, personnel);
+  /**
+   * @return the designDescription
+   */
+  public String getDesignDescription() {
+    return designDescription;
   }
 
   /**
-   * @return the title
+   * @param designDescription the designDescription to set
    */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   * @param title the title to set
-   */
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  /**
-   * @return the personnel
-   */
-  public Agent getPersonnel() {
-    return personnel;
-  }
-
-  /**
-   * @param personnel the personnel to set
-   */
-  public void setPersonnel(Agent personnel) {
-    this.personnel = personnel;
+  public void setDesignDescription(String designDescription) {
+    this.designDescription = designDescription;
   }
 
   /**
@@ -142,6 +109,20 @@ public class Project implements Serializable {
   }
 
   /**
+   * @return the personnel
+   */
+  public Agent getPersonnel() {
+    return personnel;
+  }
+
+  /**
+   * @param personnel the personnel to set
+   */
+  public void setPersonnel(Agent personnel) {
+    this.personnel = personnel;
+  }
+
+  /**
    * @return the studyAreaDescription
    */
   public StudyAreaDescription getStudyAreaDescription() {
@@ -156,16 +137,47 @@ public class Project implements Serializable {
   }
 
   /**
-   * @return the designDescription
+   * @return the title
    */
-  public String getDesignDescription() {
-    return designDescription;
+  public String getTitle() {
+    return title;
   }
 
   /**
-   * @param designDescription the designDescription to set
+   * @param title the title to set
    */
-  public void setDesignDescription(String designDescription) {
-    this.designDescription = designDescription;
+  public void setTitle(String title) {
+    this.title = title;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Project other = (Project) obj;
+    return Objects.equal(this.title, other.title) && Objects.equal(this.personnel, other.personnel) && Objects
+      .equal(this.funding, other.funding) && Objects.equal(this.studyAreaDescription, other.studyAreaDescription)
+           && Objects.equal(this.designDescription, other.designDescription);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(title, personnel, funding, studyAreaDescription, designDescription);
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).
+      add("title", title).
+      add("personnel", personnel).
+      add("funding", funding).
+      add("studyAreaDescription", studyAreaDescription).
+      add("designDescription", designDescription).
+      toString();
+  }
+
 }

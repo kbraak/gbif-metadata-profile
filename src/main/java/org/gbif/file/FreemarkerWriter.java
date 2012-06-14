@@ -18,9 +18,6 @@ package org.gbif.file;
 
 import org.gbif.utils.file.FileUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -32,12 +29,9 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-/**
- * @author markus
- */
 public class FreemarkerWriter {
 
-  protected static final Configuration ftl = provideFreemarker();
+  protected static final Configuration FTL = provideFreemarker();
 
   private static String processTemplateIntoString(Template template, Object model)
     throws IOException, TemplateException {
@@ -65,7 +59,7 @@ public class FreemarkerWriter {
    * Writes a map of data to a utf8 encoded file using a Freemarker {@link Configuration}.
    */
   public static void writeFile(File f, String template, Object data) throws IOException, TemplateException {
-    String result = processTemplateIntoString(ftl.getTemplate(template), data);
+    String result = processTemplateIntoString(FTL.getTemplate(template), data);
     Writer out = FileUtils.startNewUtf8File(f);
     out.write(result);
     out.close();

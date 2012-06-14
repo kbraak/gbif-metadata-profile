@@ -10,15 +10,17 @@ import javax.xml.validation.Validator;
 import org.xml.sax.SAXException;
 
 /**
- * For validation of EML files @see also http://knb.ecoinformatics.org/emlparser/
+ * For validation of EML files.
  *
- * @author markus
+ * @see <a href="http://knb.ecoinformatics.org/emlparser/">EML Parser</a>
  */
 public class ValidatorFactory {
 
   //public static final String EML_SCHEMA_URL = "http://rs.gbif.org/schema/eml-2.1.1/eml.xsd";
-  public static final String EML_SCHEMA_URL = "https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1_RC_3/eml.xsd";
-  public static final String EML_GBIF_PROFILE_SCHEMA_URL = "http://rs.gbif.org/schema/eml-gbif-profile/1.0.1/eml-gbif-profile.xsd";
+  public static final String EML_SCHEMA_URL =
+    "https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1_RC_3/eml.xsd";
+  public static final String EML_GBIF_PROFILE_SCHEMA_URL =
+    "http://rs.gbif.org/schema/eml-gbif-profile/1.0.1/eml-gbif-profile.xsd";
 
   /**
    * @return an xml validator based on the official eml 2.1.1 xml schema hosted at GBIF for network performance issues
@@ -40,7 +42,6 @@ public class ValidatorFactory {
     SchemaFactory factory = SchemaFactory.newInstance(schemaLang);
     // create schema by reading it from an URL:
     Schema schema = factory.newSchema(new URL(schemaUrl));
-    Validator validator = schema.newValidator();
-    return validator;
+    return schema.newValidator();
   }
 }

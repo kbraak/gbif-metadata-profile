@@ -18,9 +18,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
-/**
- * TODO: Documentation.
- */
 public class TimeKeyword implements Serializable {
 
   private Date start;
@@ -41,8 +38,7 @@ public class TimeKeyword implements Serializable {
   /**
    * Utility to set the date with a textual format
    *
-   * @param dateString To set
-   * @param format     That the string is in
+   * @param end To set
    *
    * @throws ParseException Should it be an erroneous format
    */
@@ -57,8 +53,7 @@ public class TimeKeyword implements Serializable {
   /**
    * Utility to set the date with a textual format
    *
-   * @param dateString To set
-   * @param format     That the string is in
+   * @param start To set
    *
    * @throws ParseException Should it be an erroneous format
    */

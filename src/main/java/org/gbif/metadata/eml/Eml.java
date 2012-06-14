@@ -15,10 +15,6 @@ package org.gbif.metadata.eml;
 import org.gbif.metadata.BasicMetadata;
 import org.gbif.metadata.DateUtils;
 
-import com.google.common.collect.Lists;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,15 +23,27 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
 /**
  * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT 1.1 In addition to standard Bean
  * encapsulation, additional methods exist to simplify the implementation of an EML XML parser.
- * 
+ *
  * @see EmlFactory
  */
 public class Eml implements Serializable, BasicMetadata {
 
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+)$");
+
+  private static final Joiner JOINER = Joiner.on("; ").useForNull("");
+  private static final Splitter SEMICOLON_SPLITTER = Splitter.on(';');
+  private static final Splitter COMMA_SPLITTER = Splitter.on(',');
+  private static final Splitter PIPE_SPLITTER = Splitter.on('|');
 
   /**
    * Generated
@@ -69,7 +77,7 @@ public class Eml implements Serializable, BasicMetadata {
   private Citation citation;
   /**
    * The URI (LSID or URL) of the collection. In RDF, used as URI of the collection resource.
-   * 
+   *
    * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#collectionId">TDWG Natural Collection Description</a>
    */
   private String collectionId;
@@ -78,7 +86,7 @@ public class Eml implements Serializable, BasicMetadata {
    * Note: this could potentially be sourced from the resource title, but this is declared explicitly in the GBIF IPT
    * metadata profile, so must assume that this is required for a title in a different language, presumably to aid free
    * text discovery in original language
-   * 
+   *
    * @see <a href="http://purl.org/dc/elements/1.1/title">DublinCore</a>
    */
   private String collectionName;
@@ -102,7 +110,7 @@ public class Eml implements Serializable, BasicMetadata {
 
   /**
    * Dataset level to which the metadata applies. The default value for GBIF is "dataset"
-   * 
+   *
    * @see <a href="http://www.fgdc.gov/standards/projects/incits-l1-standards-projects/NAP-Metadata
    *      /napMetadataProfileV101.pdf>NAP Metadata</a>
    */
@@ -113,7 +121,7 @@ public class Eml implements Serializable, BasicMetadata {
    * information encompasses Intellectual Property Rights (IPR), Copyright, and various Property Rights. In the case of
    * a data set, rights might include requirements for use, requirements for attribution, or other requirements the
    * owner would like to impose.
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#intellectualRights>EML
    *      Resource intellectualRights keyword</a>
    */
@@ -121,7 +129,8 @@ public class Eml implements Serializable, BasicMetadata {
 
   /**
    * A quantitative descriptor (number of specimens, samples or batches). The actual quantification could be covered by
-   * 1) an exact number of �JGI-units� in the collection plus a measure of uncertainty (+/- x); 2) a range of numbers (x
+   * 1) an exact number of �JGI-units� in the collection plus a measure of uncertainty (+/- x); 2) a range of numbers
+   * (x
    * to x), with the lower value representing an exact number, when the higher value is omitted.
    */
   private List<JGTICuratorialUnit> jgtiCuratorialUnits = Lists.newArrayList();
@@ -137,7 +146,7 @@ public class Eml implements Serializable, BasicMetadata {
    * The language in which the resource is written. This can be a well-known language name, or one of the ISO language
    * codes to be more precise.
    * The IPT will always use ISO language codes.
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#language">EML Resource
    *      language keyword</a>
    */
@@ -149,7 +158,8 @@ public class Eml implements Serializable, BasicMetadata {
   private String logoUrl;
 
   /**
-   * Language of the metadata composed of an ISO639-2/T three letter language code and an ISO3166-1 three letter country
+   * Language of the metadata composed of an ISO639-2/T three letter language code and an ISO3166-1 three letter
+   * country
    * code.
    */
   private String metadataLanguage = "en";
@@ -163,8 +173,9 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * The 'metadataProvider' element provides the full name of the person, organization, or position who created
    * documentation for the resource.
-   * 
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#metadataProvider">EML Resource
+   *
+   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#metadataProvider">EML
+   *      Resource
    *      metadataProvider keyword</a>
    */
   private Agent metadataProvider = new Agent();
@@ -172,7 +183,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Identifier for the parent collection for this sub-collection. Enables a hierarchy of collections and sub
    * collections to be built.
-   * 
+   *
    * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#isPartOfCollection">TDWG Natural Collection
    *      Description</a>
    */
@@ -194,14 +205,15 @@ public class Eml implements Serializable, BasicMetadata {
   private Date pubDate;
 
   /**
-   * This is not in the GBIF extended metadata document, but seems like a sensible field to maintain, and maps nicely in
+   * This is not in the GBIF extended metadata document, but seems like a sensible field to maintain, and maps nicely
+   * in
    * EML, therefore is added
    */
   private String purpose;
 
   /**
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#creator">EML Resource creator
    *      keyword</a>
    */
@@ -210,7 +222,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Picklist keyword indicating the process or technique used to prevent physical deterioration of non-living
    * collections. Expected to contain an instance from the Specimen Preservation Method Type Term vocabulary.
-   * 
+   *
    * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#specimenPreservationMethod">TDWG Natural Collection
    *      Description</a>
    */
@@ -233,17 +245,19 @@ public class Eml implements Serializable, BasicMetadata {
    * "The coverage field allows for a textual description of the specific sampling area, the sampling frequency
    * (temporal boundaries, frequency of occurrence), and groups of living organisms sampled (taxonomic coverage)." This
    * implementation allows only the declaration of the extent description
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#studyExtent">EML Methods
    *      studyExtent keyword</a>
    */
   private String studyExtent;
 
   /**
-   * The samplingDescription field allows for a text-based/human readable description of the sampling procedures used in
-   * the research project. The content of this element would be similar to a description of sampling procedures found in
+   * The samplingDescription field allows for a text-based/human readable description of the sampling procedures used
+   * in
+   * the research project. The content of this element would be similar to a description of sampling procedures found
+   * in
    * the methods section of a journal article.
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#samplingDescription">EML
    *      Methods samplingDescription keyword</a>
    */
@@ -252,18 +266,19 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * The qualityControl field provides a location for the description of actions taken to either control or assess the
    * quality of data resulting from the associated method step.
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#qualityControl">EML Methods
    *      qualityControl keyword</a>
    */
   private String qualityControl;
 
   /**
-   * "The methodStep field allows for repeated sets of elements that document a series of procedures followed to produce
+   * "The methodStep field allows for repeated sets of elements that document a series of procedures followed to
+   * produce
    * a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation,
    * source data and any quality control measures taken." This implementation allows only the declaration of the step
    * description
-   * 
+   *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#methodStep">EML Methods
    *      methodStep keyword</a>
    */
@@ -279,14 +294,450 @@ public class Eml implements Serializable, BasicMetadata {
     this.contact.setRole("PointOfContact");
   }
 
+  public String getAdditionalInfo() {
+    if (additionalInfo == null || additionalInfo.isEmpty()) {
+      return null;
+    }
+    return additionalInfo;
+  }
+
+  public void setAdditionalInfo(String additionalInfo) {
+    this.additionalInfo = additionalInfo;
+  }
+
+  public List<String> getAlternateIdentifiers() {
+    return alternateIdentifiers;
+  }
+
+  public void setAlternateIdentifiers(List<String> alternateIdentifiers) {
+    this.alternateIdentifiers = alternateIdentifiers;
+  }
+
+  public List<Agent> getAssociatedParties() {
+    return associatedParties;
+  }
+
+  public void setAssociatedParties(List<Agent> associatedParties) {
+    this.associatedParties = associatedParties;
+  }
+
+  public BibliographicCitationSet getBibliographicCitationSet() {
+    return bibliographicCitationSet;
+  }
+
+  public void setBibliographicCitationSet(BibliographicCitationSet val) {
+    bibliographicCitationSet = val;
+  }
+
+  public Citation getCitation() {
+    return citation;
+  }
+
+  public void setCitation(Citation citation) {
+    this.citation = citation;
+  }
+
+  public String getCollectionId() {
+    if (collectionId == null || collectionId.isEmpty()) {
+      return null;
+    }
+    return collectionId;
+  }
+
+  public void setCollectionId(String collectionId) {
+    this.collectionId = collectionId;
+  }
+
+  public String getCollectionName() {
+    if (collectionName == null || collectionName.isEmpty()) {
+      return null;
+    }
+    return collectionName;
+  }
+
+  public void setCollectionName(String collectionName) {
+    this.collectionName = collectionName;
+  }
+
+  public Agent getContact() {
+    return contact;
+  }
+
+  public void setContact(Agent contact) {
+    this.contact = contact;
+  }
+
+  private Agent getCreator() {
+    Agent creator = getResourceCreator();
+    if (creator == null) {
+      creator = getContact();
+    }
+    return creator;
+  }
+
+  public Date getDateStamp() {
+    return dateStamp;
+  }
+
+  public void setDateStamp(Date dateStamp) {
+    this.dateStamp = dateStamp;
+  }
+
+  /**
+   * Utility to set the date with a textual format
+   *
+   * @param dateString To set
+   *
+   * @throws ParseException Should it be an erroneous format
+   */
+  public void setDateStamp(String dateString) throws ParseException {
+    dateStamp = DateUtils.schemaDateTime(dateString);
+  }
+
+  public String getDistributionUrl() {
+    if (distributionUrl == null || distributionUrl.isEmpty()) {
+      return null;
+    }
+    return distributionUrl;
+  }
+
+  public void setDistributionUrl(String distributionUrl) {
+    this.distributionUrl = distributionUrl;
+  }
+
+  public int getEmlVersion() {
+    return emlVersion;
+  }
+
+  public void setEmlVersion(int emlVersion) {
+    this.emlVersion = emlVersion;
+  }
+
+  public List<GeospatialCoverage> getGeospatialCoverages() {
+    return geospatialCoverages;
+  }
+
+  public void setGeospatialCoverages(List<GeospatialCoverage> geospatialCoverages) {
+    this.geospatialCoverages = geospatialCoverages;
+  }
+
+  public String getGuid() {
+    return guid;
+  }
+
+  public void setGuid(String guid) {
+    this.guid = guid;
+  }
+
+  public String getHierarchyLevel() {
+    if (hierarchyLevel == null || hierarchyLevel.isEmpty()) {
+      return null;
+    }
+    return hierarchyLevel;
+  }
+
+  public void setHierarchyLevel(String hierarchyLevel) {
+    this.hierarchyLevel = hierarchyLevel;
+  }
+
+  public String getIntellectualRights() {
+    if (intellectualRights == null || intellectualRights.isEmpty()) {
+      return null;
+    }
+    return intellectualRights;
+  }
+
+  public void setIntellectualRights(String intellectualRights) {
+    this.intellectualRights = intellectualRights;
+  }
+
+  public List<JGTICuratorialUnit> getJgtiCuratorialUnits() {
+    return jgtiCuratorialUnits;
+  }
+
+  public void setJgtiCuratorialUnits(List<JGTICuratorialUnit> jgtiCuratorialUnit) {
+    this.jgtiCuratorialUnits = jgtiCuratorialUnit;
+  }
+
+  public List<KeywordSet> getKeywords() {
+    return keywords;
+  }
+
+  public void setKeywords(List<KeywordSet> keywords) {
+    this.keywords = keywords;
+  }
+
+  public String getLanguage() {
+    if (language == null || language.isEmpty()) {
+      return null;
+    }
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
+  }
+
+  public String getLink() {
+    return link;
+  }
+
+  public void setLink(String link) {
+    this.link = link;
+  }
+
+  @Override
+  public String getLogoUrl() {
+    if (logoUrl == null || logoUrl.isEmpty()) {
+      return null;
+    }
+    return logoUrl;
+  }
+
+  public void setLogoUrl(String logoUrl) {
+    this.logoUrl = logoUrl;
+  }
+
+  public String getMetadataLanguage() {
+    if (metadataLanguage == null || metadataLanguage.isEmpty()) {
+      return null;
+    }
+    return metadataLanguage;
+  }
+
+  public void setMetadataLanguage(String language) {
+    metadataLanguage = language;
+  }
+
+  public LocaleBundle getMetadataLocale() {
+    return metadataLocale;
+  }
+
+  public void setMetadataLocale(LocaleBundle metadataLocale) {
+    this.metadataLocale = metadataLocale;
+  }
+
+  public Agent getMetadataProvider() {
+    return metadataProvider;
+  }
+
+  public void setMetadataProvider(Agent metadataProvider) {
+    this.metadataProvider = metadataProvider;
+  }
+
+  public List<String> getMethodSteps() {
+    return methodSteps;
+  }
+
+  public void setMethodSteps(List<String> methodSteps) {
+    this.methodSteps = methodSteps;
+  }
+
+  public String getParentCollectionId() {
+    if (parentCollectionId == null || parentCollectionId.isEmpty()) {
+      return null;
+    }
+    return parentCollectionId;
+  }
+
+  public void setParentCollectionId(String parentCollectionId) {
+    this.parentCollectionId = parentCollectionId;
+  }
+
+  public List<PhysicalData> getPhysicalData() {
+    return physicalData;
+  }
+
+  public void setPhysicalData(List<PhysicalData> physicalData) {
+    this.physicalData = physicalData;
+  }
+
+  public Project getProject() {
+    return project;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
+  public Date getPubDate() {
+    return pubDate;
+  }
+
+  public void setPubDate(Date pubDate) {
+    this.pubDate = pubDate;
+  }
+
+  public String getPurpose() {
+    if (purpose == null || purpose.isEmpty()) {
+      return null;
+    }
+    return purpose;
+  }
+
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
+  }
+
+  public String getQualityControl() {
+    return qualityControl;
+  }
+
+  public void setQualityControl(String qualityControl) {
+    this.qualityControl = qualityControl;
+  }
+
+  public Agent getResourceCreator() {
+    return resourceCreator;
+  }
+
+  public void setResourceCreator(Agent resourceCreator) {
+    this.resourceCreator = resourceCreator;
+  }
+
+  public String getSampleDescription() {
+    return sampleDescription;
+  }
+
+  public void setSampleDescription(String sampleDescription) {
+    this.sampleDescription = sampleDescription;
+  }
+
+  public String getSpecimenPreservationMethod() {
+    if (specimenPreservationMethod == null || specimenPreservationMethod.isEmpty()) {
+      return null;
+    }
+    return specimenPreservationMethod;
+  }
+
+  public void setSpecimenPreservationMethod(String specimenPreservationMethod) {
+    this.specimenPreservationMethod = specimenPreservationMethod;
+  }
+
+  public String getStudyExtent() {
+    return studyExtent;
+  }
+
+  public void setStudyExtent(String studyExtent) {
+    this.studyExtent = studyExtent;
+  }
+
+  public List<TaxonomicCoverage> getTaxonomicCoverages() {
+    return taxonomicCoverages;
+  }
+
+  public void setTaxonomicCoverages(List<TaxonomicCoverage> taxonomicCoverages) {
+    this.taxonomicCoverages = taxonomicCoverages;
+  }
+
+  public List<TemporalCoverage> getTemporalCoverages() {
+    return temporalCoverages;
+  }
+
+  public void setTemporalCoverages(List<TemporalCoverage> temporalCoverages) {
+    this.temporalCoverages = temporalCoverages;
+  }
+
+  @Override
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  @Override
+  public String getCitationString() {
+    if (citation != null) {
+      return citation.getCitation();
+    }
+    return null;
+  }
+
+  @Override
+  public String getCreatorEmail() {
+    Agent creator = getCreator();
+    if (creator != null) {
+      return creator.getEmail();
+    }
+    return null;
+  }
+
+  @Override
+  public String getCreatorName() {
+    Agent creator = getCreator();
+    if (creator != null) {
+      return creator.getFullName();
+    }
+    return null;
+  }
+
+  @Override
+  public String getDescription() {
+    return getAbstract();
+  }
+
+  @Override
+  public String getHomepageUrl() {
+    return resourceCreator.getHomepage();
+  }
+
+  @Override
+  public String getHomeUrl() {
+    return resourceCreator.getHomepage();
+  }
+
+  @Override
+  public String getIdentifier() {
+    return guid;
+  }
+
+  @Override
+  public Date getPublished() {
+    return pubDate;
+  }
+
+  @Override
+  public String getPublisherEmail() {
+    Agent creator = metadataProvider;
+    if (creator != null) {
+      return creator.getEmail();
+    }
+    return null;
+  }
+
+  @Override
+  public String getPublisherName() {
+    Agent creator = metadataProvider;
+    if (creator != null) {
+      return creator.getFullName();
+    }
+    return null;
+  }
+
+  @Override
+  public String getRights() {
+    return intellectualRights;
+  }
+
+  @Override
+  public String getSubject() {
+    List<String> subjects = new ArrayList<String>();
+    for (KeywordSet ks : keywords) {
+      subjects.add(JOINER.join(ks.getKeywords()));
+    }
+    return JOINER.join(subjects);
+  }
+
   public void addAlternateIdentifier(String alternateIdentifier) {
-    this.alternateIdentifiers.add(alternateIdentifier);
+    alternateIdentifiers.add(alternateIdentifier);
   }
 
   /**
    * utility to add Agents to the primary contacts This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
+   *
    * @param agent to add
    */
   public void addAssociatedParty(Agent agent) {
@@ -299,28 +750,18 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add a bibliographic citation to the bibliographicCitations. This method was introduced to ease the
    * Digester rules for parsing of EML.
-   * 
-   * @param bibliographic citation to add
+   *
+   * @param citations to add
    */
   public void addBibliographicCitations(List<Citation> citations) {
     bibliographicCitationSet.getBibliographicCitations().addAll(citations);
   }
 
-  // /**
-  // * utility to add a citation to the citations. This method was introduced to
-  // * ease the Digester rules for parsing of EML
-  // *
-  // * @param citation to add
-  // */
-  // public void addCitation(String citation) {
-  // this.citation=citation;
-  // }
-
   /**
    * utility to add a coverage to the coverages This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
-   * @param coverage to add
+   *
+   * @param geospatialCoverage to add
    */
   public void addGeospatialCoverage(GeospatialCoverage geospatialCoverage) {
     geospatialCoverages.add(geospatialCoverage);
@@ -329,8 +770,8 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add a jgtiCuratorialUnit to the list. This method was introduced to ease the Digester rules for parsing
    * of EML
-   * 
-   * @param jgtiCuratorialUnit to add
+   *
+   * @param unit to add
    */
   public void addJgtiCuratorialUnit(JGTICuratorialUnit unit) {
     jgtiCuratorialUnits.add(unit);
@@ -339,8 +780,8 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add keywords to the keyword sets This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
-   * @param agent to add
+   *
+   * @param keywordSet to add
    */
   public void addKeywordSet(KeywordSet keywordSet) {
     keywords.add(keywordSet);
@@ -349,7 +790,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add steps to the methodSteps list. This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
+   *
    * @param step to add
    */
   public void addMethodStep(String step) {
@@ -359,8 +800,8 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add a PhysicalData instance to the physicalData list. This method was introduced to ease the Digester
    * rules for parsing of EML
-   * 
-   * @param PhysicalData to add
+   *
+   * @param physicalData to add
    */
   public void addPhysicalData(PhysicalData physicalData) {
     this.physicalData.add(physicalData);
@@ -369,7 +810,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add a coverage to the coverages This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
+   *
    * @param coverage to add
    */
   public void addTaxonomicCoverage(TaxonomicCoverage coverage) {
@@ -379,7 +820,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * utility to add a coverage to the coverages This method was introduced to ease the Digester rules for parsing of
    * EML
-   * 
+   *
    * @param coverage to add
    */
   public void addTemporalCoverage(TemporalCoverage coverage) {
@@ -390,306 +831,17 @@ public class Eml implements Serializable, BasicMetadata {
     return description;
   }
 
-  public String getAdditionalInfo() {
-    if (additionalInfo == null || additionalInfo.length() == 0) {
-      return null;
-    }
-    return additionalInfo;
-  }
-
-  public List<String> getAlternateIdentifiers() {
-    return alternateIdentifiers;
-  }
-
-  public List<Agent> getAssociatedParties() {
-    return associatedParties;
-  }
-
   public List<Citation> getBibliographicCitations() {
     return bibliographicCitationSet.getBibliographicCitations();
-  }
-
-  public BibliographicCitationSet getBibliographicCitationSet() {
-    return bibliographicCitationSet;
-  }
-
-  public Citation getCitation() {
-    return citation;
-  }
-
-  /* (non-Javadoc)
-   * @see org.gbif.metadata.BasicMetadata#getCitationString()
-   */
-  public String getCitationString() {
-    if (citation!=null){
-      return citation.getCitation();
-    }
-    return null;
-  }
-
-  public String getCollectionId() {
-    if (collectionId == null || collectionId.length() == 0) {
-      return null;
-    }
-    return collectionId;
-  }
-
-  public String getCollectionName() {
-    if (collectionName == null || collectionName.length() == 0) {
-      return null;
-    }
-    return collectionName;
-  }
-
-  public Agent getContact() {
-    return contact;
-  }
-
-  private Agent getCreator() {
-    Agent creator = getResourceCreator();
-    if (creator==null){
-      creator=getContact();
-    }
-    return creator;
-  }
-
-  public String getCreatorEmail() {
-    Agent creator = getCreator();
-    if (creator!=null){
-      return creator.getEmail();
-    }
-    return null;
-  }
-
-  public String getCreatorName() {
-    Agent creator = getCreator();
-    if (creator!=null){
-      return creator.getFullName();
-    }
-    return null;
-  }
-
-  public Date getDateStamp() {
-    return dateStamp;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#getDescription()
-   */
-  public String getDescription() {
-    return getAbstract();
-  }
-
-  public String getDistributionUrl() {
-    if (distributionUrl == null || distributionUrl.length() == 0) {
-      return null;
-    }
-    return distributionUrl;
-  }
-
-  public int getEmlVersion() {
-    return emlVersion;
-  }
-
-  public List<GeospatialCoverage> getGeospatialCoverages() {
-    return geospatialCoverages;
-  }
-
-  public String getGuid() {
-    return guid;
-  }
-
-  public String getHierarchyLevel() {
-    if (hierarchyLevel == null || hierarchyLevel.length() == 0) {
-      return null;
-    }
-    return hierarchyLevel;
-  }
-
-  public String getHomepageUrl() {
-    return resourceCreator.getHomepage();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#getHomeUrl()
-   */
-  public String getHomeUrl() {
-    return resourceCreator.getHomepage();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#getId()
-   */
-  public String getIdentifier() {
-    return guid;
-  }
-
-  public String getIntellectualRights() {
-    if (intellectualRights == null || intellectualRights.length() == 0) {
-      return null;
-    }
-    return intellectualRights;
-  }
-
-  public List<JGTICuratorialUnit> getJgtiCuratorialUnits() {
-    return jgtiCuratorialUnits;
-  }
-
-  public List<KeywordSet> getKeywords() {
-    return keywords;
-  }
-
-  public String getLanguage() {
-    if (language == null || language.length() == 0) {
-      return null;
-    }
-    return language;
-  }
-
-  public String getLink() {
-    return link;
-  }
-
-  public String getLogoUrl() {
-    if (logoUrl == null || logoUrl.length() == 0) {
-      return null;
-    }
-    return logoUrl;
-  }
-
-  public String getMetadataLanguage() {
-    if (metadataLanguage == null || metadataLanguage.length() == 0) {
-      return null;
-    }
-    return metadataLanguage;
-  }
-
-  public LocaleBundle getMetadataLocale() {
-    return metadataLocale;
-  }
-
-  public Agent getMetadataProvider() {
-    return metadataProvider;
-  }
-
-  public List<String> getMethodSteps() {
-    return methodSteps;
   }
 
   public String getPackageId() {
     return guid + "/v" + emlVersion;
   }
 
-  public String getParentCollectionId() {
-    if (parentCollectionId == null || parentCollectionId.length() == 0) {
-      return null;
-    }
-    return parentCollectionId;
-  }
-
-  public List<PhysicalData> getPhysicalData() {
-    return physicalData;
-  }
-
-  public Project getProject() {
-    return project;
-  }
-
-  public Date getPubDate() {
-    return pubDate;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#getPublished()
-   */
-  public Date getPublished() {
-    return getPubDate();
-  }
-
-  public String getPublisherEmail() {
-    Agent creator = getMetadataProvider();
-    if (creator!=null){
-      return creator.getEmail();
-    }
-    return null;
-  }
-
-  public String getPublisherName() {
-    Agent creator = getMetadataProvider();
-    if (creator!=null){
-      return creator.getFullName();
-    }
-    return null;
-  }
-
-  public String getPurpose() {
-    if (purpose == null || purpose.length() == 0) {
-      return null;
-    }
-    return purpose;
-  }
-
-  public String getQualityControl() {
-    return qualityControl;
-  }
-
-  public Agent getResourceCreator() {
-    return resourceCreator;
-  }
-
-  /* (non-Javadoc)
-   * @see org.gbif.metadata.BasicMetadata#getRights()
-   */
-  public String getRights() {
-    return this.intellectualRights;
-  }
-
-  public String getSampleDescription() {
-    return sampleDescription;
-  }
-
-  public String getSpecimenPreservationMethod() {
-    if (specimenPreservationMethod == null || specimenPreservationMethod.length() == 0) {
-      return null;
-    }
-    return specimenPreservationMethod;
-  }
-
-  public String getStudyExtent() {
-    return studyExtent;
-  }
-
-  public String getSubject() {
-    List<String> subjects = new ArrayList<String>();
-    for (KeywordSet ks : getKeywords()) {
-      subjects.add(StringUtils.join(ks.getKeywords(), "; "));
-    }
-    return StringUtils.join(subjects, "; ");
-  }
-
-  public List<TaxonomicCoverage> getTaxonomicCoverages() {
-    return taxonomicCoverages;
-  }
-
-  public List<TemporalCoverage> getTemporalCoverages() {
-    return temporalCoverages;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
   public int increaseEmlVersion() {
-    this.emlVersion += 1;
-    return this.emlVersion;
+    emlVersion += 1;
+    return emlVersion;
   }
 
   public Agent resourceCreator() {
@@ -700,298 +852,188 @@ public class Eml implements Serializable, BasicMetadata {
     this.description = description;
   }
 
-  public void setAdditionalInfo(String additionalInfo) {
-    this.additionalInfo = additionalInfo;
-  }
-
-  public void setAlternateIdentifiers(List<String> alternateIdentifiers) {
-    this.alternateIdentifiers = alternateIdentifiers;
-  }
-
-  public void setAssociatedParties(List<Agent> associatedParties) {
-    this.associatedParties = associatedParties;
-  }
-
   public void setBibliographicCitations(List<Citation> val) {
     bibliographicCitationSet.setBibliographicCitations(val);
-  }
-
-  public void setBibliographicCitationSet(BibliographicCitationSet val) {
-    bibliographicCitationSet = val;
-  }
-
-  public void setCitation(Citation citation) {
-    this.citation = citation;
   }
 
   public void setCitation(String citation, String identifier) {
     this.citation = new Citation(citation, identifier);
   }
 
-  public void setCollectionId(String collectionId) {
-    this.collectionId = collectionId;
-  }
-
-  public void setCollectionName(String collectionName) {
-    this.collectionName = collectionName;
-  }
-
-  public void setContact(Agent contact) {
-    this.contact = contact;
-  }
-
-  public void setDateStamp(Date dateStamp) {
-    this.dateStamp = dateStamp;
-  }
-
-  /**
-   * Utility to set the date with a textual format
-   * 
-   * @param dateString To set
-   * @param format That the string is in
-   * @throws ParseException Should it be an erroneous format
-   */
-  public void setDateStamp(String dateString) throws ParseException {
-    dateStamp = DateUtils.schemaDateTime(dateString);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#setDescription(java.lang.String)
-   */
   public void setDescription(String description) {
-    setAbstract(description);
+    this.description = description;
   }
 
-  public void setDistributionUrl(String distributionUrl) {
-    this.distributionUrl = distributionUrl;
-  }
-
-  public void setEmlVersion(int emlVersion) {
-    this.emlVersion = emlVersion;
-  }
-
-  public void setGeospatialCoverages(List<GeospatialCoverage> geospatialCoverages) {
-    this.geospatialCoverages = geospatialCoverages;
-  }
-
-  public void setGuid(String guid) {
-    this.guid = guid;
-  }
-
-  public void setHierarchyLevel(String hierarchyLevel) {
-    this.hierarchyLevel = hierarchyLevel;
+  public void setHomeUrl(String homeUrl) {
+    resourceCreator.setHomepage(homeUrl);
   }
 
   public void setHomepageUrl(String homeUrl) {
-    this.resourceCreator.setHomepage(homeUrl);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#setHomeUrl(java.lang.String)
-   */
-  public void setHomeUrl(String homeUrl) {
-    this.resourceCreator.setHomepage(homeUrl);
-  }
-
-  public void setIntellectualRights(String intellectualRights) {
-    this.intellectualRights = intellectualRights;
-  }
-
-  public void setJgtiCuratorialUnits(List<JGTICuratorialUnit> jgtiCuratorialUnit) {
-    this.jgtiCuratorialUnits = jgtiCuratorialUnit;
-  }
-
-  public void setKeywords(List<KeywordSet> keywords) {
-    this.keywords = keywords;
+    resourceCreator.setHomepage(homeUrl);
   }
 
   public void setKeywordSet(List<KeywordSet> keywords) {
     this.keywords = keywords;
   }
 
-  public void setLanguage(String language) {
-    this.language = language;
-  }
-
-  public void setLink(String link) {
-    this.link = link;
-  }
-
-  public void setLogoUrl(String logoUrl) {
-    this.logoUrl = logoUrl;
-  }
-
-  public void setMetadataLanguage(String language) {
-    this.metadataLanguage = language;
-  }
-
-  public void setMetadataLocale(LocaleBundle metadataLocale) {
-    this.metadataLocale = metadataLocale;
-  }
-
-  public void setMetadataProvider(Agent metadataProvider) {
-    this.metadataProvider = metadataProvider;
-  }
-
-  public void setMethodSteps(List<String> methodSteps) {
-    this.methodSteps = methodSteps;
-  }
-
   public void setPackageId(String packageId) {
     Matcher m = PACKAGED_ID_PATTERN.matcher(packageId);
     if (m.find()) {
-      this.emlVersion = Integer.valueOf(m.group(1));
+      emlVersion = Integer.valueOf(m.group(1));
       packageId = m.replaceAll("");
     }
-    this.guid = packageId;
-  }
-
-  public void setParentCollectionId(String parentCollectionId) {
-    this.parentCollectionId = parentCollectionId;
-  }
-
-  public void setPhysicalData(List<PhysicalData> physicalData) {
-    this.physicalData = physicalData;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
-  public void setPubDate(Date pubDate) {
-    this.pubDate = pubDate;
+    guid = packageId;
   }
 
   /**
    * Utility to set the date with a textual format
-   * 
+   *
    * @param dateString To set
-   * @param format That the string is in
+   *
    * @throws ParseException Should it be an erroneous format
    */
   public void setPubDateAsString(String dateString) throws ParseException {
     pubDate = DateUtils.calendarDate(dateString);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#setPublished(java.util.Date)
-   */
   public void setPublished(Date published) {
-    setPubDate(published);
+    pubDate = published;
   }
 
-  public void setPurpose(String purpose) {
-    this.purpose = purpose;
-  }
-
-  public void setQualityControl(String qualityControl) {
-    this.qualityControl = qualityControl;
-  }
-
-  public void setResourceCreator(Agent resourceCreator) {
-    this.resourceCreator = resourceCreator;
-  }
-
-  public void setSampleDescription(String sampleDescription) {
-    this.sampleDescription = sampleDescription;
-  }
-
-  public void setSpecimenPreservationMethod(String specimenPreservationMethod) {
-    this.specimenPreservationMethod = specimenPreservationMethod;
-  }
-
-  public void setStudyExtent(String studyExtent) {
-    this.studyExtent = studyExtent;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#setSubject(java.util.Collection)
-   */
   public void setSubject(List<String> keywords) {
     KeywordSet ks = new KeywordSet(keywords);
     List<KeywordSet> list = new ArrayList<KeywordSet>();
     list.add(ks);
-    setKeywordSet(list);
+    this.keywords = list;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.gbif.metadata.BasicMetadata#setKeywords(java.lang.String)
-   */
   public void setSubject(String keywords) {
     if (keywords != null) {
-      String[] tokens;
-      int commas = StringUtils.countMatches(keywords, ",");
-      int semicolon = StringUtils.countMatches(keywords, ";");
-      int pipes = StringUtils.countMatches(keywords, "|");
+      Iterable<String> tokens;
+      int commas = CharMatcher.is(',').countIn(keywords);
+      int semicolon = CharMatcher.is(';').countIn(keywords);
+      int pipes = CharMatcher.is('|').countIn(keywords);
       if (semicolon >= commas && semicolon >= pipes) {
         // semicolons
-        tokens = StringUtils.split(keywords, ";");
+        tokens = SEMICOLON_SPLITTER.split(keywords);
       } else if (pipes >= semicolon && pipes >= commas) {
         // pipes
-        tokens = StringUtils.split(keywords, "|");
+        tokens = PIPE_SPLITTER.split(keywords);
       } else {
         // commas
-        tokens = StringUtils.split(keywords, ",");
+        tokens = COMMA_SPLITTER.split(keywords);
       }
       List<String> keyList = new ArrayList<String>();
       for (String kw : tokens) {
-        String k = StringUtils.trimToNull(kw);
+        String k = Strings.emptyToNull(kw.trim());
         keyList.add(k);
       }
       setSubject(keyList);
     }
   }
 
-  public void setTaxonomicCoverages(List<TaxonomicCoverage> taxonomicCoverages) {
-    this.taxonomicCoverages = taxonomicCoverages;
-  }
-  public void setTemporalCoverages(List<TemporalCoverage> temporalCoverages) {
-    this.temporalCoverages = temporalCoverages;
-  }
-
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
   /**
-   * Sets the title also given the language. Used to support multiple translated titles in the eml source document while
-   * the Eml java classes still only support a single title, preferrably in english. The setter will use the first title
+   * Sets the title also given the language. Used to support multiple translated titles in the eml source document
+   * while
+   * the Eml java classes still only support a single title, preferrably in english. The setter will use the first
+   * title
    * but prefer any english title over any other language.
    */
   public void setTitle(String title, String language) {
-    if (this.title == null || ("en".equalsIgnoreCase(language) || "eng".equalsIgnoreCase(language))) {
+    if (this.title == null || "en".equalsIgnoreCase(language) || "eng".equalsIgnoreCase(language)) {
       this.title = title;
     }
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Eml other = (Eml) obj;
+    return Objects.equal(this.description, other.description) && Objects
+      .equal(this.additionalInfo, other.additionalInfo) && Objects
+      .equal(this.alternateIdentifiers, other.alternateIdentifiers) && Objects
+      .equal(this.associatedParties, other.associatedParties) && Objects
+      .equal(this.bibliographicCitationSet, other.bibliographicCitationSet) && Objects
+      .equal(this.citation, other.citation) && Objects.equal(this.collectionId, other.collectionId) && Objects
+      .equal(this.collectionName, other.collectionName) && Objects.equal(this.contact, other.contact) && Objects
+      .equal(this.dateStamp, other.dateStamp) && Objects.equal(this.distributionUrl, other.distributionUrl) && Objects
+      .equal(this.emlVersion, other.emlVersion) && Objects.equal(this.geospatialCoverages, other.geospatialCoverages)
+           && Objects.equal(this.hierarchyLevel, other.hierarchyLevel) && Objects
+      .equal(this.intellectualRights, other.intellectualRights) && Objects
+      .equal(this.jgtiCuratorialUnits, other.jgtiCuratorialUnits) && Objects.equal(this.keywords, other.keywords)
+           && Objects.equal(this.language, other.language) && Objects.equal(this.logoUrl, other.logoUrl) && Objects
+      .equal(this.metadataLanguage, other.metadataLanguage) && Objects.equal(this.metadataLocale, other.metadataLocale)
+           && Objects.equal(this.metadataProvider, other.metadataProvider) && Objects
+      .equal(this.parentCollectionId, other.parentCollectionId) && Objects.equal(this.physicalData, other.physicalData)
+           && Objects.equal(this.project, other.project) && Objects.equal(this.pubDate, other.pubDate) && Objects
+      .equal(this.purpose, other.purpose) && Objects.equal(this.resourceCreator, other.resourceCreator) && Objects
+      .equal(this.specimenPreservationMethod, other.specimenPreservationMethod) && Objects
+      .equal(this.taxonomicCoverages, other.taxonomicCoverages) && Objects
+      .equal(this.temporalCoverages, other.temporalCoverages) && Objects.equal(this.link, other.link) && Objects
+      .equal(this.guid, other.guid) && Objects.equal(this.title, other.title) && Objects
+      .equal(this.studyExtent, other.studyExtent) && Objects.equal(this.sampleDescription, other.sampleDescription)
+           && Objects.equal(this.qualityControl, other.qualityControl) && Objects
+      .equal(this.methodSteps, other.methodSteps);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects
+      .hashCode(description, additionalInfo, alternateIdentifiers, associatedParties, bibliographicCitationSet,
+        citation, collectionId, collectionName, contact, dateStamp, distributionUrl, emlVersion, geospatialCoverages,
+        hierarchyLevel, intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl, metadataLanguage,
+        metadataLocale, metadataProvider, parentCollectionId, physicalData, project, pubDate, purpose, resourceCreator,
+        specimenPreservationMethod, taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent,
+        sampleDescription, qualityControl, methodSteps);
+  }
+
+  @Override
   public String toString() {
-    return "Eml [\n description=" + description + "\n additionalInfo=" + additionalInfo + "\n alternateIdentifiers="
-    + alternateIdentifiers + "\n associatedParties=" + associatedParties + "\n bibliographicCitationSet="
-    + bibliographicCitationSet + "\n citation=" + citation + "\n collectionId=" + collectionId
-    + "\n collectionName=" + collectionName + "\n contact=" + contact + "\n dateStamp=" + dateStamp
-    + "\n distributionUrl=" + distributionUrl + "\n emlVersion=" + emlVersion + "\n geospatialCoverages="
-    + geospatialCoverages + "\n hierarchyLevel=" + hierarchyLevel + "\n intellectualRights=" + intellectualRights
-    + "\n jgtiCuratorialUnits=" + jgtiCuratorialUnits + "\n keywords=" + keywords + "\n language=" + language
-    + "\n logoUrl=" + logoUrl + "\n metadataLanguage=" + metadataLanguage + "\n metadataLocale=" + metadataLocale
-    + "\n metadataProvider=" + metadataProvider + "\n parentCollectionId=" + parentCollectionId
-    + "\n physicalData=" + physicalData + "\n project=" + project + "\n pubDate=" + pubDate + "\n purpose="
-    + purpose + "\n resourceCreator=" + resourceCreator + "\n specimenPreservationMethod="
-    + specimenPreservationMethod + "\n taxonomicCoverages=" + taxonomicCoverages + "\n temporalCoverages="
-    + temporalCoverages + "\n link=" + link + "\n guid=" + guid + "\n title=" + title + "\n studyExtent="
-    + studyExtent + "\n sampleDescription=" + sampleDescription + "\n qualityControl=" + qualityControl
-    + "\n methodSteps=" + methodSteps + "]";
+    return Objects.toStringHelper(this).
+      add("description", description).
+      add("additionalInfo", additionalInfo).
+      add("alternateIdentifiers", alternateIdentifiers).
+      add("associatedParties", associatedParties).
+      add("bibliographicCitationSet", bibliographicCitationSet).
+      add("citation", citation).
+      add("collectionId", collectionId).
+      add("collectionName", collectionName).
+      add("contact", contact).
+      add("dateStamp", dateStamp).
+      add("distributionUrl", distributionUrl).
+      add("emlVersion", emlVersion).
+      add("geospatialCoverages", geospatialCoverages).
+      add("hierarchyLevel", hierarchyLevel).
+      add("intellectualRights", intellectualRights).
+      add("jgtiCuratorialUnits", jgtiCuratorialUnits).
+      add("keywords", keywords).
+      add("language", language).
+      add("logoUrl", logoUrl).
+      add("metadataLanguage", metadataLanguage).
+      add("metadataLocale", metadataLocale).
+      add("metadataProvider", metadataProvider).
+      add("parentCollectionId", parentCollectionId).
+      add("physicalData", physicalData).
+      add("project", project).
+      add("pubDate", pubDate).
+      add("purpose", purpose).
+      add("resourceCreator", resourceCreator).
+      add("specimenPreservationMethod", specimenPreservationMethod).
+      add("taxonomicCoverages", taxonomicCoverages).
+      add("temporalCoverages", temporalCoverages).
+      add("link", link).
+      add("guid", guid).
+      add("title", title).
+      add("studyExtent", studyExtent).
+      add("sampleDescription", sampleDescription).
+      add("qualityControl", qualityControl).
+      add("methodSteps", methodSteps).
+      toString();
   }
 
 }

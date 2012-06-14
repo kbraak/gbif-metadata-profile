@@ -2,30 +2,29 @@ package org.gbif.metadata.handler;
 
 import org.gbif.metadata.DateUtils;
 
-import org.apache.commons.lang.StringUtils;
-import org.xml.sax.SAXException;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import org.xml.sax.SAXException;
 
 /**
  * An EML sax handler building a BasicMetadata instance.
  * Ths handler requires a namespace aware parser, but internally ignores the namespace to allow parsing of all kind of
  * EML documents regardless their version!
- * 
- * @author markus
- * 
  */
 public class EmlHandler extends BasicMetadataSaxHandler {
+
   private List<String> keywords;
   private List<String> description;
 
   @Override
   public void endDocument() throws SAXException {
     super.endDocument();
-    bm.setSubject(StringUtils.trimToNull(StringUtils.join(keywords, "; ")));
-    bm.setDescription(StringUtils.trimToNull(StringUtils.join(description, " \n")));
+    bm.setSubject(Strings.emptyToNull(Joiner.on("; ").useForNull("").join(keywords).trim()));
+    bm.setDescription(Strings.emptyToNull(Joiner.on(" \n").useForNull("").join(description).trim()));
   }
 
   @Override
@@ -65,7 +64,7 @@ public class EmlHandler extends BasicMetadataSaxHandler {
         } else if (localName.equalsIgnoreCase("alternateIdentifier")) {
           bm.setSourceId(content);
         } else if (localName.equalsIgnoreCase("pubDate")) {
-          Date published = DateUtils.parse(content, DateUtils.isoDateFormat);
+          Date published = DateUtils.parse(content, DateUtils.ISO_DATE_FORMAT);
           bm.setPublished(published);
         }
       }
