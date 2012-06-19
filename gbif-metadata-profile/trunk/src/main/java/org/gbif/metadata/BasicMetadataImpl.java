@@ -18,7 +18,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   private String title;
   private String sourceId;
   private String description;
-  private String homeUrl;
+  private String homepageUrl;
   private String logoUrl;
   private String subject;
   private String rights;
@@ -63,15 +63,6 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  @Override
-  public String getHomeUrl() {
-    return homeUrl;
-  }
-
-  public void setHomeUrl(String homeUrl) {
-    this.homeUrl = homeUrl;
   }
 
   @Override
@@ -151,7 +142,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   @Override
   public String getHomepageUrl() {
-    return homeUrl;
+    return homepageUrl;
   }
 
   @Override
@@ -186,8 +177,8 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
     this.citation = citation;
   }
 
-  public void setHomepageUrl(String homeUrl) {
-    this.homeUrl = homeUrl;
+  public void setHomepageUrl(String hohomepageUrl) {
+    this.homepageUrl = hohomepageUrl;
   }
 
   public void setSubject(List<String> keywords) {
@@ -204,7 +195,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
     }
     final BasicMetadataImpl other = (BasicMetadataImpl) obj;
     return Objects.equal(this.title, other.title) && Objects.equal(this.sourceId, other.sourceId) && Objects
-      .equal(this.description, other.description) && Objects.equal(this.homeUrl, other.homeUrl) && Objects
+      .equal(this.description, other.description) && Objects.equal(this.homepageUrl, other.homepageUrl) && Objects
       .equal(this.logoUrl, other.logoUrl) && Objects.equal(this.subject, other.subject) && Objects
       .equal(this.rights, other.rights) && Objects.equal(this.citation, other.citation) && Objects
       .equal(this.creatorName, other.creatorName) && Objects.equal(this.creatorEmail, other.creatorEmail) && Objects
@@ -216,7 +207,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   @Override
   public int hashCode() {
     return Objects
-      .hashCode(title, sourceId, description, homeUrl, logoUrl, subject, rights, citation, creatorName, creatorEmail,
+      .hashCode(title, sourceId, description, homepageUrl, logoUrl, subject, rights, citation, creatorName, creatorEmail,
         publisherName, publisherEmail, published, additionalMetadata);
   }
 
@@ -226,7 +217,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
       add("title", title).
       add("sourceId", sourceId).
       add("description", description).
-      add("homeUrl", homeUrl).
+      add("homepageUrl", homepageUrl).
       add("logoUrl", logoUrl).
       add("subject", subject).
       add("rights", rights).

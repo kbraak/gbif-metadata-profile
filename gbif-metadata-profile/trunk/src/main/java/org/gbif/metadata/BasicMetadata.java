@@ -30,9 +30,6 @@ public interface BasicMetadata {
 
   String getHomepageUrl();
 
-  @Deprecated
-  String getHomeUrl();
-
   String getIdentifier();
 
   String getLogoUrl();
