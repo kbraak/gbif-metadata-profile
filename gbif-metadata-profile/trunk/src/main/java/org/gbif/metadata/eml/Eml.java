@@ -684,11 +684,6 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   @Override
-  public String getHomeUrl() {
-    return resourceCreator.getHomepage();
-  }
-
-  @Override
   public String getIdentifier() {
     return guid;
   }
@@ -864,12 +859,8 @@ public class Eml implements Serializable, BasicMetadata {
     this.description = description;
   }
 
-  public void setHomeUrl(String homeUrl) {
-    resourceCreator.setHomepage(homeUrl);
-  }
-
-  public void setHomepageUrl(String homeUrl) {
-    resourceCreator.setHomepage(homeUrl);
+  public void setHomepageUrl(String homepageUrl) {
+    resourceCreator.setHomepage(homepageUrl);
   }
 
   public void setKeywordSet(List<KeywordSet> keywords) {

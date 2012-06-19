@@ -44,7 +44,7 @@ public class MetadataFactory {
   private boolean hasContent(BasicMetadataImpl bm) {
     return bm != null && (bm.getTitle() != null || bm.getDescription() != null || bm.getSubject() != null
                           || bm.getSourceId() != null ||
-                          bm.getHomeUrl() != null || bm.getPublished() != null);
+                          bm.getHomepageUrl() != null || bm.getPublished() != null);
   }
 
   public BasicMetadataImpl read(File metadataFile) throws MetadataException {

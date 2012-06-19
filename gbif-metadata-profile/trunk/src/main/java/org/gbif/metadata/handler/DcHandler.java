@@ -32,8 +32,8 @@ public class DcHandler extends BasicMetadataSaxHandler {
         bm.setPublished(published);
 
       } else if (localName.equalsIgnoreCase("relation")) {
-        if (bm.getHomeUrl() == null) {
-          bm.setHomeUrl(content);
+        if (bm.getHomepageUrl() == null) {
+          bm.setHomepageUrl(content);
         }
       } else if (localName.equalsIgnoreCase("identifier")) {
         bm.setSourceId(content);
