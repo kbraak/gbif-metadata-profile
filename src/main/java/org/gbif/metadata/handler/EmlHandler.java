@@ -49,14 +49,14 @@ public class EmlHandler extends BasicMetadataSaxHandler {
         // dataset/creator/onlineUrl
         if (localName.equalsIgnoreCase("onlineUrl")) {
           // only use this url if no distribution url exists
-          if (bm.getHomeUrl() == null) {
-            bm.setHomeUrl(content);
+          if (bm.getHomepageUrl() == null) {
+            bm.setHomepageUrl(content);
           }
         }
       } else if (parents.startsWith("/eml/dataset/distribution/online")) {
         // dataset/distribution/online/url
         if (localName.equalsIgnoreCase("url")) {
-          bm.setHomeUrl(content);
+          bm.setHomepageUrl(content);
         }
       } else if (parents.startsWith("/eml/dataset")) {
         if (localName.equalsIgnoreCase("title")) {

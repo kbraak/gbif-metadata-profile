@@ -58,7 +58,7 @@ public class EmlWriterTest {
       // assertEquals(eml2.getDateStamp(), eml.getDateStamp());
       assertEquals(eml2.getCitation(), eml.getCitation());
       assertEquals(eml2.getLogoUrl(), eml.getLogoUrl());
-      assertEquals(eml2.getHomeUrl(), eml.getHomeUrl());
+      assertEquals(eml2.getHomepageUrl(), eml.getHomepageUrl());
       assertEquals(eml2.getContact(), eml.getContact());
       assertEquals(eml2.getMetadataProvider(), eml.getMetadataProvider());
       assertEquals(eml2.getResourceCreator(), eml.getResourceCreator());

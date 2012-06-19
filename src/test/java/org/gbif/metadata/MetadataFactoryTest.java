@@ -53,7 +53,7 @@ public class MetadataFactoryTest {
     assertEquals("PonTaurus", bm.getTitle());
     assertEquals("Test data set mapped to Darwin Core.", bm.getDescription());
     assertEquals("IPT; GBIF", bm.getSubject());
-    assertEquals("http://www.bgbm.org", bm.getHomeUrl());
+    assertEquals("http://www.bgbm.org", bm.getHomepageUrl());
 
     // test as input stream
     bm = mf.read(getClass().getResourceAsStream("/metadata/worms_dc2.xml"));
