@@ -108,4 +108,50 @@ public class Address implements Serializable {
       .add("postalCode", postalCode).add("city", city).toString();
   }
 
+  /**
+   * Construct a formatted address string, from the deliveryPoint, city, province, postal code, and country.
+   * The format used is: delivery point, city, province country, postal code
+   *
+   * @return formatted address
+   */
+  public String toFormattedString() {
+    String formattedAddress = null;
+    if (!Strings.isNullOrEmpty(address)) {
+      formattedAddress = address;
+    }
+    if (!Strings.isNullOrEmpty(city)) {
+      if (!Strings.isNullOrEmpty(formattedAddress)) {
+        formattedAddress = formattedAddress + ", " + city;
+      } else {
+        formattedAddress = city;
+      }
+
+    }
+    if (!Strings.isNullOrEmpty(province)) {
+      if (!Strings.isNullOrEmpty(formattedAddress)) {
+        formattedAddress = formattedAddress + ", " + province;
+      } else {
+        formattedAddress = province;
+      }
+
+    }
+    if (!Strings.isNullOrEmpty(country)) {
+      if (!Strings.isNullOrEmpty(formattedAddress)) {
+        formattedAddress = formattedAddress + " " + country;
+      } else {
+        formattedAddress = country;
+      }
+
+    }
+    if (!Strings.isNullOrEmpty(postalCode)) {
+      if (!Strings.isNullOrEmpty(formattedAddress)) {
+        formattedAddress = formattedAddress + ", " + postalCode;
+      } else {
+        formattedAddress = postalCode;
+      }
+    }
+
+    return formattedAddress;
+  }
+
 }
