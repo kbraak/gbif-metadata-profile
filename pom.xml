@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.gbif</groupId>
     <artifactId>motherpom</artifactId>
-    <version>8</version>
+    <version>9</version>
   </parent>
 
   <groupId>org.gbif</groupId>
@@ -19,12 +19,12 @@
 
   <properties>
     <commons-digester.version>2.1</commons-digester.version>
-    <commons-io.version>2.3</commons-io.version>
+    <commons-io.version>2.4</commons-io.version>
     <freemarker.version>2.3.19</freemarker.version>
-    <gbif-common.version>0.5</gbif-common.version>
+    <gbif-common.version>0.6</gbif-common.version>
     <guava.version>12.0</guava.version>
     <junit.version>4.10</junit.version>
-    <slf4j.version>1.6.5</slf4j.version>
+    <slf4j.version>1.6.6</slf4j.version>
   </properties>
 
   <scm>
