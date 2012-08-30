@@ -10,7 +10,7 @@
 
   <groupId>org.gbif</groupId>
   <artifactId>gbif-metadata-profile</artifactId>
-  <version>1.0.2</version>
+  <version>1.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>GBIF Common :: Metadata profile</name>
@@ -29,9 +29,9 @@
   </properties>
 
   <scm>
-    <connection>scm:svn:http://gbif-common-resources.googlecode.com/svn/gbif-metadata-profile/tags/gbif-metadata-profile-1.0.2</connection>
-    <developerConnection>scm:svn:https://gbif-common-resources.googlecode.com/svn/gbif-metadata-profile/tags/gbif-metadata-profile-1.0.2</developerConnection>
-    <url>http://code.google.com/p/gbif-common-resources/source/browse/#svn/gbif-metadata-profile/tags/gbif-metadata-profile-1.0.2</url>
+    <connection>scm:svn:http://gbif-common-resources.googlecode.com/svn/gbif-metadata-profile/trunk</connection>
+    <developerConnection>scm:svn:https://gbif-common-resources.googlecode.com/svn/gbif-metadata-profile/trunk</developerConnection>
+    <url>http://code.google.com/p/gbif-common-resources/source/browse/#svn/gbif-metadata-profile/trunk</url>
   </scm>
 
   <issueManagement>
