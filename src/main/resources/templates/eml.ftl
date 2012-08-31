@@ -326,7 +326,9 @@
               <dataFormat>
                 <externallyDefinedFormat>
                   <formatName>${pdata.format!}</formatName>
-                  <formatVersion>${pdata.formatVersion!}</formatVersion>
+                  <#if pdata.formatVersion?has_content>
+                    <formatVersion>${pdata.formatVersion}</formatVersion>
+                  </#if>
                 </externallyDefinedFormat>
               </dataFormat>
               <distribution>

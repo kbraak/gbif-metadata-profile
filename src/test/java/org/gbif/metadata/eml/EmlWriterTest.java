@@ -17,9 +17,12 @@ import org.gbif.utils.file.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Date;
 
+import freemarker.template.TemplateException;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -160,5 +163,39 @@ public class EmlWriterTest {
       e.printStackTrace();
       fail();
     }
+  }
+
+  @Test
+  public void testEmptyFormatVersion() throws IOException, TemplateException, SAXException {
+    // read EML
+    Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+    assertNotNull(eml);
+    assertEquals(2, eml.getPhysicalData().size());
+    // ensure the format version is optional - non existing = null
+    assertNull(eml.getPhysicalData().get(0).getFormatVersion());
+    // ensure the format version can be a String! In 1.0.1 it used to be a decimal
+    assertEquals("2.0.97", eml.getPhysicalData().get(1).getFormatVersion());
+
+    // create new PhysicalData, that has empty-string format version
+    PhysicalData data = new PhysicalData();
+
+    // empty string - should not be written to EML.xml
+    data.setFormatVersion("");
+    data.setName("Original dataset");
+    data.setCharset("UTF-8");
+    data.setFormat("MS Excel Spreadsheet");
+    // becomes the 2nd Physical data object
+    eml.addPhysicalData(data);
+
+    // write EML
+    File temp = File.createTempFile("eml", ".xml");
+    System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+    EmlWriter.writeEmlFile(temp, eml);
+
+    // now read the EML in again and ensure format version is null - remember it's the 3rd Physical Data
+    Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+    assertNotNull(eml2);
+    assertEquals(null, eml2.getPhysicalData().get(2).getFormatVersion());
+    assertEquals("UTF-8", eml2.getPhysicalData().get(2).getCharset());
   }
 }
