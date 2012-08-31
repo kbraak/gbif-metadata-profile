@@ -265,14 +265,14 @@ public class EmlFactoryTest {
       assertEquals("INV-GCEM-0305a1_1_1.shp", eml.getPhysicalData().get(0).getName());
       assertEquals("ASCII", eml.getPhysicalData().get(0).getCharset());
       assertEquals("shapefile", eml.getPhysicalData().get(0).getFormat());
-      assertEquals("2.0", eml.getPhysicalData().get(0).getFormatVersion());
+      assertEquals(null, eml.getPhysicalData().get(0).getFormatVersion());
       assertEquals(
         "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
         eml.getPhysicalData().get(0).getDistributionUrl());
       assertEquals("INV-GCEM-0305a1_1_2.shp", eml.getPhysicalData().get(1).getName());
       assertEquals("ASCII", eml.getPhysicalData().get(1).getCharset());
       assertEquals("shapefile", eml.getPhysicalData().get(1).getFormat());
-      assertEquals("2.0", eml.getPhysicalData().get(1).getFormatVersion());
+      assertEquals("2.0.97", eml.getPhysicalData().get(1).getFormatVersion());
       assertEquals(
         "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_2.TXT",
         eml.getPhysicalData().get(1).getDistributionUrl());
