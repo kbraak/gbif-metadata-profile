@@ -2,7 +2,7 @@ package org.gbif.metadata.eml;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class AddressTest {
   private static final String ADDRESS = "63 Strandvejen";
