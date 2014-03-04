@@ -75,6 +75,10 @@ public class EmlWriterTest {
       ks.add("Luise");
       eml.addKeywordSet(ks);
 
+      KeywordSet ks2 = new KeywordSet();
+      ks2.setKeywordsString(null);
+      eml.addKeywordSet(ks2);
+
       TaxonomicCoverage tc = new TaxonomicCoverage();
       tc.addTaxonKeywords("Abies alba; Puma concolor; Luzula luzuloides var. luzuloides");
       eml.addTaxonomicCoverage(tc);
