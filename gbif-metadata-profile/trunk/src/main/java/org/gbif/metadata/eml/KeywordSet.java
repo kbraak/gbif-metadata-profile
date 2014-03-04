@@ -115,13 +115,15 @@ public class KeywordSet implements Serializable {
   }
 
   /**
-   * @param seperator the seperator to use between keywords
+   * @param separator the separator to use between keywords
    */
-  public void setKeywordsString(String keywords, String seperator) {
+  public void setKeywordsString(String keywords, String separator) {
     this.keywords.clear();
-    for (String k : Splitter.on(seperator).split(keywords)) {
-      k = Strings.emptyToNull(k.trim());
-      this.keywords.add(k);
+    if (keywords != null) {
+      for (String k : Splitter.on(separator).split(keywords)) {
+        k = Strings.emptyToNull(k.trim());
+        this.keywords.add(k);
+      }
     }
   }
 
@@ -129,12 +131,12 @@ public class KeywordSet implements Serializable {
     return getKeywordsString(", ");
   }
 
-  public String getKeywordsString(String seperator) {
+  public String getKeywordsString(String separator) {
     StringBuilder sb = new StringBuilder();
     boolean b = false;
     for (String keyword : keywords) {
-      if (b && seperator != null) {
-        sb.append(seperator).append(keyword);
+      if (b && separator != null) {
+        sb.append(separator).append(keyword);
       } else {
         sb.append(keyword);
         b = true;
