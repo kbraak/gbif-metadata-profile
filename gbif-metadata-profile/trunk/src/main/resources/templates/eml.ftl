@@ -48,6 +48,13 @@
     <#if (agent.getHomepage())??>
     <onlineUrl>${agent.homepage}</onlineUrl>
     </#if>
+    <#if (agent.userIds?size>0)>
+      <#list agent.userIds as userId>
+        <#if userId.identifier?has_content && userId.directory?has_content>
+          <userId directory="${userId.directory}">${userId.identifier}</userId>
+        </#if>
+      </#list>
+    </#if>
     <#if withRole && (agent.getRole())??>
     <role>${agent.role!}</role>
     </#if>
@@ -57,7 +64,7 @@
 <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1"
          xmlns:dc="http://purl.org/dc/terms/"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.0.2/eml.xsd"
+         xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml.xsd"
          packageId="${eml.packageId}" system="http://gbif.org" scope="system"<#if (eml.metadataLanguage)??>
          xml:lang="${eml.metadataLanguage!}"</#if>>
 
@@ -68,34 +75,42 @@
   <#if eml.title??>
   <title xml:lang="${eml.metadataLanguage!"en"}"><#if eml.title?has_content>${eml.title}<#else><@s.text name='eml.title'/></#if></title>
   </#if>
-<#-- The creator is the person who created the resource (not necessarily the author of this metadata about the resource). -->
-<creator>
-  <@agentBlock agent=eml.resourceCreator() />
-</creator>
-<#-- The agent responsible for the creation of the metadata. -->
-<metadataProvider>
-  <@agentBlock agent=eml.getMetadataProvider() />
-</metadataProvider>
-<#-- Any other party associated with the resource, along with their role. -->
-  <#if (eml.associatedParties ? size > 0)>
-    <#list eml.getAssociatedParties() as associatedParty>
-    <associatedParty>
-      <@agentBlock agent=associatedParty withRole=true />
-    </associatedParty>
+  <#-- The creator is the person, organization, or position who created the resource (not necessarily the author of this metadata about the resource). -->
+  <#if (eml.creators?size>0) >
+    <#list eml.creators as creator>
+      <creator>
+        <@agentBlock agent=creator />
+      </creator>
     </#list>
   </#if>
-<#-- The date on which the resource was published. -->
-<pubDate>
-  <#if (eml.getPubDate()??)>
-      	<#if (eml.getPubDate()?string("SSS"))=="001">${eml.pubDate?date?string("yyyy")}<#else>${eml.pubDate?date?string(DATEIsoFormat)}</#if>
-      </#if>
-</pubDate>
-<language>${eml.language!"en"}</language>
-<#-- A brief description of the resource. -->
-<abstract>
-  <para>${eml.abstract!}</para>
-</abstract>
-<#-- Zero or more sets of keywords and an associated thesaurus for each. -->
+  <#-- The metadataProvider created documentation for the resource. -->
+  <#if (eml.metadataProviders?size>0)>
+    <#list eml.metadataProviders as metadataProvider>
+      <metadataProvider>
+        <@agentBlock agent=metadataProvider />
+      </metadataProvider>
+    </#list>
+  </#if>
+  <#-- Any other party associated with the resource, along with their role. -->
+  <#if (eml.associatedParties?size > 0)>
+    <#list eml.associatedParties as associatedParty>
+      <associatedParty>
+        <@agentBlock agent=associatedParty withRole=true />
+      </associatedParty>
+    </#list>
+  </#if>
+  <#-- The date on which the resource was published. -->
+  <pubDate>
+    <#if (eml.getPubDate()??)>
+      <#if (eml.getPubDate()?string("SSS"))=="001">${eml.pubDate?date?string("yyyy")}<#else>${eml.pubDate?date?string(DATEIsoFormat)}</#if>
+    </#if>
+  </pubDate>
+  <language>${eml.language!"en"}</language>
+  <#-- A brief description of the resource. -->
+  <abstract>
+    <para>${eml.abstract!}</para>
+  </abstract>
+  <#-- Zero or more sets of keywords and an associated thesaurus for each. -->
   <#if (eml.keywords ? size > 0)>
     <#list eml.keywords as ks>
       <#if (ks.keywordThesaurus)?has_content>
@@ -110,13 +125,13 @@
       </#if>
     </#list>
   </#if>
-<#-- Any additional information about the resource not covered in any other element. -->
+  <#-- Any additional information about the resource not covered in any other element. -->
   <#if (eml.getAdditionalInfo())??>
   <additionalInfo>
     <para>${eml.additionalInfo!}</para>
   </additionalInfo>
   </#if>
-<#-- A statement of the intellectual property rights associated with the resource. -->
+  <#-- A statement of the intellectual property rights associated with the resource. -->
   <#if (eml.getIntellectualRights())??>
   <intellectualRights>
     <para>${eml.intellectualRights!}</para>
@@ -196,15 +211,27 @@
     </#if>
   </coverage>
   </#if>
-  <#if (eml.getPurpose())??>
+  <#if eml.purpose?has_content>
   <purpose>
-    <para>${eml.purpose!}</para>
+    <para>${eml.purpose}</para>
   </purpose>
   </#if>
-  <#if (eml.getContact())??>
-  <contact>
-    <@agentBlock agent=eml.getContact() />
-  </contact>
+  <#if eml.updateFrequency??>
+  <maintenance>
+    <descrption>
+      <para>${eml.updateFrequencyDescription!}</para>
+    </descrption>
+    <maintenanceUpdateFrequency>${eml.updateFrequency.displayValue}</maintenanceUpdateFrequency>
+  </maintenance>
+  </#if>
+
+  <#-- The contact is the person or institution to contact with questions about the use, interpretation of a data set. -->
+  <#if (eml.contacts?size>0)>
+    <#list eml.contacts as contact>
+      <contact>
+        <@agentBlock agent=contact />
+      </contact>
+    </#list>
   </#if>
   <#if (eml.getStudyExtent())?? || (eml.getSampleDescription())?? || (eml.getQualityControl())?? ||  ((eml.methodSteps)?? && ((eml.methodSteps) ? size > 0)) >
   <methods>
@@ -238,41 +265,40 @@
     </#if>
   </methods>
   </#if>
-  <#if ((eml.project.getTitle())??
-  && (eml.project.getPersonnel().getLastName())??
-  && (eml.project.getPersonnel().getRole())??
-  && (eml.project.getFunding())??
-  && (eml.project.getStudyAreaDescription().getDescriptorValue())??
-  && (eml.project.getDesignDescription())??)>
+  <#if eml.project.title?has_content && (eml.project.personnel?size > 0)>
   <project>
-    <#if (eml.project.getTitle())?has_content>
-      <title>${eml.project.title}</title>
+    <title>${eml.project.title}</title>
+    <#list eml.project.getPersonnel() as personnel>
+      <personnel>
+        <individualName>
+          <#if (personnel.getFirstName())??>
+            <givenName>${personnel.firstName}</givenName>
+          </#if>
+          <surName>${personnel.lastName!}</surName>
+        </individualName>
+        <role>${personnel.role!}</role>
+      </personnel>
+    </#list>
+    <#if eml.project.funding?has_content>
+      <funding>
+        <para>${eml.project.funding}</para>
+      </funding>
     </#if>
-    <personnel>
-      <individualName>
-        <#if (eml.project.getPersonnel().getFirstName())??>
-          <givenName>${eml.project.personnel.firstName}</givenName>
-        </#if>
-        <surName>${eml.project.personnel.lastName!}</surName>
-      </individualName>
-      <role>${eml.project.personnel.role!}</role>
-    </personnel>
-    <funding>
-      <para>${eml.project.funding!}</para>
-    </funding>
-    <studyAreaDescription>
-      <descriptor name="${eml.project.studyAreaDescription.getName().getName()!}"
-                  citableClassificationSystem="${eml.project.studyAreaDescription.citableClassificationSystem!}">
-        <descriptorValue>${eml.project.studyAreaDescription.descriptorValue!}</descriptorValue>
-      </descriptor>
-    </studyAreaDescription>
-    <designDescription>
-      <description>
-        <#if (eml.project.getDesignDescription())?? >
+    <#if eml.project.studyAreaDescription?? && eml.project.studyAreaDescription.descriptorValue?has_content>
+      <studyAreaDescription>
+        <descriptor name="${eml.project.studyAreaDescription.getName().getName()!}"
+                    citableClassificationSystem="${eml.project.studyAreaDescription.citableClassificationSystem!}">
+          <descriptorValue>${eml.project.studyAreaDescription.descriptorValue}</descriptorValue>
+        </descriptor>
+      </studyAreaDescription>
+    </#if>
+    <#if eml.project.designDescription?has_content>
+      <designDescription>
+        <description>
           <para>${eml.project.designDescription}</para>
-        </#if>
-      </description>
-    </designDescription>
+        </description>
+      </designDescription>
+    </#if>
   </project>
   </#if>
 </dataset>
@@ -342,12 +368,20 @@
         <#if (eml.getLogoUrl())??>
           <resourceLogoUrl>${eml.logoUrl!}</resourceLogoUrl>
         </#if>
-        <#if (eml.parentCollectionId)?? && (eml.collectionId)?? && (eml.collectionName)??>
-          <collection>
-            <parentCollectionIdentifier>${eml.parentCollectionId}</parentCollectionIdentifier>
-            <collectionIdentifier>${eml.collectionId}</collectionIdentifier>
-            <collectionName>${eml.collectionName}</collectionName>
-          </collection>
+        <#if (eml.collections?? && eml.collections?size>0) >
+          <#list eml.collections as collection>
+            <#if collection.collectionName?has_content>
+              <collection>
+                <#if collection.parentCollectionId?has_content>
+                  <parentCollectionIdentifier>${collection.parentCollectionId}</parentCollectionIdentifier>
+                </#if>
+                <#if collection.collectionId?has_content>
+                  <collectionIdentifier>${collection.collectionId}</collectionIdentifier>
+                </#if>
+                <collectionName>${collection.collectionName}</collectionName>
+              </collection>
+            </#if>
+          </#list>
         </#if>
         <#list eml.getTemporalCoverages() as tcoverage>
           <#if (tcoverage.getFormationPeriod())??>

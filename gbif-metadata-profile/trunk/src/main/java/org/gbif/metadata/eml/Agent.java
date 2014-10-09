@@ -13,12 +13,14 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 /**
- * Encapsulates all the information for an Agent
+ * Encapsulates all the information for an Agent.
  */
 public class Agent implements Serializable {
 
@@ -33,6 +35,7 @@ public class Agent implements Serializable {
   private String email;
   private String role;
   private String homepage;
+  private List<UserId> userIds = Lists.newArrayList();
 
   public Address getAddress() {
     return address;
@@ -119,6 +122,14 @@ public class Agent implements Serializable {
     this.position = position;
   }
 
+  public List<UserId> getUserIds() {
+    return userIds;
+  }
+
+  public void setUserIds(List<UserId> userIds) {
+    this.userIds = userIds;
+  }
+
   public String getRole() {
     return role;
   }
@@ -138,12 +149,21 @@ public class Agent implements Serializable {
     return Strings.emptyToNull(name.trim());
   }
 
+  /**
+   * Utility to add a userId to the list of userIds. This method was introduced to ease the Digester rules for
+   * parsing of EML.
+   * @param userId to add
+   */
+  public void addUserId(UserId userId) {
+    userIds.add(userId);
+  }
+
   public boolean isEmpty() {
     return Strings.nullToEmpty(firstName).trim().isEmpty() && Strings.nullToEmpty(lastName).trim().isEmpty() &&
            Strings.nullToEmpty(organisation).trim().isEmpty() && Strings.nullToEmpty(position).trim().isEmpty() &&
            address.isEmpty() && Strings.nullToEmpty(phone).trim().isEmpty() &&
-           Strings.nullToEmpty(email).trim().isEmpty() && Strings.nullToEmpty(role).trim().isEmpty() &&
-           Strings.nullToEmpty(homepage).trim().isEmpty();
+           Strings.nullToEmpty(email).trim().isEmpty() && userIds.isEmpty() &&
+           Strings.nullToEmpty(role).trim().isEmpty() && Strings.nullToEmpty(homepage).trim().isEmpty();
   }
 
   @Override
@@ -158,13 +178,13 @@ public class Agent implements Serializable {
     return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName) && Objects
       .equal(this.organisation, other.organisation) && Objects.equal(this.position, other.position) && Objects
       .equal(this.address, other.address) && Objects.equal(this.phone, other.phone) && Objects
-      .equal(this.email, other.email) && Objects.equal(this.role, other.role) && Objects
-      .equal(this.homepage, other.homepage);
+      .equal(this.email, other.email) && Objects.equal(this.userIds, other.userIds) && Objects
+      .equal(this.role, other.role) && Objects.equal(this.homepage, other.homepage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(firstName, lastName, organisation, position, address, phone, email, role, homepage);
+    return Objects.hashCode(firstName, lastName, organisation, position, address, phone, email, userIds, role, homepage);
   }
 
   @Override
@@ -177,9 +197,9 @@ public class Agent implements Serializable {
       add("address", address).
       add("phone", phone).
       add("email", email).
+      add("userIds", userIds).
       add("role", role).
       add("homepage", homepage).
       toString();
   }
-
 }

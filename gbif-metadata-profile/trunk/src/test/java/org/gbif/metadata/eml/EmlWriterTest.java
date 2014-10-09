@@ -24,14 +24,12 @@ import freemarker.template.TemplateException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 public class EmlWriterTest {
 
-  @Test
+    @Test
   public void testRoundtrip() {
     try {
       // read EML
@@ -51,7 +49,7 @@ public class EmlWriterTest {
       // compare
       assertEquals("Tanzanian Entomological Collection", eml.getTitle());
       assertEquals(eml2.getGuid(), eml.getGuid());
-      assertEquals(eml2.getPackageId(), eml.getPackageId());
+      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7", eml.getPackageId());
       assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
       assertEquals(eml2.getTitle(), eml.getTitle());
       assertEquals(eml2.getDescription(), eml.getDescription());
@@ -62,11 +60,17 @@ public class EmlWriterTest {
       assertEquals(eml2.getCitation(), eml.getCitation());
       assertEquals(eml2.getLogoUrl(), eml.getLogoUrl());
       assertEquals(eml2.getHomepageUrl(), eml.getHomepageUrl());
-      assertEquals(eml2.getContact(), eml.getContact());
-      assertEquals(eml2.getMetadataProvider(), eml.getMetadataProvider());
-      assertEquals(eml2.getResourceCreator(), eml.getResourceCreator());
+      assertEquals(eml2.getContacts().get(0), eml.getContacts().get(0));
+      assertEquals(eml2.getMetadataProviders().get(0), eml.getMetadataProviders().get(0));
+      assertEquals(eml2.getAssociatedParties().get(0), eml.getAssociatedParties().get(0));
+      assertEquals(eml2.getCreators().get(0), eml.getCreators().get(0));
       assertEquals(eml2.getDistributionUrl(), eml.getDistributionUrl());
       assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
+      assertEquals(eml2.getProject(), eml.getProject());
+      assertEquals(eml2.getCollections().get(0), eml.getCollections().get(0));
+      assertEquals(eml2.getPurpose(), eml.getPurpose());
+      assertEquals(eml2.getUpdateFrequencyDescription(), eml.getUpdateFrequencyDescription());
+      assertEquals(eml2.getUpdateFrequency(), eml.getUpdateFrequency());
 
       // write EML again with more data
       KeywordSet ks = new KeywordSet();
@@ -139,6 +143,184 @@ public class EmlWriterTest {
     }
   }
 
+    @Test
+    public void testMultipleProjectPersonnel() {
+        try {
+            // read EML
+            Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+            assertNotNull(eml);
+            assertEquals(1, eml.getProject().getPersonnel().size());
+            assertNull(eml.getProject().getPersonnel().get(0).getFirstName());
+            assertEquals("Remsen", eml.getProject().getPersonnel().get(0).getLastName());
+            assertEquals("publisher", eml.getProject().getPersonnel().get(0).getRole());
+
+            Agent anotherPersonnel = new Agent();
+            anotherPersonnel.setFirstName("John");
+            anotherPersonnel.setLastName("Stewart");
+            anotherPersonnel.setRole("originator");
+            eml.getProject().getPersonnel().add(anotherPersonnel);
+
+            // write EML
+            File temp = File.createTempFile("eml", ".xml");
+            System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+            EmlWriter.writeEmlFile(temp, eml);
+
+            // now read the EML in again and ensure personnel has been persisted correctly
+            Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+            assertNotNull(eml2);
+
+            assertEquals(2, eml2.getProject().getPersonnel().size());
+            assertEquals("John", eml2.getProject().getPersonnel().get(1).getFirstName());
+            assertEquals("Stewart", eml2.getProject().getPersonnel().get(1).getLastName());
+            assertEquals("originator", eml2.getProject().getPersonnel().get(1).getRole());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testMultipleCollection() {
+        try {
+            // read EML
+            Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+            assertNotNull(eml);
+            assertEquals(1, eml.getCollections().size());
+            assertEquals("urn:lsid:tim.org:12:1", eml.getCollections().get(0).getParentCollectionId());
+            assertEquals("urn:lsid:tim.org:12:2", eml.getCollections().get(0).getCollectionId());
+            assertEquals("Mammals", eml.getCollections().get(0).getCollectionName());
+
+            Collection anotherCollection = new Collection();
+            anotherCollection.setParentCollectionId("urn:lsid:jose.org:98:1");
+            anotherCollection.setCollectionId("urn:lsid:jose.org:98:2");
+            anotherCollection.setCollectionName("Birds");
+            eml.addCollection(anotherCollection);
+
+            // write EML
+            File temp = File.createTempFile("eml", ".xml");
+            System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+            EmlWriter.writeEmlFile(temp, eml);
+
+            // now read the EML in again and ensure collection has been persisted correctly
+            Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+            assertNotNull(eml2);
+
+            assertEquals(2, eml2.getCollections().size());
+            assertEquals("urn:lsid:jose.org:98:1", eml2.getCollections().get(1).getParentCollectionId());
+            assertEquals("urn:lsid:jose.org:98:2", eml2.getCollections().get(1).getCollectionId());
+            assertEquals("Birds", eml2.getCollections().get(1).getCollectionName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testMultipleCreatorsMetadataProvidersContacts() {
+        try {
+            // read EML
+            Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+            assertNotNull(eml);
+            assertEquals(1, eml.getCreators().size());
+            assertEquals("Remsen", eml.getCreators().get(0).getLastName());
+
+            assertEquals(1, eml.getMetadataProviders().size());
+            assertEquals("Robertson", eml.getMetadataProviders().get(0).getLastName());
+
+            assertEquals(1, eml.getContacts().size());
+            assertEquals("Remsen", eml.getContacts().get(0).getLastName());
+
+            Agent agent = createMockAgent();
+            eml.addCreator(agent);
+            eml.addMetadataProvider(agent);
+            eml.addContact(agent);
+
+            // write EML
+            File temp = File.createTempFile("eml", ".xml");
+            System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+            EmlWriter.writeEmlFile(temp, eml);
+
+            // now read the EML in again and ensure another agent has been added to creators, metadataProviders, and
+            // contacts lists
+            Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+            assertNotNull(eml2);
+
+            assertEquals(2, eml2.getCreators().size());
+            assertTrue(agent.equals(eml2.getCreators().get(1)));
+
+            assertEquals(2, eml2.getMetadataProviders().size());
+            assertTrue(agent.equals(eml2.getMetadataProviders().get(1)));
+
+            assertEquals(2, eml2.getContacts().size());
+            assertTrue(agent.equals(eml2.getContacts().get(1)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testMultipleUserIds() {
+        try {
+            // read EML
+            Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+            assertNotNull(eml);
+            assertEquals(1, eml.getCreators().size());
+            assertEquals(1, eml.getCreators().get(0).getUserIds().size());
+            assertEquals("http://orcid.org/", eml.getCreators().get(0).getUserIds().get(0).getDirectory());
+            assertEquals("0000-0002-8442-8025", eml.getCreators().get(0).getUserIds().get(0).getIdentifier());
+
+            UserId anotherUserId = new UserId();
+            anotherUserId.setDirectory("http://otherorcid.org/");
+            anotherUserId.setIdentifier("ABCD-123");
+
+            eml.getCreators().get(0).addUserId(anotherUserId);
+
+            // write EML
+            File temp = File.createTempFile("eml", ".xml");
+            System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+            EmlWriter.writeEmlFile(temp, eml);
+
+            // now read the EML in again and ensure another agent has been added to creators, metadataProviders, and
+            // contacts lists
+            Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+            assertNotNull(eml2);
+
+            assertEquals(2, eml2.getCreators().get(0).getUserIds().size());
+            assertEquals("http://otherorcid.org/", eml2.getCreators().get(0).getUserIds().get(1).getDirectory());
+            assertEquals("ABCD-123", eml2.getCreators().get(0).getUserIds().get(1).getIdentifier());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testDefaultMaintenanceUpdateFrequency() {
+        try {
+            // read EML with no update frequency - it should default to UNKOWN
+            Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample2.xml"));
+            assertNotNull(eml);
+            assertNull(eml.getUpdateFrequencyDescription());
+            assertEquals(MaintenanceUpdateFrequency.UNKOWN, eml.getUpdateFrequency());
+
+            // write EML
+            File temp = File.createTempFile("eml", ".xml");
+            System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+            EmlWriter.writeEmlFile(temp, eml);
+
+            // Verify the update frequency was persisted correctly
+            Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+            assertNotNull(eml2);
+            assertNull(eml2.getUpdateFrequencyDescription());
+            assertEquals(MaintenanceUpdateFrequency.UNKOWN, eml2.getUpdateFrequency());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
   @Test
   public void testXmlEscaping() {
     try {
@@ -149,7 +331,7 @@ public class EmlWriterTest {
       // use ampersand values
       Agent gbif = new Agent();
       gbif.setOrganisation("GBIF & EOL");
-      eml.setContact(gbif);
+      eml.getContacts().add(gbif);
       eml.setTitle("The <very> important \"resources\" & other things");
 
       // write EML
@@ -160,7 +342,7 @@ public class EmlWriterTest {
       // now read the EML in again and ensure pubDate is not null
       Eml eml2 = EmlFactory.build(new FileInputStream(temp));
       assertNotNull(eml2);
-      assertEquals("GBIF & EOL", eml2.getContact().getOrganisation());
+      assertEquals("GBIF & EOL", eml2.getContacts().get(1).getOrganisation());
       assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
 
     } catch (Exception e) {
@@ -202,4 +384,32 @@ public class EmlWriterTest {
     assertEquals(null, eml2.getPhysicalData().get(2).getFormatVersion());
     assertEquals("UTF-8", eml2.getPhysicalData().get(2).getCharset());
   }
+
+    /**
+     * @return mock agent used in testing
+     */
+    private Agent createMockAgent() {
+        Agent a = new Agent();
+        a.setFirstName("John");
+        a.setLastName("Stewart");
+
+        Address address = new Address();
+        address.setAddress("Central Park");
+        address.setCity("New York");
+        address.setCountry("United States");
+        address.setPostalCode("5600");
+        address.setProvince("New York");
+        a.setAddress(address);
+
+        a.setEmail("jstewart@ny-nhm.org");
+        a.setHomepage("http://www.ny-nhm.org");
+        a.setOrganisation("Natural History Museum");
+        a.setPhone("+19779779797");
+        a.setPosition("Head of Entomology");
+
+        UserId userId = new UserId("http://orcid.org/", "0000-0002-8442-9000");
+        a.addUserId(userId);
+
+        return a;
+    }
 }

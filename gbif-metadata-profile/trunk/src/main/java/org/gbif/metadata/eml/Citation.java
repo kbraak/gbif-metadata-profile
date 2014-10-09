@@ -5,7 +5,8 @@ import java.io.Serializable;
 import com.google.common.base.Objects;
 
 /**
- * A single literature citation with an optional identifier TODO Documentation
+ * This class can be used to encapsulate information about a citation having an identifier (e.g. DOI) plus
+ * citation string.
  */
 public class Citation implements Serializable {
 
