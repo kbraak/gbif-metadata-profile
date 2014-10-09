@@ -16,8 +16,10 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 /**
  * A class encapsulating the project information
@@ -45,7 +47,7 @@ public class Project implements Serializable {
    *      personnel
    *      keyword</a>
    */
-  private Agent personnel = new Agent();
+  private List<Agent> personnel = Lists.newArrayList();
 
   /**
    * The funding field is used to provide information about funding sources for the project such as: grant and contract
@@ -77,7 +79,9 @@ public class Project implements Serializable {
    * Required by Struts2
    */
   public Project() {
-    personnel.setRole("ResponsibleParty");
+    for (Agent agent: personnel) {
+      agent.setRole("pointOfContact");
+    }
   }
 
   /**
@@ -111,14 +115,14 @@ public class Project implements Serializable {
   /**
    * @return the personnel
    */
-  public Agent getPersonnel() {
+  public List<Agent> getPersonnel() {
     return personnel;
   }
 
   /**
    * @param personnel the personnel to set
    */
-  public void setPersonnel(Agent personnel) {
+  public void setPersonnel(List<Agent> personnel) {
     this.personnel = personnel;
   }
 
@@ -149,6 +153,19 @@ public class Project implements Serializable {
   public void setTitle(String title) {
     this.title = title;
   }
+
+    /**
+     * Adds an Agent to the project personnel list. This method was introduced to ease the Digester rules for
+     * parsing of EML.
+     *
+     * @param agent to add
+     */
+    public void addProjectPersonnel(Agent agent) {
+        if (agent.getRole() == null) {
+            agent.setRole("pointOfContact");
+        }
+        getPersonnel().add(agent);
+    }
 
   @Override
   public boolean equals(Object obj) {

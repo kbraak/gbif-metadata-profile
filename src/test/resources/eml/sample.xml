@@ -7,7 +7,7 @@
 <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:dc="http://purl.org/dc/terms/"
-    xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.0.2/eml-gbif-profile.xsd"
+    xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml-gbif-profile.xsd"
     xml:lang="en"
     packageId="619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7" system="http://gbif.org" scope="system">
 
@@ -39,6 +39,7 @@
             <phone>+4528261487</phone>
             <electronicMailAddress>dremsen@gbif.org</electronicMailAddress>
             <onlineUrl>http://www.gbif.org</onlineUrl>
+            <userId directory="http://orcid.org/">0000-0002-8442-8025</userId>
         </creator>
 
         <!-- The responsible party for the creation of the metadata -->
@@ -56,7 +57,8 @@
             </address>
             <phone>+4528261487</phone>
             <electronicMailAddress>trobertson@gbif.org</electronicMailAddress>
-            <onlineUrl>http://www.gbif.org</onlineUrl> 
+            <onlineUrl>http://www.gbif.org</onlineUrl>
+            <userId directory="http://researchId.org/">0000-0002-8442-8050</userId>
         </metadataProvider>
 
         <!-- Note that associated parties have roles -->
@@ -65,6 +67,7 @@
                 <surName>Doering</surName>
             </individualName>
             <phone>4535321487</phone>
+            <userId directory="http://ldap.org/">0000-0002-8442-8075</userId>
             <!-- The IPT will define a controlled vocabulary for this term -->
             <role>principleInvestigator</role>
         </associatedParty>
@@ -190,6 +193,12 @@
         <purpose>
             <para>Provide data to the whole world.</para>
         </purpose>
+        <maintenance>
+            <description>
+                <para>Changes done as needed.</para>
+            </description>
+            <maintenanceUpdateFrequency>asNeeded</maintenanceUpdateFrequency>
+        </maintenance>
 
         <!-- This is mandatory in EML
                         In terms of the IPT, propose this be the same as the and should be the same as the <creator/>
@@ -212,6 +221,7 @@
             <phone>+4528261487</phone>
             <electronicMailAddress>dremsen@gbif.org</electronicMailAddress>
             <onlineUrl>http://www.gbif.org</onlineUrl>
+            <userId directory="http://orcid.org/">0000-0002-8442-8025</userId>
         </contact>
 
         <!-- Methods used -->

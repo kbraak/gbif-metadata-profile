@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 public class EmlFactory {
 
   /**
-   * Uses rule based parsing to read the EML XML and build the EML model
+   * Uses rule based parsing to read the EML XML and build the EML model.
    * Note the following: - Metadata provider rules are omitted on the assumption that the provider is the same as the
    * creator - Contact rules are omitted on the assumption that contacts are covered by the creator and associated
    * parties - Publisher rules are omitted on the assumption the publisher is covered by the creator and associated
@@ -75,7 +75,9 @@ public class EmlFactory {
     digester.addBeanPropertySetter("eml/dataset/methods/qualityControl/description/para", "qualityControl");
     digester.addBeanPropertySetter("eml/dataset/distribution/online/url", "distributionUrl");
     digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
-    //digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/citation", "citation");
+    digester.addBeanPropertySetter("eml/dataset/maintenance/description/para", "updateFrequencyDescription");
+    digester.addCallMethod("eml/dataset/maintenance/maintenanceUpdateFrequency", "setUpdateFrequency", 1);
+    digester.addCallParam("eml/dataset/maintenance/maintenanceUpdateFrequency", 0);
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/citation", "setCitation", 2);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 0);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 1, "identifier");
@@ -83,21 +85,15 @@ public class EmlFactory {
       "specimenPreservationMethod");
     digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoUrl");
     digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/hierarchyLevel", "hierarchyLevel");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/parentCollectionIdentifier",
-      "parentCollectionId");
-    digester
-      .addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionIdentifier", "collectionId");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionName", "collectionName");
-
     digester.addCallMethod("eml/dataset/pubDate", "setPubDateAsString", 1);
     digester.addCallParam("eml/dataset/pubDate", 0);
 
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/dateStamp", "setDateStamp", 1);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/dateStamp", 0);
 
-    addAgentRules(digester, "eml/dataset/creator", "setResourceCreator");
-    addAgentRules(digester, "eml/dataset/metadataProvider", "setMetadataProvider");
-    addAgentRules(digester, "eml/dataset/contact", "setContact");
+    addAgentRules(digester, "eml/dataset/creator", "addCreator");
+    addAgentRules(digester, "eml/dataset/metadataProvider", "addMetadataProvider");
+    addAgentRules(digester, "eml/dataset/contact", "addContact");
     addAgentRules(digester, "eml/dataset/associatedParty", "addAssociatedParty");
     addKeywordRules(digester);
     addBibliographicCitations(digester);
@@ -107,6 +103,7 @@ public class EmlFactory {
     addFormationPeriodRules(digester);
     addTaxonomicCoverageRules(digester);
     addProjectRules(digester);
+    addCollectionRules(digester);
     addPhysicalDataRules(digester);
     addJGTICuratorialIUnit(digester);
 
@@ -122,8 +119,7 @@ public class EmlFactory {
 
   /**
    * This is a reusable set of rules to build Agents and their Addresses, and add the Agent to the predecessor object
-   * on
-   * the Stack Note that we are ignoring the userId as there have been no requests for the IPT to support this
+   * on the Stack Note that we are ignoring the userId as there have been no requests for the IPT to support this.
    *
    * @param digester     to add the rules to
    * @param prefix       The XPath prefix to prepend for extracting the Agent information
@@ -147,16 +143,19 @@ public class EmlFactory {
     digester.addBeanPropertySetter(prefix + "/address/postalCode", "postalCode");
     digester.addBeanPropertySetter(prefix + "/address/country", "country");
     digester.addBeanPropertySetter(prefix + "/address/deliveryPoint", "address");
-    digester.addSetNext(prefix + "/address", "setAddress"); // called on
-    // </address> to set
-    // on parent Agent
-    digester.addSetNext(prefix, parentMethod); // method called on parent
-    // object which is the
-    // previous stack object
+    digester.addSetNext(prefix + "/address", "setAddress"); // called on </address> to set on parent Agent
+
+    digester.addObjectCreate(prefix + "/userId", UserId.class);
+    digester.addCallMethod(prefix + "/userId", "setDirectory", 1);
+    digester.addCallParam(prefix + "/userId", 0, "directory");
+    digester.addBeanPropertySetter(prefix + "/userId", "identifier");
+    digester.addSetNext(prefix + "/userId", "addUserId"); // called on </userId> to set on parent Agent
+
+    digester.addSetNext(prefix, parentMethod); // method called on parent object which is the previous stack object
   }
 
   /**
-   * Add rules to extract the keywords
+   * Add rules to extract the keywords.
    *
    * @param digester to add the rules to
    */
@@ -173,7 +172,7 @@ public class EmlFactory {
   }
 
   /**
-   * Add rules to extract the bibliographic citations
+   * Add rules to extract the bibliographic citations.
    *
    * @param digester to add the rules to
    */
@@ -187,7 +186,7 @@ public class EmlFactory {
   }
 
   /**
-   * Adds rules to get the geographic coverage
+   * Adds rules to get the geographic coverage.
    *
    * @param digester to add the rules to
    */
@@ -213,7 +212,7 @@ public class EmlFactory {
   }
 
   /**
-   * Adds rules to extract the temporal coverage
+   * Adds rules to extract the temporal coverage.
    *
    * @param digester to add the rules to
    */
@@ -232,7 +231,7 @@ public class EmlFactory {
   }
 
   /**
-   * Adds rules to extract the livingTimePeriod temporal coverage
+   * Adds rules to extract the livingTimePeriod temporal coverage.
    *
    * @param digester to add the rules to
    */
@@ -245,7 +244,7 @@ public class EmlFactory {
   }
 
   /**
-   * Adds rules to extract the formationPeriod temporal coverage
+   * Adds rules to extract the formationPeriod temporal coverage.
    *
    * @param digester to add the rules to
    */
@@ -258,7 +257,7 @@ public class EmlFactory {
   }
 
   /**
-   * Adds rules to extract the taxonomic coverage
+   * Adds rules to extract the taxonomic coverage.
    *
    * @param digester to add the rules to
    */
@@ -279,24 +278,20 @@ public class EmlFactory {
       "addTaxonomicCoverage"); // add the TaxonomicCoverage to the list in EML
   }
 
-  /**
-   * Add rules for pulling the project details
-   *
-   * @param digester to add the rules to
-   */
-  private static void addProjectRules(Digester digester) {
-    digester.addObjectCreate("eml/dataset/project", Project.class);
-    digester.addBeanPropertySetter("eml/dataset/project/title", "title");
-    addAgentRules(digester, "eml/dataset/project/personnel", "setPersonnel");
-    // digester.addBeanPropertySetter("eml/dataset/project/abstract/para",
-    // "projectAbstract");
-    digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
-    addStudyAreaDescriptionRules(digester);
-    digester.addBeanPropertySetter("eml/dataset/project/designDescription/description/para", "designDescription");
-    digester.addSetNext("eml/dataset/project", "setProject"); // add the Project
-    // to the list in
-    // EML
-  }
+    /**
+     * Add rules for parsing the project details.
+     *
+     * @param digester to add the rules to
+     */
+    private static void addProjectRules(Digester digester) {
+        digester.addObjectCreate("eml/dataset/project", Project.class);
+        digester.addBeanPropertySetter("eml/dataset/project/title", "title");
+        addAgentRules(digester, "eml/dataset/project/personnel", "addProjectPersonnel");
+        digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
+        addStudyAreaDescriptionRules(digester);
+        digester.addBeanPropertySetter("eml/dataset/project/designDescription/description/para", "designDescription");
+        digester.addSetNext("eml/dataset/project", "setProject");
+    }
 
   /**
    * Adds rules for the study area description: <studyAreaDescription> <descriptor name="generic"
@@ -325,7 +320,7 @@ public class EmlFactory {
   }
 
   /**
-   * Add rules to extract the physicalData
+   * Add rules to extract the physicalData.
    *
    * @param digester to add the rules to
    */
@@ -345,8 +340,22 @@ public class EmlFactory {
     // list in EML
   }
 
+    /**
+     * Add rules to extract the collection.
+     *
+     * @param digester to add the rules to
+     */
+    private static void addCollectionRules(Digester digester) {
+        digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/collection", Collection.class);
+        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/parentCollectionIdentifier", "parentCollectionId");
+        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionIdentifier", "collectionId");
+        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionName", "collectionName");
+        // add the Collection to the list in EML
+        digester.addSetNext("eml/additionalMetadata/metadata/gbif/collection", "addCollection");
+    }
+
   /**
-   * Add rules to extract the jgtiCuratorialUnit
+   * Add rules to extract the jgtiCuratorialUnit.
    *
    * @param digester to add the rules to
    */

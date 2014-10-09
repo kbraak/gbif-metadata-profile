@@ -66,7 +66,7 @@ public class Eml implements Serializable, BasicMetadata {
    * resource, and these roles should be indicated in the "role" element.
    */
   private List<Agent> associatedParties = Lists.newArrayList();
-  // private List<String> bibliographicCitations = Lists.newArrayList();
+
   private BibliographicCitationSet bibliographicCitationSet = new BibliographicCitationSet();
 
   /**
@@ -75,23 +75,6 @@ public class Eml implements Serializable, BasicMetadata {
    * /eml/dataset and not /eml/citation therefore these are found in the additionalMetadata section of the EML.
    */
   private Citation citation;
-  /**
-   * The URI (LSID or URL) of the collection. In RDF, used as URI of the collection resource.
-   *
-   * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#collectionId">TDWG Natural Collection Description</a>
-   */
-  private String collectionId;
-  /**
-   * Official name of the Collection in the local language.
-   * Note: this could potentially be sourced from the resource title, but this is declared explicitly in the GBIF IPT
-   * metadata profile, so must assume that this is required for a title in a different language, presumably to aid free
-   * text discovery in original language
-   *
-   * @see <a href="http://purl.org/dc/elements/1.1/title">DublinCore</a>
-   */
-  private String collectionName;
-
-  private Agent contact = new Agent();
 
   /**
    * Date of metadata creation or the last metadata update Default to now(), but can be overridden
@@ -170,24 +153,7 @@ public class Eml implements Serializable, BasicMetadata {
    */
   private LocaleBundle metadataLocale;
 
-  /**
-   * The 'metadataProvider' element provides the full name of the person, organization, or position who created
-   * documentation for the resource.
-   *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#metadataProvider">EML
-   *      Resource
-   *      metadataProvider keyword</a>
-   */
-  private Agent metadataProvider = new Agent();
-
-  /**
-   * Identifier for the parent collection for this sub-collection. Enables a hierarchy of collections and sub
-   * collections to be built.
-   *
-   * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#isPartOfCollection">TDWG Natural Collection
-   *      Description</a>
-   */
-  private String parentCollectionId;
+  private List<Collection> collections = Lists.newArrayList();
 
   private List<PhysicalData> physicalData = Lists.newArrayList();
 
@@ -206,18 +172,48 @@ public class Eml implements Serializable, BasicMetadata {
 
   /**
    * This is not in the GBIF extended metadata document, but seems like a sensible field to maintain, and maps nicely
-   * in
-   * EML, therefore is added
+   * in EML, therefore is added.
    */
   private String purpose;
 
   /**
-   * The 'creator' element provides the full name of the person, organization, or position who created the resource.
+   * A text description of the maintenance of this data resource.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#creator">EML Resource creator
-   *      keyword</a>
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#description">MaintenanceUpdateFrequency description</a>
    */
-  private Agent resourceCreator = new Agent();
+  private String updateFrequencyDescription;
+
+  /**
+   * The maintenance update frequency is the frequency with which changes and additions are made to the dataset after
+   * the initial dataset is completed.
+   *
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#MaintUpFreqType">MaintUpFreqType EML ENUM</a>
+   */
+  private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKOWN;
+
+  /**
+   * The 'creator' element provides the full name of the person, organization, or position who created the resource.
+   * The list of creators for a resource represent the people and organizations who should be cited for the resource.
+   *
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#creator">EML Resource creator</a>
+   */
+  private List<Agent> creators = Lists.newArrayList();
+
+  /**
+   * The 'metadataProvider' element provides the full name of the person, organization, or position who created
+   * documentation for the resource.
+   *
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#metadataProvider">EML Resource metadataProvider</a>
+   */
+  private List<Agent> metadataProviders = Lists.newArrayList();
+
+  /**
+   * The 'contact' field contains contact information for this dataset. This is the person or institution to contact
+   * with questions about the use, interpretation of a data set.
+   *
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#contact">EML Dataset contact</a>
+   */
+  private List<Agent> contacts = Lists.newArrayList();
 
   /**
    * Picklist keyword indicating the process or technique used to prevent physical deterioration of non-living
@@ -242,8 +238,8 @@ public class Eml implements Serializable, BasicMetadata {
   private String title;
 
   /**
-   * "The coverage field allows for a textual description of the specific sampling area, the sampling frequency
-   * (temporal boundaries, frequency of occurrence), and groups of living organisms sampled (taxonomic coverage)." This
+   * The coverage field allows for a textual description of the specific sampling area, the sampling frequency
+   * (temporal boundaries, frequency of occurrence), and groups of living organisms sampled (taxonomic coverage). This
    * implementation allows only the declaration of the extent description
    *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#studyExtent">EML Methods
@@ -253,10 +249,8 @@ public class Eml implements Serializable, BasicMetadata {
 
   /**
    * The samplingDescription field allows for a text-based/human readable description of the sampling procedures used
-   * in
-   * the research project. The content of this element would be similar to a description of sampling procedures found
-   * in
-   * the methods section of a journal article.
+   * in the research project. The content of this element would be similar to a description of sampling procedures found
+   * in the methods section of a journal article.
    *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#samplingDescription">EML
    *      Methods samplingDescription keyword</a>
@@ -273,11 +267,10 @@ public class Eml implements Serializable, BasicMetadata {
   private String qualityControl;
 
   /**
-   * "The methodStep field allows for repeated sets of elements that document a series of procedures followed to
-   * produce
-   * a data object. These include text descriptions of the procedures, relevant literature, software, instrumentation,
-   * source data and any quality control measures taken." This implementation allows only the declaration of the step
-   * description
+   * The methodStep field allows for repeated sets of elements that document a series of procedures followed to
+   * produce a data object. These include text descriptions of the procedures, relevant literature, software,
+   * instrumentation, source data and any quality control measures taken." This implementation allows only the
+   * declaration of the step description
    *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#methodStep">EML Methods
    *      methodStep keyword</a>
@@ -289,9 +282,6 @@ public class Eml implements Serializable, BasicMetadata {
    */
   public Eml() {
     this.pubDate = new Date();
-    this.resourceCreator.setRole("Originator");
-    this.metadataProvider.setRole("MetadataProvider");
-    this.contact.setRole("PointOfContact");
   }
 
   public String getAdditionalInfo() {
@@ -337,43 +327,37 @@ public class Eml implements Serializable, BasicMetadata {
     this.citation = citation;
   }
 
-  public String getCollectionId() {
-    if (collectionId == null || collectionId.isEmpty()) {
-      return null;
+    /**
+     * Return the primary creator, the first creator in the list of creators. If there are
+     * no creators, return the primary contact, the first contact in the list of contacts.
+     *
+     * @return the creator, or null if no creators or contacts exist
+     */
+    private Agent getCreator() {
+        if (!creators.isEmpty()) {
+            return creators.get(0);
+        }
+        if (!contacts.isEmpty()) {
+            return contacts.get(0);
+        }
+        return null;
     }
-    return collectionId;
-  }
 
-  public void setCollectionId(String collectionId) {
-    this.collectionId = collectionId;
-  }
-
-  public String getCollectionName() {
-    if (collectionName == null || collectionName.isEmpty()) {
-      return null;
+    /**
+     * Return the primary metadataProvider, the first metadataProvider in the list of metadataProviders. If there are
+     * no metadataProviders, return the primary contact, the first contact in the list of contacts.
+     *
+     * @return the metadataProvider, or null if no metadataProviders or contacts exist
+     */
+    private Agent getPublisher() {
+        if (!metadataProviders.isEmpty()) {
+            return metadataProviders.get(0);
+        }
+        if (!contacts.isEmpty()) {
+            return contacts.get(0);
+        }
+        return null;
     }
-    return collectionName;
-  }
-
-  public void setCollectionName(String collectionName) {
-    this.collectionName = collectionName;
-  }
-
-  public Agent getContact() {
-    return contact;
-  }
-
-  public void setContact(Agent contact) {
-    this.contact = contact;
-  }
-
-  private Agent getCreator() {
-    Agent creator = getResourceCreator();
-    if (creator == null) {
-      creator = getContact();
-    }
-    return creator;
-  }
 
   public Date getDateStamp() {
     return dateStamp;
@@ -517,14 +501,6 @@ public class Eml implements Serializable, BasicMetadata {
     this.metadataLocale = metadataLocale;
   }
 
-  public Agent getMetadataProvider() {
-    return metadataProvider;
-  }
-
-  public void setMetadataProvider(Agent metadataProvider) {
-    this.metadataProvider = metadataProvider;
-  }
-
   public List<String> getMethodSteps() {
     return methodSteps;
   }
@@ -533,15 +509,12 @@ public class Eml implements Serializable, BasicMetadata {
     this.methodSteps = methodSteps;
   }
 
-  public String getParentCollectionId() {
-    if (parentCollectionId == null || parentCollectionId.isEmpty()) {
-      return null;
-    }
-    return parentCollectionId;
+  public List<Collection> getCollections() {
+      return collections;
   }
 
-  public void setParentCollectionId(String parentCollectionId) {
-    this.parentCollectionId = parentCollectionId;
+  public void setCollections(List<Collection> collections) {
+      this.collections = collections;
   }
 
   public List<PhysicalData> getPhysicalData() {
@@ -579,20 +552,58 @@ public class Eml implements Serializable, BasicMetadata {
     this.purpose = purpose;
   }
 
+  public String getUpdateFrequencyDescription() {
+    return updateFrequencyDescription;
+  }
+
+  public void setUpdateFrequencyDescription(String updateFrequencyDescription) {
+    this.updateFrequencyDescription = updateFrequencyDescription;
+  }
+
+  public MaintenanceUpdateFrequency getUpdateFrequency() {
+    return updateFrequency;
+  }
+
+  /**
+   * Sets the updateFrequency ENUM. The incoming string is matched to the MaintenanceUpdateFrequency's
+   * displayValue, otherwise it's set to null.
+   *
+   * @param updateFrequency as per the EML enumeration in lowerCamel case, e.g. asNeeded
+   */
+  public void setUpdateFrequency(String updateFrequency) {
+    this.updateFrequency = MaintenanceUpdateFrequency.findByDisplayValue(updateFrequency);
+  }
+
+  public List<Agent> getCreators() {
+    return creators;
+  }
+
+  public void setCreators(List<Agent> creators) {
+    this.creators = creators;
+  }
+
+  public List<Agent> getMetadataProviders() {
+    return metadataProviders;
+  }
+
+  public void setMetadataProviders(List<Agent> metadataProviders) {
+    this.metadataProviders = metadataProviders;
+  }
+
+  public List<Agent> getContacts() {
+    return contacts;
+  }
+
+  public void setContacts(List<Agent> contacts) {
+    this.contacts = contacts;
+  }
+
   public String getQualityControl() {
     return qualityControl;
   }
 
   public void setQualityControl(String qualityControl) {
     this.qualityControl = qualityControl;
-  }
-
-  public Agent getResourceCreator() {
-    return resourceCreator;
-  }
-
-  public void setResourceCreator(Agent resourceCreator) {
-    this.resourceCreator = resourceCreator;
   }
 
   public String getSampleDescription() {
@@ -678,9 +689,14 @@ public class Eml implements Serializable, BasicMetadata {
     return getAbstract();
   }
 
+  /**
+   * HomepageUrl is equal the distributionUrl.
+   *
+   * @return homepageUrl
+   */
   @Override
   public String getHomepageUrl() {
-    return resourceCreator.getHomepage();
+    return distributionUrl;
   }
 
   @Override
@@ -695,18 +711,18 @@ public class Eml implements Serializable, BasicMetadata {
 
   @Override
   public String getPublisherEmail() {
-    Agent creator = metadataProvider;
-    if (creator != null) {
-      return creator.getEmail();
+    Agent publisher = getPublisher();
+    if (publisher != null) {
+      return publisher.getEmail();
     }
     return null;
   }
 
   @Override
   public String getPublisherName() {
-    Agent creator = metadataProvider;
-    if (creator != null) {
-      return creator.getFullName();
+    Agent publisher = getPublisher();
+    if (publisher != null) {
+      return publisher.getFullName();
     }
     return null;
   }
@@ -730,8 +746,38 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   /**
-   * utility to add Agents to the primary contacts This method was introduced to ease the Digester rules for parsing of
-   * EML
+   * Utility to add an agent to the creators list. This method was introduced to ease the Digester rules for parsing of
+   * EML.
+   *
+   * @param agent to add
+   */
+  public void addCreator(Agent agent) {
+    creators.add(agent);
+  }
+
+  /**
+   * Utility to add an agent to the metadataProviders list. This method was introduced to ease the Digester rules for
+   * parsing of EML.
+   *
+   * @param agent to add
+   */
+  public void addMetadataProvider(Agent agent) {
+    metadataProviders.add(agent);
+  }
+
+  /**
+   * Utility to add an agent to the contacts list. This method was introduced to ease the Digester rules for parsing of
+   * EML.
+   *
+   * @param agent to add
+   */
+  public void addContact(Agent agent) {
+    contacts.add(agent);
+  }
+
+  /**
+   * Utility to add an Agent to the associatedParties list. This method was introduced to ease the Digester rules for
+   * parsing of EML.
    *
    * @param agent to add
    */
@@ -803,6 +849,16 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   /**
+   * Utility to add a Collection instance to the collections list. This method was introduced to ease the Digester
+   * rules for parsing of EML.
+   *
+   * @param collection to add
+   */
+  public void addCollection(Collection collection) {
+    this.collections.add(collection);
+  }
+
+  /**
    * utility to add a coverage to the coverages This method was introduced to ease the Digester rules for parsing of
    * EML
    *
@@ -839,10 +895,6 @@ public class Eml implements Serializable, BasicMetadata {
     return emlVersion;
   }
 
-  public Agent resourceCreator() {
-    return resourceCreator;
-  }
-
   public void setAbstract(String description) {
     this.description = description;
   }
@@ -859,10 +911,6 @@ public class Eml implements Serializable, BasicMetadata {
     this.description = description;
   }
 
-  public void setHomepageUrl(String homepageUrl) {
-    resourceCreator.setHomepage(homepageUrl);
-  }
-
   public void setKeywordSet(List<KeywordSet> keywords) {
     this.keywords = keywords;
   }
@@ -877,7 +925,7 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   /**
-   * Utility to set the date with a textual format
+   * Utility to set the date with a textual format.
    *
    * @param dateString To set
    *
@@ -925,10 +973,8 @@ public class Eml implements Serializable, BasicMetadata {
 
   /**
    * Sets the title also given the language. Used to support multiple translated titles in the eml source document
-   * while
-   * the Eml java classes still only support a single title, preferrably in english. The setter will use the first
-   * title
-   * but prefer any english title over any other language.
+   * while the Eml java classes still only support a single title, preferably in english. The setter will use the first
+   * title but prefer any english title over any other language.
    */
   public void setTitle(String title, String language) {
     if (this.title == null || "en".equalsIgnoreCase(language) || "eng".equalsIgnoreCase(language)) {
@@ -945,40 +991,45 @@ public class Eml implements Serializable, BasicMetadata {
       return false;
     }
     final Eml other = (Eml) obj;
-    return Objects.equal(this.description, other.description) && Objects
-      .equal(this.additionalInfo, other.additionalInfo) && Objects
-      .equal(this.alternateIdentifiers, other.alternateIdentifiers) && Objects
-      .equal(this.associatedParties, other.associatedParties) && Objects
-      .equal(this.bibliographicCitationSet, other.bibliographicCitationSet) && Objects
-      .equal(this.citation, other.citation) && Objects.equal(this.collectionId, other.collectionId) && Objects
-      .equal(this.collectionName, other.collectionName) && Objects.equal(this.contact, other.contact) && Objects
-      .equal(this.dateStamp, other.dateStamp) && Objects.equal(this.distributionUrl, other.distributionUrl) && Objects
-      .equal(this.emlVersion, other.emlVersion) && Objects.equal(this.geospatialCoverages, other.geospatialCoverages)
-           && Objects.equal(this.hierarchyLevel, other.hierarchyLevel) && Objects
-      .equal(this.intellectualRights, other.intellectualRights) && Objects
-      .equal(this.jgtiCuratorialUnits, other.jgtiCuratorialUnits) && Objects.equal(this.keywords, other.keywords)
-           && Objects.equal(this.language, other.language) && Objects.equal(this.logoUrl, other.logoUrl) && Objects
-      .equal(this.metadataLanguage, other.metadataLanguage) && Objects.equal(this.metadataLocale, other.metadataLocale)
-           && Objects.equal(this.metadataProvider, other.metadataProvider) && Objects
-      .equal(this.parentCollectionId, other.parentCollectionId) && Objects.equal(this.physicalData, other.physicalData)
-           && Objects.equal(this.project, other.project) && Objects.equal(this.pubDate, other.pubDate) && Objects
-      .equal(this.purpose, other.purpose) && Objects.equal(this.resourceCreator, other.resourceCreator) && Objects
-      .equal(this.specimenPreservationMethod, other.specimenPreservationMethod) && Objects
-      .equal(this.taxonomicCoverages, other.taxonomicCoverages) && Objects
-      .equal(this.temporalCoverages, other.temporalCoverages) && Objects.equal(this.link, other.link) && Objects
-      .equal(this.guid, other.guid) && Objects.equal(this.title, other.title) && Objects
-      .equal(this.studyExtent, other.studyExtent) && Objects.equal(this.sampleDescription, other.sampleDescription)
-           && Objects.equal(this.qualityControl, other.qualityControl) && Objects
-      .equal(this.methodSteps, other.methodSteps);
+    return Objects.equal(this.description, other.description)
+            && Objects.equal(this.additionalInfo, other.additionalInfo)
+            && Objects.equal(this.alternateIdentifiers, other.alternateIdentifiers)
+            && Objects.equal(this.associatedParties, other.associatedParties)
+            && Objects.equal(this.bibliographicCitationSet, other.bibliographicCitationSet)
+            && Objects.equal(this.citation, other.citation) && Objects.equal(this.contacts, other.contacts)
+            && Objects.equal(this.dateStamp, other.dateStamp)
+            && Objects.equal(this.distributionUrl, other.distributionUrl)
+            && Objects.equal(this.emlVersion, other.emlVersion)
+            && Objects.equal(this.geospatialCoverages, other.geospatialCoverages)
+            && Objects.equal(this.hierarchyLevel, other.hierarchyLevel)
+            && Objects.equal(this.intellectualRights, other.intellectualRights)
+            && Objects.equal(this.jgtiCuratorialUnits, other.jgtiCuratorialUnits)
+            && Objects.equal(this.keywords, other.keywords) && Objects.equal(this.language, other.language)
+            && Objects.equal(this.logoUrl, other.logoUrl)
+            && Objects.equal(this.metadataLanguage, other.metadataLanguage)
+            && Objects.equal(this.metadataLocale, other.metadataLocale)
+            && Objects.equal(this.metadataProviders, other.metadataProviders)
+            && Objects.equal(this.collections, other.collections)
+            && Objects.equal(this.physicalData, other.physicalData) && Objects.equal(this.project, other.project)
+            && Objects.equal(this.pubDate, other.pubDate) && Objects.equal(this.purpose, other.purpose)
+            && Objects.equal(this.creators, other.creators)
+            && Objects.equal(this.specimenPreservationMethod, other.specimenPreservationMethod)
+            && Objects.equal(this.taxonomicCoverages, other.taxonomicCoverages)
+            && Objects.equal(this.temporalCoverages, other.temporalCoverages) && Objects.equal(this.link, other.link)
+            && Objects.equal(this.guid, other.guid) && Objects.equal(this.title, other.title)
+            && Objects.equal(this.studyExtent, other.studyExtent)
+            && Objects.equal(this.sampleDescription, other.sampleDescription)
+            && Objects.equal(this.qualityControl, other.qualityControl)
+            && Objects.equal(this.methodSteps, other.methodSteps);
   }
 
   @Override
   public int hashCode() {
     return Objects
       .hashCode(description, additionalInfo, alternateIdentifiers, associatedParties, bibliographicCitationSet,
-        citation, collectionId, collectionName, contact, dateStamp, distributionUrl, emlVersion, geospatialCoverages,
-        hierarchyLevel, intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl, metadataLanguage,
-        metadataLocale, metadataProvider, parentCollectionId, physicalData, project, pubDate, purpose, resourceCreator,
+        citation, contacts, dateStamp, distributionUrl, emlVersion, geospatialCoverages, hierarchyLevel,
+        intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl, metadataLanguage, metadataLocale,
+        metadataProviders, collections, physicalData, project, pubDate, purpose, creators,
         specimenPreservationMethod, taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent,
         sampleDescription, qualityControl, methodSteps);
   }
@@ -992,9 +1043,7 @@ public class Eml implements Serializable, BasicMetadata {
       add("associatedParties", associatedParties).
       add("bibliographicCitationSet", bibliographicCitationSet).
       add("citation", citation).
-      add("collectionId", collectionId).
-      add("collectionName", collectionName).
-      add("contact", contact).
+      add("contacts", contacts).
       add("dateStamp", dateStamp).
       add("distributionUrl", distributionUrl).
       add("emlVersion", emlVersion).
@@ -1007,13 +1056,13 @@ public class Eml implements Serializable, BasicMetadata {
       add("logoUrl", logoUrl).
       add("metadataLanguage", metadataLanguage).
       add("metadataLocale", metadataLocale).
-      add("metadataProvider", metadataProvider).
-      add("parentCollectionId", parentCollectionId).
+      add("metadataProviders", metadataProviders).
+      add("collections", collections).
       add("physicalData", physicalData).
       add("project", project).
       add("pubDate", pubDate).
       add("purpose", purpose).
-      add("resourceCreator", resourceCreator).
+      add("creator", creators).
       add("specimenPreservationMethod", specimenPreservationMethod).
       add("taxonomicCoverages", taxonomicCoverages).
       add("temporalCoverages", temporalCoverages).
@@ -1026,5 +1075,4 @@ public class Eml implements Serializable, BasicMetadata {
       add("methodSteps", methodSteps).
       toString();
   }
-
 }
