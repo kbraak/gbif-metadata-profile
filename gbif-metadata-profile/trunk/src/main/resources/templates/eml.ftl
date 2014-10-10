@@ -132,9 +132,9 @@
   </additionalInfo>
   </#if>
   <#-- A statement of the intellectual property rights associated with the resource. -->
-  <#if (eml.getIntellectualRights())??>
+  <#if (eml.getIntellectualRightsXml())??>
   <intellectualRights>
-    <para>${eml.intellectualRights!}</para>
+    <para><#noescape>${eml.getIntellectualRightsXml()!}</#noescape></para>
   </intellectualRights>
   </#if>
   <#if (eml.getDistributionUrl())??>
@@ -218,9 +218,9 @@
   </#if>
   <#if eml.updateFrequency??>
   <maintenance>
-    <descrption>
+    <description>
       <para>${eml.updateFrequencyDescription!}</para>
-    </descrption>
+    </description>
     <maintenanceUpdateFrequency>${eml.updateFrequency.displayValue}</maintenanceUpdateFrequency>
   </maintenance>
   </#if>

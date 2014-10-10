@@ -170,8 +170,10 @@ public class EmlFactoryTest {
 
       // intellectual rights tests
       assertNotNull(eml.getIntellectualRights());
-      assertTrue(eml.getIntellectualRights().startsWith("Owner grants"));
-      assertTrue(eml.getIntellectualRights().endsWith("Site)."));
+      assertTrue(eml.getIntellectualRightsXml().equals("This work is licensed under <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>."));
+      assertTrue(eml.getIntellectualRights().equals("This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero 1.0 License</a>."));
+
+      // homepage URL, aka distributionUrl
       assertNotNull(eml.getDistributionUrl());
       assertEquals("http://www.any.org/fauna/coleoptera/beetleList.html", eml.getDistributionUrl());
 

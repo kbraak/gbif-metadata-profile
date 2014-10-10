@@ -111,16 +111,7 @@
 
         <!-- Identified in the Other section of the GBIF Extended Metadata Doc -->
         <intellectualRights>
-            <para>Owner grants XXX a worldwide, non-exclusive right to: (i) use, reproduce, perform,
-                display, archive, transmit and distribute the Content (including any trademarks,
-                tradenames and logos in the Content) in electronic form in connection with the Site,
-                (ii) allow users of the Site to use, search, copy, download and transmit the
-                Content, and (iii) modify and reformat the Content, but solely to the extent
-                necessary and for the purposes of: (a) conforming to the format and "look and feel"
-                of the Site, and (b) creating snippets, headlines or teasers consisting of selected
-                lines or sections from the Content to be displayed on the Site (or displayed on
-                other websites owned by XXX for the purposes of directing traffic to the Site).
-            </para>
+            <para>This work is licensed under <ulink url="http://creativecommons.org/publicdomain/zero/1.0/legalcode"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>.</para>
         </intellectualRights>
 
 

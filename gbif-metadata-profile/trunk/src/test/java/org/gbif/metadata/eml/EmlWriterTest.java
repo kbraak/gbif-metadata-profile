@@ -24,6 +24,8 @@ import freemarker.template.TemplateException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
@@ -48,29 +50,73 @@ public class EmlWriterTest {
 
       // compare
       assertEquals("Tanzanian Entomological Collection", eml.getTitle());
-      assertEquals(eml2.getGuid(), eml.getGuid());
-      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7", eml.getPackageId());
-      assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
       assertEquals(eml2.getTitle(), eml.getTitle());
+
+      assertNotNull(eml.getGuid());
+      assertEquals(eml2.getGuid(), eml.getGuid());
+
+      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7", eml.getPackageId());
+
+      assertNotNull(eml.getMetadataLanguage());
+      assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
+
+      assertNotNull(eml.getDescription());
       assertEquals(eml2.getDescription(), eml.getDescription());
+
+      assertNotNull(eml.getPubDate());
       assertEquals(eml2.getPubDate(), eml.getPubDate());
+
       // TODO: fix timezone parsing/writing
       // Sth unknown does go wrong here...
       // assertEquals(eml2.getDateStamp(), eml.getDateStamp());
+
+      assertNotNull(eml.getCitation());
       assertEquals(eml2.getCitation(), eml.getCitation());
+
+      assertNotNull(eml.getLogoUrl());
       assertEquals(eml2.getLogoUrl(), eml.getLogoUrl());
+
+      assertNotNull(eml.getHomepageUrl());
       assertEquals(eml2.getHomepageUrl(), eml.getHomepageUrl());
+
+      assertNotNull(eml.getContacts());
       assertEquals(eml2.getContacts().get(0), eml.getContacts().get(0));
+
+      assertNotNull(eml.getMetadataProviders().get(0));
       assertEquals(eml2.getMetadataProviders().get(0), eml.getMetadataProviders().get(0));
+
+      assertNotNull(eml.getAssociatedParties().get(0));
       assertEquals(eml2.getAssociatedParties().get(0), eml.getAssociatedParties().get(0));
+
+      assertNotNull(eml.getCreators().get(0));
       assertEquals(eml2.getCreators().get(0), eml.getCreators().get(0));
+
+      assertNotNull(eml.getDistributionUrl());
       assertEquals(eml2.getDistributionUrl(), eml.getDistributionUrl());
+
+      assertNotNull(eml.getMetadataLanguage());
       assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
+
+      assertNotNull(eml.getProject());
       assertEquals(eml2.getProject(), eml.getProject());
+
+      assertNotNull(eml.getCollections().get(0));
       assertEquals(eml2.getCollections().get(0), eml.getCollections().get(0));
+
+      assertNotNull(eml.getPurpose());
       assertEquals(eml2.getPurpose(), eml.getPurpose());
+
+      assertNotNull(eml.getUpdateFrequencyDescription());
       assertEquals(eml2.getUpdateFrequencyDescription(), eml.getUpdateFrequencyDescription());
+
+      assertNotNull(eml.getUpdateFrequency());
       assertEquals(eml2.getUpdateFrequency(), eml.getUpdateFrequency());
+
+      assertNotNull(eml.getIntellectualRights());
+      assertEquals(eml2.getIntellectualRights(), eml.getIntellectualRights());
+
+      assertNotNull(eml.getIntellectualRightsXml());
+      assertEquals(eml2.getIntellectualRightsXml(), eml.getIntellectualRightsXml());
 
       // write EML again with more data
       KeywordSet ks = new KeywordSet();
@@ -352,7 +398,7 @@ public class EmlWriterTest {
   }
 
   @Test
-  public void testEmptyFormatVersion() throws IOException, TemplateException, SAXException {
+  public void testEmptyFormatVersion() throws IOException, TemplateException, SAXException, ParserConfigurationException {
     // read EML
     Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
     assertNotNull(eml);
