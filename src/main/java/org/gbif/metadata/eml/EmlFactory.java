@@ -15,8 +15,11 @@ package org.gbif.metadata.eml;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.digester.Digester;
+import org.apache.commons.digester3.*;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * This class is considered a utility for testing but should be migrated to the source when stable, as this is an EML
@@ -38,7 +41,7 @@ public class EmlFactory {
    * @throws IOException  If the Stream cannot be read from
    * @throws SAXException If the XML is not well formed
    */
-  public static Eml build(InputStream xml) throws IOException, SAXException {
+  public static Eml build(InputStream xml) throws IOException, SAXException, ParserConfigurationException {
     Digester digester = new Digester();
     digester.setNamespaceAware(true);
 
@@ -67,7 +70,8 @@ public class EmlFactory {
     digester.addBeanPropertySetter("eml/dataset/language", "language");
     digester.addBeanPropertySetter("eml/dataset/abstract/para", "abstract");
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
-    digester.addBeanPropertySetter("eml/dataset/intellectualRights/para", "intellectualRights");
+    digester.addRule("eml/dataset/intellectualRights/para", new NodeCreateRule(Node.ELEMENT_NODE));
+    digester.addSetNext("eml/dataset/intellectualRights/para", "setIntellectualRights");
     digester.addCallMethod("eml/dataset/methods/methodStep/description/para", "addMethodStep", 1);
     digester.addCallParam("eml/dataset/methods/methodStep/description/para", 0);
     digester.addBeanPropertySetter("eml/dataset/methods/sampling/studyExtent/description/para", "studyExtent");

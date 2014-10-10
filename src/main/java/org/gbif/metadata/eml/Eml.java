@@ -16,6 +16,7 @@ import org.gbif.metadata.BasicMetadata;
 import org.gbif.metadata.DateUtils;
 
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,12 @@ import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT 1.1 In addition to standard Bean
@@ -38,6 +45,7 @@ import com.google.common.collect.Lists;
  */
 public class Eml implements Serializable, BasicMetadata {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+)$");
 
   private static final Joiner JOINER = Joiner.on("; ").useForNull("");
@@ -105,8 +113,8 @@ public class Eml implements Serializable, BasicMetadata {
    * a data set, rights might include requirements for use, requirements for attribution, or other requirements the
    * owner would like to impose.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#intellectualRights>EML
-   *      Resource intellectualRights keyword</a>
+   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#intellectualRights">EML
+   *      Resource intellectualRights</a>
    */
   private String intellectualRights;
 
@@ -424,16 +432,65 @@ public class Eml implements Serializable, BasicMetadata {
     this.hierarchyLevel = hierarchyLevel;
   }
 
-  public String getIntellectualRights() {
-    if (intellectualRights == null || intellectualRights.isEmpty()) {
-      return null;
+    /**
+     * @return intellectualRights (XML/EML ulink will have been converted into HTML anchor)
+     */
+    public String getIntellectualRights() {
+        if (Strings.isNullOrEmpty(intellectualRights)) {
+            return null;
+        }
+        return intellectualRights;
     }
-    return intellectualRights;
-  }
 
-  public void setIntellectualRights(String intellectualRights) {
-    this.intellectualRights = intellectualRights;
-  }
+    /**
+     * Called only when persisting intellectualRights in XML.
+     *
+     * @return intellectualRights with HTML anchor converted back into XML/EML ulink.
+     */
+    public String getIntellectualRightsXml() {
+        if (Strings.isNullOrEmpty(intellectualRights)) {
+            return null;
+        }
+        return paraHtmToXml(intellectualRights);
+    }
+
+    /**
+     * Converts XML/EML ulink into HTML anchor, and then sets the intellectualRights.
+     *
+     * @param intellectualRights
+     */
+    public void setIntellectualRights(String intellectualRights) {
+        this.intellectualRights = paraXmlToHtml(intellectualRights);
+    }
+
+    /**
+     * Called on the paragraph string (<para>str</para>), to convert XML/EML ulink into HTML anchor.
+     *
+     * @return paragraph string, but with XML/EML ulink converted into an HTML link.
+     */
+    private static String paraXmlToHtml(String xml) {
+        if (!Strings.isNullOrEmpty(xml)) {
+            return xml.replaceAll("\\<citetitle\\>", "").
+                    replaceAll("\\</citetitle\\>", "").
+                    replaceAll("\\<ulink url=", "<a href=").
+                    replaceAll("\\</ulink\\>", "</a>");
+        }
+        return xml;
+    }
+
+    /**
+     * Called on the paragraph string (<para>str</para>), to convert HTML anchor into XML/EML ulink.
+     *
+     * @return paragraph string, but with HTML anchors converted back into XML/EML ulink.
+     */
+    private static String paraHtmToXml(String html) {
+        if (!Strings.isNullOrEmpty(html)) {
+            return html.replaceAll("\"\\>", "\"><citetitle>").
+                    replaceAll("\\<a href=", "<ulink url=").
+                    replaceAll("\\</a>", "</citetitle></ulink>");
+        }
+        return html;
+    }
 
   public List<JGTICuratorialUnit> getJgtiCuratorialUnits() {
     return jgtiCuratorialUnits;
@@ -553,6 +610,9 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   public String getUpdateFrequencyDescription() {
+    if (Strings.isNullOrEmpty(updateFrequencyDescription)) {
+      return null;
+    }
     return updateFrequencyDescription;
   }
 
@@ -878,6 +938,18 @@ public class Eml implements Serializable, BasicMetadata {
     temporalCoverages.add(coverage);
   }
 
+  /**
+   * Sets the intellectualRights, converting the raw XML into a string, and then converting any XML/EML ulink.
+   * into HTML anchors.
+   *
+   * @param element in an XML document
+   */
+  public void setIntellectualRights(org.w3c.dom.Element element) {
+      String xmlStr = rawXmlToString(element);
+      this.intellectualRights = paraXmlToHtml(xmlStr);
+  }
+
+
   public String getAbstract() {
     return description;
   }
@@ -981,6 +1053,31 @@ public class Eml implements Serializable, BasicMetadata {
       this.title = title;
     }
   }
+
+    /**
+     * Transforms an para element of an XML document into its exact string representation, stripping
+     * off the leading and trailing para tags.
+     *
+     * @param element in an XML document
+     * @return element transformed into a string
+     */
+    private String rawXmlToString(org.w3c.dom.Element element) {
+        TransformerFactory transFactory = TransformerFactory.newInstance();
+        String str = null;
+        try {
+            Transformer transformer = transFactory.newTransformer();
+            StringWriter buffer = new StringWriter();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.transform(new DOMSource(element), new StreamResult(buffer));
+            // strip off leading <para> and trailing </para>, and trim any leading and trailing whitespace also
+            str = buffer.toString().replaceAll("\\<para\\>", "").replaceAll("\\</para\\>", "").trim();
+        } catch (TransformerConfigurationException e) {
+            LOG.error("An error occurred creating new XML Transformer: " + e.getLocalizedMessage());
+        } catch (TransformerException e) {
+            LOG.error("An error occurred transforming raw XML to string: " + e.getLocalizedMessage());
+        }
+        return str;
+    }
 
   @Override
   public boolean equals(Object obj) {
