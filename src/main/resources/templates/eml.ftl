@@ -388,8 +388,12 @@
             <formationPeriod>${tcoverage.formationPeriod}</formationPeriod>
           </#if>
         </#list>
-        <#if (eml.getSpecimenPreservationMethod())??>
-          <specimenPreservationMethod>${eml.specimenPreservationMethod!}</specimenPreservationMethod>
+        <#if (eml.specimenPreservationMethods?size >0)>
+          <#list eml.specimenPreservationMethods as preservationMethod>
+            <#if preservationMethod?has_content>
+                <specimenPreservationMethod>${preservationMethod}</specimenPreservationMethod>
+            </#if>
+          </#list>
         </#if>
         <#if (eml.temporalCoverages ? size > 0)>
           <#list eml.getTemporalCoverages() as tcoverage>

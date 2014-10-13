@@ -230,7 +230,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#specimenPreservationMethod">TDWG Natural Collection
    *      Description</a>
    */
-  private String specimenPreservationMethod;
+  private List<String> specimenPreservationMethods = Lists.newArrayList();;
 
   private List<TaxonomicCoverage> taxonomicCoverages = Lists.newArrayList();
 
@@ -674,23 +674,20 @@ public class Eml implements Serializable, BasicMetadata {
     this.sampleDescription = sampleDescription;
   }
 
-  public String getSpecimenPreservationMethod() {
-    if (specimenPreservationMethod == null || specimenPreservationMethod.isEmpty()) {
-      return null;
-    }
-    return specimenPreservationMethod;
-  }
-
-  public void setSpecimenPreservationMethod(String specimenPreservationMethod) {
-    this.specimenPreservationMethod = specimenPreservationMethod;
-  }
-
   public String getStudyExtent() {
     return studyExtent;
   }
 
   public void setStudyExtent(String studyExtent) {
     this.studyExtent = studyExtent;
+  }
+
+  public List<String> getSpecimenPreservationMethods() {
+    return specimenPreservationMethods;
+  }
+
+  public void setSpecimenPreservationMethods(List<String> specimenPreservationMethods) {
+    this.specimenPreservationMethods = specimenPreservationMethods;
   }
 
   public List<TaxonomicCoverage> getTaxonomicCoverages() {
@@ -896,6 +893,16 @@ public class Eml implements Serializable, BasicMetadata {
    */
   public void addMethodStep(String step) {
     methodSteps.add(step);
+  }
+
+  /**
+   * Utility to add specimenPreservationMethod to the specimenPreservationMethods list. This method was introduced to
+   * ease the Digester rules for parsing of EML.
+   *
+   * @param preservationMethod to add
+   */
+  public void addSpecimenPreservationMethod(String preservationMethod) {
+    specimenPreservationMethods.add(preservationMethod);
   }
 
   /**
@@ -1110,7 +1117,7 @@ public class Eml implements Serializable, BasicMetadata {
             && Objects.equal(this.physicalData, other.physicalData) && Objects.equal(this.project, other.project)
             && Objects.equal(this.pubDate, other.pubDate) && Objects.equal(this.purpose, other.purpose)
             && Objects.equal(this.creators, other.creators)
-            && Objects.equal(this.specimenPreservationMethod, other.specimenPreservationMethod)
+            && Objects.equal(this.specimenPreservationMethods, other.specimenPreservationMethods)
             && Objects.equal(this.taxonomicCoverages, other.taxonomicCoverages)
             && Objects.equal(this.temporalCoverages, other.temporalCoverages) && Objects.equal(this.link, other.link)
             && Objects.equal(this.guid, other.guid) && Objects.equal(this.title, other.title)
@@ -1127,7 +1134,7 @@ public class Eml implements Serializable, BasicMetadata {
         citation, contacts, dateStamp, distributionUrl, emlVersion, geospatialCoverages, hierarchyLevel,
         intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl, metadataLanguage, metadataLocale,
         metadataProviders, collections, physicalData, project, pubDate, purpose, creators,
-        specimenPreservationMethod, taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent,
+        specimenPreservationMethods, taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent,
         sampleDescription, qualityControl, methodSteps);
   }
 
@@ -1160,7 +1167,7 @@ public class Eml implements Serializable, BasicMetadata {
       add("pubDate", pubDate).
       add("purpose", purpose).
       add("creator", creators).
-      add("specimenPreservationMethod", specimenPreservationMethod).
+      add("specimenPreservationMethod", specimenPreservationMethods).
       add("taxonomicCoverages", taxonomicCoverages).
       add("temporalCoverages", temporalCoverages).
       add("link", link).

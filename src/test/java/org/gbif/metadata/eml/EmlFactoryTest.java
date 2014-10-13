@@ -300,7 +300,8 @@ public class EmlFactoryTest {
       assertEquals(new Integer("500"), eml.getJgtiCuratorialUnits().get(0).getRangeStart());
       assertEquals(new Integer("600"), eml.getJgtiCuratorialUnits().get(0).getRangeEnd());
 
-      assertEquals("alcohol", eml.getSpecimenPreservationMethod());
+      assertFalse(eml.getSpecimenPreservationMethods().isEmpty());
+      assertEquals("alcohol", eml.getSpecimenPreservationMethods().get(0));
       assertEquals("http://www.tim.org/logo.jpg", eml.getLogoUrl());
 
       assertEquals("urn:lsid:tim.org:12:1", eml.getCollections().get(0).getParentCollectionId());
