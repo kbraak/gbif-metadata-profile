@@ -85,8 +85,8 @@ public class EmlFactory {
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/citation", "setCitation", 2);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 0);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 1, "identifier");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/specimenPreservationMethod",
-      "specimenPreservationMethod");
+    digester.addCallMethod("eml/additionalMetadata/metadata/gbif/specimenPreservationMethod", "addSpecimenPreservationMethod", 1);
+    digester.addCallParam("eml/additionalMetadata/metadata/gbif/specimenPreservationMethod", 0);
     digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoUrl");
     digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/hierarchyLevel", "hierarchyLevel");
     digester.addCallMethod("eml/dataset/pubDate", "setPubDateAsString", 1);
