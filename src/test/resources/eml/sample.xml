@@ -252,7 +252,7 @@
         </methods>
 
 
-        <project>
+        <project id="T123">
             <title>Documenting Some Asian Birds and Insects</title>
             <personnel>
                 <individualName>
@@ -260,6 +260,9 @@
                 </individualName>
                 <role>publisher</role>
             </personnel>
+            <abstract>
+              <para>Part of a series of events.</para>
+            </abstract>
             <funding>
                 <para>My Deep Pockets</para>
             </funding>

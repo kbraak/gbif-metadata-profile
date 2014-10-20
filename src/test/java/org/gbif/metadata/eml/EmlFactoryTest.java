@@ -249,6 +249,10 @@ public class EmlFactoryTest {
       assertEquals("Documenting Some Asian Birds and Insects", eml.getProject().getTitle());
       assertNotNull(eml.getProject().getPersonnel());
       assertEquals("My Deep Pockets", eml.getProject().getFunding());
+      assertNotNull(eml.getProject().getIdentifier());
+      assertEquals("T123", eml.getProject().getIdentifier());
+      assertNotNull("Part of a series of events.", eml.getProject().getDescription());
+      assertEquals("Part of a series of events.", eml.getProject().getDescription());
       assertEquals(StudyAreaDescriptor.GENERIC, eml.getProject().getStudyAreaDescription().getName());
       assertEquals("false", eml.getProject().getStudyAreaDescription().getCitableClassificationSystem());
       assertEquals("Turkish Mountains", eml.getProject().getStudyAreaDescription().getDescriptorValue());

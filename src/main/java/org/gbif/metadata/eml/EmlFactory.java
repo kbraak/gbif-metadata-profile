@@ -289,8 +289,11 @@ public class EmlFactory {
      */
     private static void addProjectRules(Digester digester) {
         digester.addObjectCreate("eml/dataset/project", Project.class);
+        digester.addCallMethod("eml/dataset/project", "setIdentifier", 1);
+        digester.addCallParam("eml/dataset/project", 0, "id");
         digester.addBeanPropertySetter("eml/dataset/project/title", "title");
         addAgentRules(digester, "eml/dataset/project/personnel", "addProjectPersonnel");
+        digester.addBeanPropertySetter("eml/dataset/project/abstract/para", "description");
         digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
         addStudyAreaDescriptionRules(digester);
         digester.addBeanPropertySetter("eml/dataset/project/designDescription/description/para", "designDescription");

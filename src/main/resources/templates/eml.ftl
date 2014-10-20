@@ -266,7 +266,7 @@
   </methods>
   </#if>
   <#if eml.project.title?has_content && (eml.project.personnel?size > 0)>
-  <project>
+  <project <#if eml.project.identifier?has_content>id="${eml.project.identifier}"</#if>>
     <title>${eml.project.title}</title>
     <#list eml.project.getPersonnel() as personnel>
       <personnel>
@@ -279,6 +279,11 @@
         <role>${personnel.role!}</role>
       </personnel>
     </#list>
+    <#if eml.project.description?has_content>
+      <abstract>
+        <para>${eml.project.description}</para>
+      </abstract>
+    </#if>
     <#if eml.project.funding?has_content>
       <funding>
         <para>${eml.project.funding}</para>

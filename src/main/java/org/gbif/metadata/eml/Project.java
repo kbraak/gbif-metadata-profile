@@ -40,6 +40,20 @@ public class Project implements Serializable {
   private String title;
 
   /**
+   * A unique identifier for the research project.
+   * </br>
+   * This can be used to link multiple dataset/EML document instances that are associated in some way with the same
+   * project, e.g. a monitoring series. The nature of the association can be described in the Project description.
+   */
+  private String identifier;
+
+  /**
+   * Summary about the research project.
+   */
+  private String description;
+
+
+  /**
    * The Personnel field extends ResponsibleParty with role information and is used to document people involved in a
    * research project by providing contact information and their role in the project.
    *
@@ -68,7 +82,8 @@ public class Project implements Serializable {
   private StudyAreaDescription studyAreaDescription = new StudyAreaDescription();
 
   /**
-   * A general description in textual form describing some aspect of the study area
+   * A general textual description of research design. It can include detailed accounts of goals, motivations, theory,
+   * hypotheses, strategy, statistical design, and actual work.
    *
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#designDescription">EML Project
    *      designDescription keyword</a>
@@ -141,6 +156,34 @@ public class Project implements Serializable {
   }
 
   /**
+   * @return project identifier
+   */
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  /**
+   * @param identifier the identifier of the project to set
+   */
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  /**
+   * @return project description
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * @param description the description of the project to set
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  /**
    * @return the title
    */
   public String getTitle() {
@@ -196,5 +239,4 @@ public class Project implements Serializable {
       add("designDescription", designDescription).
       toString();
   }
-
 }
