@@ -343,6 +343,34 @@ public class EmlWriterTest {
   }
 
   @Test
+  public void testWriteNewProjectIdAndDescription() {
+    try {
+      // read EML
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      assertNotNull(eml);
+      assertEquals("T123", eml.getProject().getIdentifier());
+      assertEquals("Part of a series of events.", eml.getProject().getDescription());
+
+      eml.getProject().setIdentifier("T123:1");
+      eml.getProject().setDescription("Part of a year-long series of events.");
+
+      // write EML
+      File temp = File.createTempFile("eml", ".xml");
+      System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
+      EmlWriter.writeEmlFile(temp, eml);
+
+      // now read the EML in again and ensure personnel has been persisted correctly
+      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      assertNotNull(eml2);
+      assertEquals("T123:1", eml.getProject().getIdentifier());
+      assertEquals("Part of a year-long series of events.", eml.getProject().getDescription());
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  @Test
   public void testDefaultMaintenanceUpdateFrequency() {
     try {
       // read EML with no update frequency - it should default to UNKOWN
