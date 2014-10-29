@@ -55,7 +55,7 @@ public class EmlWriterTest {
       assertNotNull(eml.getGuid());
       assertEquals(eml2.getGuid(), eml.getGuid());
 
-      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7", eml.getPackageId());
+      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7.41", eml.getPackageId());
 
       assertNotNull(eml.getMetadataLanguage());
       assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());

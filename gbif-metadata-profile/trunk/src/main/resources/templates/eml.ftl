@@ -425,8 +425,8 @@
             </jgtiCuratorialUnit>
           </#list>
         </#if>
-        <#if (eml.getEmlVersion()>1)>
-          <dc:replaces>${eml.guid}/v${eml.emlVersion - 1}.xml</dc:replaces>
+        <#if (eml.getPreviousEmlVersion()?string != "0" && eml.getPreviousEmlVersion()?string != "0.0")>
+          <dc:replaces>${eml.guid}/v${eml.getPreviousEmlVersion()}.xml</dc:replaces>
         </#if>
       </gbif>
     </metadata>

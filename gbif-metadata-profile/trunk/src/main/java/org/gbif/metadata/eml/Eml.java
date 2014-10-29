@@ -17,6 +17,7 @@ import org.gbif.metadata.DateUtils;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ import javax.xml.transform.stream.StreamResult;
 public class Eml implements Serializable, BasicMetadata {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
-  private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+)$");
+  private static final Pattern PACKAGED_ID_PATTERN =  Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
 
   private static final Joiner JOINER = Joiner.on("; ").useForNull("");
   private static final Splitter SEMICOLON_SPLITTER = Splitter.on(';');
@@ -96,7 +97,10 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Serialised data
    */
-  private int emlVersion = 0;
+  private BigDecimal emlVersion = new BigDecimal("0.0");
+  private BigDecimal previousEmlVersion = new BigDecimal("0.0");
+  private int majorVersion = 0;
+  private int minorVersion = 0;
   private List<GeospatialCoverage> geospatialCoverages = Lists.newArrayList();
 
   /**
@@ -397,12 +401,8 @@ public class Eml implements Serializable, BasicMetadata {
     this.distributionUrl = distributionUrl;
   }
 
-  public int getEmlVersion() {
+  public BigDecimal getEmlVersion() {
     return emlVersion;
-  }
-
-  public void setEmlVersion(int emlVersion) {
-    this.emlVersion = emlVersion;
   }
 
   public List<GeospatialCoverage> getGeospatialCoverages() {
@@ -966,12 +966,7 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   public String getPackageId() {
-    return guid + "/v" + emlVersion;
-  }
-
-  public int increaseEmlVersion() {
-    emlVersion += 1;
-    return emlVersion;
+    return guid + "/v" + emlVersion.toPlainString();
   }
 
   public void setAbstract(String description) {
@@ -997,7 +992,8 @@ public class Eml implements Serializable, BasicMetadata {
   public void setPackageId(String packageId) {
     Matcher m = PACKAGED_ID_PATTERN.matcher(packageId);
     if (m.find()) {
-      emlVersion = Integer.valueOf(m.group(1));
+      BigDecimal version = new BigDecimal(m.group(1));
+      setEmlVersion(version);
       packageId = m.replaceAll("");
     }
     guid = packageId;
@@ -1178,5 +1174,72 @@ public class Eml implements Serializable, BasicMetadata {
       add("qualityControl", qualityControl).
       add("methodSteps", methodSteps).
       toString();
+  }
+
+  public BigDecimal getPreviousEmlVersion() {
+    return previousEmlVersion;
+  }
+
+  /**
+   * Determine the next eml version, after bumping the major version by one (without actually changing it).
+   *
+   * @return the next eml version after major version change
+   */
+  public BigDecimal getNextEmlVersionAfterMajorVersionChange() {
+    return new BigDecimal(String.valueOf(majorVersion + 1) + ".0");
+  }
+
+  /**
+   * Determine the next eml version, after bumping the minor version by one (without actually changing it).
+   *
+   * @return the next eml version after minor version change
+   */
+  public BigDecimal getNextEmlVersionAfterMinorVersionChange() {
+    return new BigDecimal(String.valueOf(majorVersion) + "." + String.valueOf(minorVersion + 1));
+  }
+
+  public void setPreviousEmlVersion(BigDecimal previousEmlVersion) {
+    this.previousEmlVersion = previousEmlVersion;
+  }
+
+  /**
+   * Set new eml version, storing previous eml version before performing update.
+   *
+   * @param majorVersion major eml version number
+   * @param minorVersion minor eml version number
+   */
+  public void setEmlVersion(int majorVersion, int minorVersion) {
+    this.previousEmlVersion = emlVersion;
+    this.emlVersion = new BigDecimal(majorVersion + "." + minorVersion);
+  }
+
+  /**
+   * Set the version from the incoming BigDecimal. If the BigDecimal is in the format major_version.minor_version
+   * the major and minor versions are parsed, set, and the version updated accordingly. If the decimal is not
+   * in the format major_version.minor_version, the version is reset to 0.0.
+   *
+   * @param version BigDecimal in the format major_version.minor_version
+   */
+  public void setEmlVersion(BigDecimal version) {
+    if (version != null) {
+      String versionAsString = version.toPlainString();
+      // if version has major_version.minor_version format, set major and minor versions
+      if (versionAsString.contains(".") && versionAsString.indexOf(".") > 0) {
+        int decimal = versionAsString.indexOf(".");
+        try {
+          majorVersion = Integer.valueOf(versionAsString.substring(0, decimal));
+          minorVersion = Integer.valueOf(versionAsString.substring(decimal + 1));
+          setEmlVersion(majorVersion, minorVersion);
+        } catch (NumberFormatException e) {
+          LOG.error("Error parsing major and minor version numbers from version: " + versionAsString);
+        }
+      }
+      // otherwise reset major and minor version to 0
+      else {
+        majorVersion = 0;
+        minorVersion = 0;
+        setEmlVersion(majorVersion, minorVersion);
+      }
+    }
   }
 }
