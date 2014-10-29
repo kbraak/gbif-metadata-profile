@@ -40,14 +40,14 @@ public class EmlFactoryTest {
       cal.clear();
 
       assertNotNull(eml);
-      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7", eml.getPackageId());
+      assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v7.41", eml.getPackageId());
       assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5", eml.getGuid());
 
       assertTrue(eml.getAlternateIdentifiers().contains("619a4b95-1a82-4006-be6a-7dbe3c9b33c5"));
       assertTrue(eml.getAlternateIdentifiers().contains("doi:10.1093/ageing/29.1.57"));
       assertTrue(eml.getAlternateIdentifiers().contains("http://ageing.oxfordjournals.org/content/29/1/57"));
 
-      assertEquals(7, eml.getEmlVersion());
+      assertEquals("7.41", eml.getEmlVersion().toPlainString());
       assertEquals("Tanzanian Entomological Collection", eml.getTitle());
 
       // this is complete test for agents so subsequent agent tests will not be so extensive
@@ -316,6 +316,4 @@ public class EmlFactoryTest {
       fail();
     }
   }
-
-
 }
