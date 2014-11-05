@@ -72,4 +72,29 @@ public class EmlTest {
     eml.setEmlVersion(new BigDecimal("5.4"));
     assertEquals("5.5", eml.getNextEmlVersionAfterMinorVersionChange().toPlainString());
   }
+
+  /**
+   * Ensure trailing zero's don't get cutoff! E.g. we preserve version 1.10.
+   */
+  @Test
+  public void testTrailingZeros() {
+    BigDecimal bd1 = new BigDecimal("1.10");
+    assertEquals("1.10", bd1.toPlainString());
+
+    Eml eml = new Eml();
+    eml.setEmlVersion(new BigDecimal("1.10"));
+    assertEquals("1.10", eml.getEmlVersion().toPlainString());
+
+    Eml eml2 = new Eml();
+    eml2.setEmlVersion(new BigDecimal("0.9"));
+    eml2.setPreviousEmlVersion(new BigDecimal("0.8"));
+
+    assertEquals("0.8", eml2.getPreviousEmlVersion().toPlainString());
+    assertEquals("0.9", eml2.getEmlVersion().toPlainString());
+    assertEquals("0.10", eml2.getNextEmlVersionAfterMinorVersionChange().toPlainString());
+
+    eml2.setEmlVersion(eml2.getNextEmlVersionAfterMinorVersionChange());
+    assertEquals("0.9", eml2.getPreviousEmlVersion().toPlainString());
+    assertEquals("0.10", eml2.getEmlVersion().toPlainString());
+  }
 }
