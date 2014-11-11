@@ -951,7 +951,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @param element in an XML document
    */
-  public void setIntellectualRights(org.w3c.dom.Element element) {
+  public void parseIntellectualRights(org.w3c.dom.Element element) {
       String xmlStr = rawXmlToString(element);
       this.intellectualRights = paraXmlToHtml(xmlStr);
   }
