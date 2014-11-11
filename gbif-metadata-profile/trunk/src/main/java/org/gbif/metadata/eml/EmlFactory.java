@@ -71,7 +71,7 @@ public class EmlFactory {
     digester.addBeanPropertySetter("eml/dataset/abstract/para", "abstract");
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
     digester.addRule("eml/dataset/intellectualRights/para", new NodeCreateRule(Node.ELEMENT_NODE));
-    digester.addSetNext("eml/dataset/intellectualRights/para", "setIntellectualRights");
+    digester.addSetNext("eml/dataset/intellectualRights/para", "parseIntellectualRights");
     digester.addCallMethod("eml/dataset/methods/methodStep/description/para", "addMethodStep", 1);
     digester.addCallParam("eml/dataset/methods/methodStep/description/para", 0);
     digester.addBeanPropertySetter("eml/dataset/methods/sampling/studyExtent/description/para", "studyExtent");
