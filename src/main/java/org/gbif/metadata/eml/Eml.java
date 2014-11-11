@@ -631,7 +631,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @param updateFrequency as per the EML enumeration in lowerCamel case, e.g. asNeeded
    */
   public void setUpdateFrequency(String updateFrequency) {
-    this.updateFrequency = MaintenanceUpdateFrequency.findByDisplayValue(updateFrequency);
+    this.updateFrequency = MaintenanceUpdateFrequency.findByIdentifier(updateFrequency);
   }
 
   public List<Agent> getCreators() {

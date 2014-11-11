@@ -221,7 +221,7 @@
     <description>
       <para>${eml.updateFrequencyDescription!}</para>
     </description>
-    <maintenanceUpdateFrequency>${eml.updateFrequency.displayValue}</maintenanceUpdateFrequency>
+    <maintenanceUpdateFrequency>${eml.updateFrequency.identifier}</maintenanceUpdateFrequency>
   </maintenance>
   </#if>
 
