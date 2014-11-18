@@ -53,6 +53,8 @@ public class Eml implements Serializable, BasicMetadata {
   private static final Splitter SEMICOLON_SPLITTER = Splitter.on(';');
   private static final Splitter COMMA_SPLITTER = Splitter.on(',');
   private static final Splitter PIPE_SPLITTER = Splitter.on('|');
+  private static final int MAJOR_VERSION_START = 1;
+  private static final int MINOR_VERSION_START = 0;
 
   /**
    * Generated
@@ -97,9 +99,9 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Serialised data
    */
-  private BigDecimal emlVersion = new BigDecimal("0.0");
-  private BigDecimal previousEmlVersion = new BigDecimal("0.0");
-  private int majorVersion = 0;
+  private BigDecimal emlVersion = new BigDecimal("1.0");
+  private BigDecimal previousEmlVersion = new BigDecimal("1.0");
+  private int majorVersion = 1;
   private int minorVersion = 0;
   private List<GeospatialCoverage> geospatialCoverages = Lists.newArrayList();
 
@@ -1216,7 +1218,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Set the version from the incoming BigDecimal. If the BigDecimal is in the format major_version.minor_version
    * the major and minor versions are parsed, set, and the version updated accordingly. If the decimal is not
-   * in the format major_version.minor_version, the version is reset to 0.0.
+   * in the format major_version.minor_version, the version is reset to 1.0.
    *
    * @param version BigDecimal in the format major_version.minor_version
    */
@@ -1236,8 +1238,8 @@ public class Eml implements Serializable, BasicMetadata {
       }
       // otherwise reset major and minor version to 0
       else {
-        majorVersion = 0;
-        minorVersion = 0;
+        majorVersion = MAJOR_VERSION_START;
+        minorVersion = MINOR_VERSION_START;
         setEmlVersion(majorVersion, minorVersion);
       }
     }
