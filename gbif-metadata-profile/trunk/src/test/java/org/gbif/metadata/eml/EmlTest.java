@@ -12,28 +12,28 @@ public class EmlTest {
   public void testEmlVersionsStartAtZero() {
     Eml eml = new Eml();
 
-    assertEquals("0.0", eml.getEmlVersion().toPlainString());
-    assertEquals("0.0", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("1.0", eml.getEmlVersion().toPlainString());
+    assertEquals("1.0", eml.getPreviousEmlVersion().toPlainString());
 
     BigDecimal nextMajorVersion = eml.getNextEmlVersionAfterMajorVersionChange();
     eml.setEmlVersion(nextMajorVersion);
-    assertEquals("1.0", eml.getEmlVersion().toPlainString());
-    assertEquals("0.0", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("2.0", eml.getEmlVersion().toPlainString());
+    assertEquals("1.0", eml.getPreviousEmlVersion().toPlainString());
 
     BigDecimal nextMinorVersion = eml.getNextEmlVersionAfterMinorVersionChange();
     eml.setEmlVersion(nextMinorVersion);
-    assertEquals("1.1", eml.getEmlVersion().toPlainString());
-    assertEquals("1.0", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("2.1", eml.getEmlVersion().toPlainString());
+    assertEquals("2.0", eml.getPreviousEmlVersion().toPlainString());
 
     nextMinorVersion = eml.getNextEmlVersionAfterMinorVersionChange();
     eml.setEmlVersion(nextMinorVersion);
-    assertEquals("1.2", eml.getEmlVersion().toPlainString());
-    assertEquals("1.1", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("2.2", eml.getEmlVersion().toPlainString());
+    assertEquals("2.1", eml.getPreviousEmlVersion().toPlainString());
 
     nextMajorVersion = eml.getNextEmlVersionAfterMajorVersionChange();
     eml.setEmlVersion(nextMajorVersion);
-    assertEquals("2.0", eml.getEmlVersion().toPlainString());
-    assertEquals("1.2", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("3.0", eml.getEmlVersion().toPlainString());
+    assertEquals("2.2", eml.getPreviousEmlVersion().toPlainString());
   }
 
   @Test
@@ -51,12 +51,12 @@ public class EmlTest {
   public void testEmlVersionsStartNotWithDecimal() {
     Eml eml = new Eml();
     eml.setPackageId("619a4b95-1a82-4006-be6a-7dbe3c9b33c5/v2");
-    assertEquals("0.0", eml.getEmlVersion().toPlainString());
+    assertEquals("1.0", eml.getEmlVersion().toPlainString());
 
     BigDecimal nextMajorVersion = eml.getNextEmlVersionAfterMajorVersionChange();
     eml.setEmlVersion(nextMajorVersion);
-    assertEquals("1.0", eml.getEmlVersion().toPlainString());
-    assertEquals("0.0", eml.getPreviousEmlVersion().toPlainString());
+    assertEquals("2.0", eml.getEmlVersion().toPlainString());
+    assertEquals("1.0", eml.getPreviousEmlVersion().toPlainString());
   }
 
   @Test
@@ -86,15 +86,15 @@ public class EmlTest {
     assertEquals("1.10", eml.getEmlVersion().toPlainString());
 
     Eml eml2 = new Eml();
-    eml2.setEmlVersion(new BigDecimal("0.9"));
-    eml2.setPreviousEmlVersion(new BigDecimal("0.8"));
+    eml2.setEmlVersion(new BigDecimal("1.9"));
+    eml2.setPreviousEmlVersion(new BigDecimal("1.8"));
 
-    assertEquals("0.8", eml2.getPreviousEmlVersion().toPlainString());
-    assertEquals("0.9", eml2.getEmlVersion().toPlainString());
-    assertEquals("0.10", eml2.getNextEmlVersionAfterMinorVersionChange().toPlainString());
+    assertEquals("1.8", eml2.getPreviousEmlVersion().toPlainString());
+    assertEquals("1.9", eml2.getEmlVersion().toPlainString());
+    assertEquals("1.10", eml2.getNextEmlVersionAfterMinorVersionChange().toPlainString());
 
     eml2.setEmlVersion(eml2.getNextEmlVersionAfterMinorVersionChange());
-    assertEquals("0.9", eml2.getPreviousEmlVersion().toPlainString());
-    assertEquals("0.10", eml2.getEmlVersion().toPlainString());
+    assertEquals("1.9", eml2.getPreviousEmlVersion().toPlainString());
+    assertEquals("1.10", eml2.getEmlVersion().toPlainString());
   }
 }
