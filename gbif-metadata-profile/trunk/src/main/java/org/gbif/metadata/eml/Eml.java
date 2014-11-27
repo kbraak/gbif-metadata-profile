@@ -31,6 +31,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1243,5 +1246,49 @@ public class Eml implements Serializable, BasicMetadata {
         setEmlVersion(majorVersion, minorVersion);
       }
     }
+  }
+
+  /**
+   * Parses license url from rights statement. For the following example rights statement:
+   * </br>
+   * This work is licensed under a
+   * <a href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">Creative Commons CCZero (CC0) 1.0 License</a>.
+   * </br>
+   * this method will return http://creativecommons.org/publicdomain/zero/1.0/legalcode
+   *
+   * @return license url from para embedded inside rights statement, or null if none found.
+   */
+  protected String parseLicenseUrl() {
+    String licenseUrl = null;
+    if (intellectualRights != null) {
+      Document doc = Jsoup.parse(intellectualRights);
+      Element link = doc.select("a").first();
+      if (link != null) {
+        licenseUrl = link.attr("href");
+      }
+    }
+    return licenseUrl;
+  }
+
+  /**
+   * Parses license title from rights statement. For the following example rights statement:
+   * </br>
+   * This work is licensed under a
+   * <a href="http://creativecommons.org/publicdomain/zero/1.0/legalcode">Creative Commons CCZero (CC0) 1.0 License</a>.
+   * </br>
+   * this method will return Creative Commons CCZero (CC0) 1.0 License
+   *
+   * @return license title from para embedded inside rights statement, or null if none found.
+   */
+  protected String parseLicenseTitle() {
+    String licenseUrl = null;
+    if (intellectualRights != null) {
+      Document doc = Jsoup.parse(intellectualRights);
+      Element link = doc.select("a").first();
+      if (link != null) {
+        licenseUrl = link.text();
+      }
+    }
+    return licenseUrl;
   }
 }
