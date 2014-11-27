@@ -1258,7 +1258,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @return license url from para embedded inside rights statement, or null if none found.
    */
-  protected String parseLicenseUrl() {
+  public String parseLicenseUrl() {
     String licenseUrl = null;
     if (intellectualRights != null) {
       Document doc = Jsoup.parse(intellectualRights);
@@ -1280,7 +1280,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @return license title from para embedded inside rights statement, or null if none found.
    */
-  protected String parseLicenseTitle() {
+  public String parseLicenseTitle() {
     String licenseUrl = null;
     if (intellectualRights != null) {
       Document doc = Jsoup.parse(intellectualRights);
