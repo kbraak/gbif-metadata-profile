@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class EmlTest {
 
@@ -96,5 +97,27 @@ public class EmlTest {
     eml2.setEmlVersion(eml2.getNextEmlVersionAfterMinorVersionChange());
     assertEquals("1.9", eml2.getPreviousEmlVersion().toPlainString());
     assertEquals("1.10", eml2.getEmlVersion().toPlainString());
+  }
+
+  @Test
+  public void testParseLicenseUrl() {
+    Eml eml = new Eml();
+    eml.setIntellectualRights(
+      "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
+    assertEquals("http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
+
+    eml.setIntellectualRights("This work is licensed under CC0");
+    assertNull(eml.parseLicenseUrl());
+  }
+
+  @Test
+  public void testParseLicenseTitle() {
+    Eml eml = new Eml();
+    eml.setIntellectualRights(
+      "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
+    assertEquals("Creative Commons CCZero (CC0) 1.0 License", eml.parseLicenseTitle());
+
+    eml.setIntellectualRights("This work is licensed under CC0");
+    assertNull(eml.parseLicenseTitle());
   }
 }
