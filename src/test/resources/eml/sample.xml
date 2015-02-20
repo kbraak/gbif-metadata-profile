@@ -5,7 +5,7 @@
         The content of this metadata are NOT real data, but drafted just for this sample
         -->
 <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:dc="http://purl.org/dc/terms/"
     xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml-gbif-profile.xsd"
     xml:lang="en"
@@ -16,7 +16,7 @@
         <alternateIdentifier>619a4b95-1a82-4006-be6a-7dbe3c9b33c5</alternateIdentifier>
         <alternateIdentifier>doi:10.1093/ageing/29.1.57</alternateIdentifier>
         <alternateIdentifier>http://ageing.oxfordjournals.org/content/29/1/57</alternateIdentifier>
-        
+
         <title xml:lang="en">Tanzanian Entomological Collection</title>
         <title xml:lang="de">Entymologische Sammlung Tansania</title>
 
@@ -58,7 +58,7 @@
             <phone>+4528261487</phone>
             <electronicMailAddress>trobertson@gbif.org</electronicMailAddress>
             <onlineUrl>http://www.gbif.org</onlineUrl>
-            <userId directory="http://researchId.org/">0000-0002-8442-8050</userId>
+            <userId directory="http://www.researcherid.com/rid/">A-8442-8050</userId>
         </metadataProvider>
 
         <!-- Note that associated parties have roles -->
@@ -256,8 +256,10 @@
             <title>Documenting Some Asian Birds and Insects</title>
             <personnel>
                 <individualName>
-                    <surName>Remsen</surName>
+                    <givenName>David</givenName>
+                    <surName>Green</surName>
                 </individualName>
+                <userId directory="http://orcid.org/">0000-0002-1234-5678</userId>
                 <role>publisher</role>
             </personnel>
             <abstract>
@@ -283,7 +285,7 @@
         <metadata>
             <gbif>
                 <!-- eml file creation date -->
-                <dateStamp>2002-10-23T18:13:51.235+01:00</dateStamp>          
+                <dateStamp>2002-10-23T18:13:51.235+01:00</dateStamp>
 
                 <!-- level to which the metadata dcoument applies; default for GBIF is "dataset";  "series" is the other common level -->
                 <hierarchyLevel> dataset </hierarchyLevel>
@@ -298,7 +300,7 @@
                 <citation>title 2</citation>
                 <citation>title 3</citation>
             </bibliography>
-            
+
             <!-- Note the repetition -->
             <physical>
                 <objectName>INV-GCEM-0305a1_1_1.shp</objectName>
@@ -331,10 +333,10 @@
                     </online>
                 </distribution>
             </physical>
-                
+
                 <!-- URL of the logo associated with a resource -->
                 <resourceLogoUrl>http://www.tim.org/logo.jpg</resourceLogoUrl>
-                
+
                 <!-- This combines 3 optional fields in one section, and dictates the format output by the IPT -->
                 <collection>
                     <parentCollectionIdentifier>urn:lsid:tim.org:12:1</parentCollectionIdentifier>
@@ -344,7 +346,7 @@
 
                 <!-- derived from NHC  -->
                 <formationPeriod> During the 70s </formationPeriod>
-                
+
                 <!-- derived from NHC  -->
             <specimenPreservationMethod> alcohol </specimenPreservationMethod>
             <!-- derived from NHC  -->
@@ -360,7 +362,7 @@
                         <endRange>600</endRange>
                     </jgtiUnitRange>
                 </jgtiCuratorialUnit>
-                
+
             </gbif>
         </metadata>
     </additionalMetadata>

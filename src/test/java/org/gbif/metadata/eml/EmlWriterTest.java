@@ -196,14 +196,18 @@ public class EmlWriterTest {
       Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getProject().getPersonnel().size());
-      assertNull(eml.getProject().getPersonnel().get(0).getFirstName());
-      assertEquals("Remsen", eml.getProject().getPersonnel().get(0).getLastName());
+      assertEquals("David", eml.getProject().getPersonnel().get(0).getFirstName());
+      assertEquals("Green", eml.getProject().getPersonnel().get(0).getLastName());
+      assertEquals("http://orcid.org/", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getDirectory());
+      assertEquals("0000-0002-1234-5678", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getIdentifier());
       assertEquals("publisher", eml.getProject().getPersonnel().get(0).getRole());
 
       Agent anotherPersonnel = new Agent();
       anotherPersonnel.setFirstName("John");
       anotherPersonnel.setLastName("Stewart");
       anotherPersonnel.setRole("originator");
+      UserId userId = new UserId("http://www.researcherid.com/rid/", "A-1234-4321");
+      anotherPersonnel.addUserId(userId);
       eml.getProject().getPersonnel().add(anotherPersonnel);
 
       // write EML
@@ -219,7 +223,8 @@ public class EmlWriterTest {
       assertEquals("John", eml2.getProject().getPersonnel().get(1).getFirstName());
       assertEquals("Stewart", eml2.getProject().getPersonnel().get(1).getLastName());
       assertEquals("originator", eml2.getProject().getPersonnel().get(1).getRole());
-
+      assertEquals("http://www.researcherid.com/rid/", eml.getProject().getPersonnel().get(1).getUserIds().get(0).getDirectory());
+      assertEquals("A-1234-4321", eml.getProject().getPersonnel().get(1).getUserIds().get(0).getIdentifier());
     } catch (Exception e) {
       e.printStackTrace();
       fail();
@@ -359,7 +364,7 @@ public class EmlWriterTest {
       System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
       EmlWriter.writeEmlFile(temp, eml);
 
-      // now read the EML in again and ensure personnel has been persisted correctly
+      // now read the EML in again and ensure project has been persisted correctly
       Eml eml2 = EmlFactory.build(new FileInputStream(temp));
       assertNotNull(eml2);
       assertEquals("T123:1", eml.getProject().getIdentifier());
@@ -411,7 +416,7 @@ public class EmlWriterTest {
       System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
       EmlWriter.writeEmlFile(temp, eml);
 
-      // now read the EML in again and ensure personnel has been persisted correctly
+      // now read the EML in again and ensure specimen preservation methods has been persisted correctly
       Eml eml2 = EmlFactory.build(new FileInputStream(temp));
       assertNotNull(eml2);
 

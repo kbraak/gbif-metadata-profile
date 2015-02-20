@@ -102,8 +102,8 @@ public class EmlFactoryTest {
       assertNotNull(firstMetadataProvider.getHomepage());
       assertEquals("http://www.gbif.org", firstMetadataProvider.getHomepage());
       assertFalse(firstMetadataProvider.getUserIds().isEmpty());
-      assertEquals("http://researchId.org/", firstMetadataProvider.getUserIds().get(0).getDirectory());
-      assertEquals("0000-0002-8442-8050", firstMetadataProvider.getUserIds().get(0).getIdentifier());
+      assertEquals("http://www.researcherid.com/rid/", firstMetadataProvider.getUserIds().get(0).getDirectory());
+      assertEquals("A-8442-8050", firstMetadataProvider.getUserIds().get(0).getIdentifier());
 
       // agent test for contact
       Agent firstContact = eml.getContacts().get(0);
@@ -248,6 +248,11 @@ public class EmlFactoryTest {
       assertNotNull(eml.getProject());
       assertEquals("Documenting Some Asian Birds and Insects", eml.getProject().getTitle());
       assertNotNull(eml.getProject().getPersonnel());
+      assertEquals("David", eml.getProject().getPersonnel().get(0).getFirstName());
+      assertEquals("Green", eml.getProject().getPersonnel().get(0).getLastName());
+      assertEquals("http://orcid.org/", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getDirectory());
+      assertEquals("0000-0002-1234-5678", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getIdentifier());
+      assertEquals("publisher", eml.getProject().getPersonnel().get(0).getRole());
       assertEquals("My Deep Pockets", eml.getProject().getFunding());
       assertNotNull(eml.getProject().getIdentifier());
       assertEquals("T123", eml.getProject().getIdentifier());

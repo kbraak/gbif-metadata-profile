@@ -276,6 +276,13 @@
           </#if>
           <surName>${personnel.lastName!}</surName>
         </individualName>
+        <#if (personnel.userIds?size>0)>
+          <#list personnel.userIds as userId>
+            <#if userId.identifier?has_content && userId.directory?has_content>
+              <userId directory="${userId.directory}">${userId.identifier}</userId>
+            </#if>
+          </#list>
+        </#if>
         <role>${personnel.role!}</role>
       </personnel>
     </#list>
