@@ -21,7 +21,7 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
 
   protected String content;
   private StringBuffer chars;
-  private Pattern normWhitespace = Pattern.compile("\\s+");
+  private Pattern normWhitespace = Pattern.compile("/[^\\S\\r\\n]/");
   protected String parents = "";
 
   @Override

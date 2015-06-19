@@ -64,7 +64,10 @@ public class Eml implements Serializable, BasicMetadata {
    */
   private static final long serialVersionUID = 770733523572837495L;
 
-  private String description;
+  /**
+   * Description, composed of one or more paragraphs.
+   */
+  private List<String> description = Lists.newArrayList();
 
   /**
    * This is not in the GBIF extended metadata document, but seems like a sensible placeholder that can be used to
@@ -747,7 +750,7 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   @Override
-  public String getDescription() {
+  public List<String> getDescription() {
     return getAbstract();
   }
 
@@ -805,6 +808,15 @@ public class Eml implements Serializable, BasicMetadata {
 
   public void addAlternateIdentifier(String alternateIdentifier) {
     alternateIdentifiers.add(alternateIdentifier);
+  }
+
+  /**
+   * Adds another paragraph to description.
+   *
+   * @param para paragraph
+   */
+  public void addDescriptionPara(String para) {
+    description.add(para);
   }
 
   /**
@@ -962,7 +974,7 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
 
-  public String getAbstract() {
+  public List<String> getAbstract() {
     return description;
   }
 
@@ -974,7 +986,7 @@ public class Eml implements Serializable, BasicMetadata {
     return guid + "/v" + emlVersion.toPlainString();
   }
 
-  public void setAbstract(String description) {
+  public void setAbstract(List<String> description) {
     this.description = description;
   }
 
@@ -986,7 +998,7 @@ public class Eml implements Serializable, BasicMetadata {
     this.citation = new Citation(citation, identifier);
   }
 
-  public void setDescription(String description) {
+  public void setDescription(List<String> description) {
     this.description = description;
   }
 

@@ -106,10 +106,16 @@
     </#if>
   </pubDate>
   <language>${eml.language!"en"}</language>
-  <#-- A brief description of the resource. -->
+  <#-- A description of the resource -->
+  <#if (eml.abstract?size>0)>
   <abstract>
-    <para>${eml.abstract!}</para>
+      <#list eml.abstract as p>
+        <#if p?has_content>
+    <para>${p}</para>
+        </#if>
+      </#list>
   </abstract>
+  </#if>
   <#-- Zero or more sets of keywords and an associated thesaurus for each. -->
   <#if (eml.keywords ? size > 0)>
     <#list eml.keywords as ks>

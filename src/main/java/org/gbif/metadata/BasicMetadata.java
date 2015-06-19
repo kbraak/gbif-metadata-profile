@@ -17,6 +17,7 @@
 package org.gbif.metadata;
 
 import java.util.Date;
+import java.util.List;
 
 public interface BasicMetadata {
 
@@ -26,7 +27,7 @@ public interface BasicMetadata {
 
   String getCreatorName();
 
-  String getDescription();
+  List<String> getDescription();
 
   String getHomepageUrl();
 

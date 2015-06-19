@@ -42,7 +42,7 @@ public class MetadataFactory {
    */
 
   private boolean hasContent(BasicMetadataImpl bm) {
-    return bm != null && (bm.getTitle() != null || bm.getDescription() != null || bm.getSubject() != null
+    return bm != null && (bm.getTitle() != null || !bm.getDescription().isEmpty() || bm.getSubject() != null
                           || bm.getSourceId() != null ||
                           bm.getHomepageUrl() != null || bm.getPublished() != null);
   }

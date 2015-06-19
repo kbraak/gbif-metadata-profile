@@ -60,8 +60,17 @@ public class EmlWriterTest {
       assertNotNull(eml.getMetadataLanguage());
       assertEquals(eml2.getMetadataLanguage(), eml.getMetadataLanguage());
 
-      assertNotNull(eml.getDescription());
-      assertEquals(eml2.getDescription(), eml.getDescription());
+      assertFalse(eml.getAlternateIdentifiers().isEmpty());
+      assertFalse(eml2.getAlternateIdentifiers().isEmpty());
+      assertEquals(eml2.getAlternateIdentifiers().get(0), eml.getAlternateIdentifiers().get(0));
+      assertEquals(eml2.getAlternateIdentifiers().get(1), eml.getAlternateIdentifiers().get(1));
+      assertEquals(eml2.getAlternateIdentifiers().get(2), eml.getAlternateIdentifiers().get(2));
+
+      assertFalse(eml.getDescription().isEmpty());
+      assertFalse(eml2.getDescription().isEmpty());
+      assertEquals(eml2.getDescription().get(0), eml.getDescription().get(0));
+      assertEquals(eml2.getDescription().get(1), eml.getDescription().get(1));
+      assertEquals(eml2.getDescription().get(2), eml.getDescription().get(2));
 
       assertNotNull(eml.getPubDate());
       assertEquals(eml2.getPubDate(), eml.getPubDate());

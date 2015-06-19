@@ -17,7 +17,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   private String title;
   private String sourceId;
-  private String description;
+  private List<String> description;
   private String homepageUrl;
   private String logoUrl;
   private String subject;
@@ -57,11 +57,11 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   }
 
   @Override
-  public String getDescription() {
+  public List<String> getDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(List<String> description) {
     this.description = description;
   }
 

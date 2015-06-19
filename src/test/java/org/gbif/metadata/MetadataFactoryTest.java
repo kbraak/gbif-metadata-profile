@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -51,7 +52,7 @@ public class MetadataFactoryTest {
 
     bm = mf.read(FileUtils.getClasspathFile("metadata/ipt_eml.xml"));
     assertEquals("PonTaurus", bm.getTitle());
-    assertEquals("Test data set mapped to Darwin Core.", bm.getDescription());
+    assertEquals("Test data set mapped to Darwin Core.", bm.getDescription().get(0));
     assertEquals("IPT; GBIF", bm.getSubject());
     assertEquals("http://www.bgbm.org", bm.getHomepageUrl());
 
@@ -62,9 +63,8 @@ public class MetadataFactoryTest {
     // test as file
     bm = mf.read(FileUtils.getClasspathFile("metadata/worms_dc.xml"));
     assertEquals("World Register of Marine Species", bm.getTitle());
-    //    assertEquals(
-    //        "The aim of a World Register of Marine Species (WoRMS) is to provide an authoritative and comprehensive list of names of marine organisms, including information on synonymy. While highest priority goes to valid names, other names in use are included so that this register can serve as a guide to interpret taxonomic literature.",
-    //        bm.getDescription());
+    assertEquals(7, bm.getDescription().size());
+    assertTrue(bm.getDescription().get(0).startsWith("The aim of a World Register"));
     assertEquals("Marine;Taxonomy;Species Checklist;Authoritative;Specimens", bm.getSubject());
     assertEquals("2010-08-09", DateUtils.ISO_DATE_FORMAT.format(bm.getPublished()));
 

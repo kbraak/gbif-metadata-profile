@@ -68,7 +68,11 @@ public class EmlFactory {
     digester.addCallParam("eml/dataset/title", 1, "xml:lang");
 
     digester.addBeanPropertySetter("eml/dataset/language", "language");
-    digester.addBeanPropertySetter("eml/dataset/abstract/para", "abstract");
+
+    // descriptions, broken into multiple paragraphs
+    digester.addCallMethod("eml/dataset/abstract/para", "addDescriptionPara", 1);
+    digester.addCallParam("eml/dataset/abstract/para", 0);
+
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
     digester.addRule("eml/dataset/intellectualRights/para", new NodeCreateRule(Node.ELEMENT_NODE));
     digester.addSetNext("eml/dataset/intellectualRights/para", "parseIntellectualRights");

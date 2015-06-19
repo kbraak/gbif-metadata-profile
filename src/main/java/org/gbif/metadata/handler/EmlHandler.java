@@ -2,12 +2,12 @@ package org.gbif.metadata.handler;
 
 import org.gbif.metadata.DateUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.xml.sax.SAXException;
 
 /**
@@ -24,7 +24,7 @@ public class EmlHandler extends BasicMetadataSaxHandler {
   public void endDocument() throws SAXException {
     super.endDocument();
     bm.setSubject(Strings.emptyToNull(Joiner.on("; ").useForNull("").join(keywords).trim()));
-    bm.setDescription(Strings.emptyToNull(Joiner.on(" \n").useForNull("").join(description).trim()));
+    bm.setDescription(description);
   }
 
   @Override
@@ -43,7 +43,9 @@ public class EmlHandler extends BasicMetadataSaxHandler {
       } else if (parents.startsWith("/eml/dataset/abstract")) {
         // dataset/abstract/para
         if (localName.equalsIgnoreCase("para")) {
-          description.add(content);
+          if (!Strings.isNullOrEmpty(content)) {
+            description.add(content.trim());
+          }
         }
       } else if (parents.startsWith("/eml/dataset/creator")) {
         // dataset/creator/onlineUrl
@@ -74,8 +76,7 @@ public class EmlHandler extends BasicMetadataSaxHandler {
   @Override
   public void startDocument() {
     super.startDocument();
-    keywords = new ArrayList<String>();
-    description = new ArrayList<String>();
+    keywords = Lists.newArrayList();
+    description = Lists.newArrayList();
   }
-
 }

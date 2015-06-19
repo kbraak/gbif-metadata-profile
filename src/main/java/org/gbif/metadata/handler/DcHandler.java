@@ -5,11 +5,22 @@ import org.gbif.utils.text.EmailUtils;
 import org.gbif.utils.text.EmailUtils.EmailWithName;
 
 import java.util.Date;
+import java.util.List;
 
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.xml.sax.SAXException;
 
 public class DcHandler extends BasicMetadataSaxHandler {
+
+  List<String> description;
+
+  @Override
+  public void endDocument() throws SAXException {
+    super.endDocument();
+    bm.setDescription(description);
+  }
 
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -21,9 +32,11 @@ public class DcHandler extends BasicMetadataSaxHandler {
       if (localName.equalsIgnoreCase("title")) {
         bm.setTitle(content);
 
-      } else if (localName.equalsIgnoreCase("description")
-                 || localName.equalsIgnoreCase("abstract") && bm.getDescription() == null) {
-        bm.setDescription(content);
+      } else if (localName.equalsIgnoreCase("description") || localName.equalsIgnoreCase("abstract")) {
+        // split description into paragraphs
+        for (String para : Splitter.onPattern("\r?\n").trimResults().omitEmptyStrings().split(content)) {
+          description.add(para);
+        }
       } else if (localName.equalsIgnoreCase("subject") || localName.equalsIgnoreCase("coverage") || localName
         .equalsIgnoreCase("spatial") || localName.equalsIgnoreCase("temporal")) {
         bm.addSubject(content);
@@ -61,5 +74,11 @@ public class DcHandler extends BasicMetadataSaxHandler {
       .equalsIgnoreCase("homepage")) {
       bm.setHomepageUrl(content);
     }
+  }
+
+  @Override
+  public void startDocument() {
+    super.startDocument();
+    description = Lists.newArrayList();
   }
 }
