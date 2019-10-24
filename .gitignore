@@ -1,1 +1,15 @@
+*.class
+*.iml
+.idea
 target/
+registry-ws/logs
+logs/
+dependency-reduced-pom.xml
+appkeys.txt
+
+*.DS_Store
+
+# Package Files #
+*.jar
+*.war
+*.ear
