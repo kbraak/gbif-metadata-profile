@@ -5,15 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   private static final long serialVersionUID = 12073642352837495L;
-  private static final Joiner SUBJECT_JOINER = Joiner.on("; ").useForNull("");
 
   private String title;
   private String sourceId;
@@ -28,7 +28,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   private String publisherName;
   private String publisherEmail;
   private Date published;
-  private Map<String, String> additionalMetadata = new HashMap<String, String>();
+  private Map<String, String> additionalMetadata = new HashMap<>();
 
   public Map<String, String> getAdditionalMetadata() {
     return additionalMetadata;
@@ -136,6 +136,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
     this.title = title;
   }
 
+  @Override
   public String getCitationString() {
     return citation;
   }
@@ -158,7 +159,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
    * adds more subjects/keywords, concatenating it to the existing one
    */
   public void addSubject(String newSubject) {
-    if (Strings.isNullOrEmpty(subject)) {
+    if (StringUtils.isBlank(subject)) {
       subject = newSubject;
     } else {
       subject += "; " + newSubject.trim();
@@ -182,53 +183,55 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   }
 
   public void setSubject(List<String> keywords) {
-    subject = SUBJECT_JOINER.join(keywords);
+    subject = keywords.stream()
+        .map(StringUtils::trimToEmpty)
+        .collect(Collectors.joining("; "));
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final BasicMetadataImpl other = (BasicMetadataImpl) obj;
-    return Objects.equal(this.title, other.title) && Objects.equal(this.sourceId, other.sourceId) && Objects
-      .equal(this.description, other.description) && Objects.equal(this.homepageUrl, other.homepageUrl) && Objects
-      .equal(this.logoUrl, other.logoUrl) && Objects.equal(this.subject, other.subject) && Objects
-      .equal(this.rights, other.rights) && Objects.equal(this.citation, other.citation) && Objects
-      .equal(this.creatorName, other.creatorName) && Objects.equal(this.creatorEmail, other.creatorEmail) && Objects
-      .equal(this.publisherName, other.publisherName) && Objects.equal(this.publisherEmail, other.publisherEmail)
-           && Objects.equal(this.published, other.published) && Objects
-      .equal(this.additionalMetadata, other.additionalMetadata);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BasicMetadataImpl that = (BasicMetadataImpl) o;
+    return Objects.equals(title, that.title)
+        && Objects.equals(sourceId, that.sourceId)
+        && Objects.equals(description, that.description)
+        && Objects.equals(homepageUrl, that.homepageUrl)
+        && Objects.equals(logoUrl, that.logoUrl)
+        && Objects.equals(subject, that.subject)
+        && Objects.equals(rights, that.rights)
+        && Objects.equals(citation, that.citation)
+        && Objects.equals(creatorName, that.creatorName)
+        && Objects.equals(creatorEmail, that.creatorEmail)
+        && Objects.equals(publisherName, that.publisherName)
+        && Objects.equals(publisherEmail, that.publisherEmail)
+        && Objects.equals(published, that.published)
+        && Objects.equals(additionalMetadata, that.additionalMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-      .hashCode(title, sourceId, description, homepageUrl, logoUrl, subject, rights, citation, creatorName, creatorEmail,
-        publisherName, publisherEmail, published, additionalMetadata);
+    return Objects.hash(title, sourceId, description, homepageUrl, logoUrl, subject, rights, citation, creatorName,
+        creatorEmail, publisherName, publisherEmail, published, additionalMetadata);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("title", title).
-      add("sourceId", sourceId).
-      add("description", description).
-      add("homepageUrl", homepageUrl).
-      add("logoUrl", logoUrl).
-      add("subject", subject).
-      add("rights", rights).
-      add("citation", citation).
-      add("creatorName", creatorName).
-      add("creatorEmail", creatorEmail).
-      add("publisherName", publisherName).
-      add("publisherEmail", publisherEmail).
-      add("published", published).
-      add("additionalMetadata", additionalMetadata).
-      toString();
+    return new StringJoiner(", ", BasicMetadataImpl.class.getSimpleName() + "[", "]")
+        .add("title='" + title + "'")
+        .add("sourceId='" + sourceId + "'")
+        .add("description=" + description)
+        .add("homepageUrl='" + homepageUrl + "'")
+        .add("logoUrl='" + logoUrl + "'")
+        .add("subject='" + subject + "'")
+        .add("rights='" + rights + "'")
+        .add("citation='" + citation + "'")
+        .add("creatorName='" + creatorName + "'")
+        .add("creatorEmail='" + creatorEmail + "'")
+        .add("publisherName='" + publisherName + "'")
+        .add("publisherEmail='" + publisherEmail + "'")
+        .add("published=" + published)
+        .add("additionalMetadata=" + additionalMetadata)
+        .toString();
   }
-
 }

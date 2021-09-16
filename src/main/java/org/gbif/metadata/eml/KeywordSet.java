@@ -16,11 +16,10 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Simple POJO container for an ordered list of keywords and optionally, a thesaurus to which those keywords are
@@ -49,7 +48,7 @@ public class KeywordSet implements Serializable {
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keyword">EML Resource keyword
    *      element</a>
    */
-  private List<String> keywords = Lists.newArrayList();
+  private List<String> keywords = new ArrayList<>();
 
   /**
    * Default constructor required by Struts2
@@ -120,8 +119,8 @@ public class KeywordSet implements Serializable {
   public void setKeywordsString(String keywords, String separator) {
     this.keywords.clear();
     if (keywords != null) {
-      for (String k : Splitter.on(separator).split(keywords)) {
-        k = Strings.emptyToNull(k.trim());
+      for (String k : StringUtils.split(keywords, separator)) {
+        k = StringUtils.trimToNull(k);
         this.keywords.add(k);
       }
     }

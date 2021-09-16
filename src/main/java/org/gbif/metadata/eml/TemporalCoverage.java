@@ -17,8 +17,8 @@ import org.gbif.metadata.DateUtils;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate temporal coverage information.
@@ -157,32 +157,28 @@ public class TemporalCoverage implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final TemporalCoverage other = (TemporalCoverage) obj;
-    return Objects.equal(this.startDate, other.startDate) && Objects.equal(this.endDate, other.endDate) && Objects
-      .equal(this.formationPeriod, other.formationPeriod) && Objects
-      .equal(this.livingTimePeriod, other.livingTimePeriod);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TemporalCoverage that = (TemporalCoverage) o;
+    return Objects.equals(startDate, that.startDate)
+        && Objects.equals(endDate, that.endDate)
+        && Objects.equals(formationPeriod, that.formationPeriod)
+        && Objects.equals(livingTimePeriod, that.livingTimePeriod);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(startDate, endDate, formationPeriod, livingTimePeriod);
+    return Objects.hash(startDate, endDate, formationPeriod, livingTimePeriod);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("startDate", startDate).
-      add("endDate", endDate).
-      add("formationPeriod", formationPeriod).
-      add("livingTimePeriod", livingTimePeriod).
-      toString();
+    return new StringJoiner(", ", TemporalCoverage.class.getSimpleName() + "[", "]")
+        .add("startDate=" + startDate)
+        .add("endDate=" + endDate)
+        .add("formationPeriod='" + formationPeriod + "'")
+        .add("livingTimePeriod='" + livingTimePeriod + "'")
+        .toString();
   }
-
 }

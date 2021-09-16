@@ -16,15 +16,14 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Simple POJO container for an ordered list of bibliographic citations.
  */
-
 public class BibliographicCitationSet implements Serializable {
 
   /**
@@ -39,7 +38,7 @@ public class BibliographicCitationSet implements Serializable {
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keyword">EML Resource keyword
    *      element</a>
    */
-  protected List<Citation> bibliographicCitations = Lists.newArrayList();
+  protected List<Citation> bibliographicCitations = new ArrayList<>();
 
   /**
    * Default constructor required by Struts2
@@ -72,27 +71,22 @@ public class BibliographicCitationSet implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final BibliographicCitationSet other = (BibliographicCitationSet) obj;
-    return Objects.equal(this.bibliographicCitations, other.bibliographicCitations);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BibliographicCitationSet that = (BibliographicCitationSet) o;
+    return Objects.equals(bibliographicCitations, that.bibliographicCitations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(bibliographicCitations);
+    return Objects.hash(bibliographicCitations);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("bibliographicCitations", bibliographicCitations).
-      toString();
+    return new StringJoiner(", ", BibliographicCitationSet.class.getSimpleName() + "[", "]")
+        .add("bibliographicCitations=" + bibliographicCitations)
+        .toString();
   }
-
 }

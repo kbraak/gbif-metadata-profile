@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 public class DateUtils {
 
@@ -44,7 +44,7 @@ public class DateUtils {
    *      calendarDate keyword</a>
    */
   public static Date calendarDate(String dateString) throws ParseException {
-    if (dateString == null || Strings.isNullOrEmpty(dateString.trim())) {
+    if (dateString == null || StringUtils.isEmpty(dateString.trim())) {
       return null;
     }
     // kill whitespace
@@ -72,7 +72,7 @@ public class DateUtils {
    * @param x the date as a string or null if not parsable
    */
   public static Date parse(String x) {
-    if (x == null || Strings.isNullOrEmpty(x.trim())) {
+    if (x == null || StringUtils.isEmpty(x.trim())) {
       return null;
     }
     Date date = null;
@@ -127,7 +127,7 @@ public class DateUtils {
    * @throws ParseException Should it be an erroneous format
    */
   public static Date schemaDateTime(String dateString) throws ParseException {
-    dateString = Strings.nullToEmpty(dateString).trim();
+    dateString = StringUtils.trimToEmpty(dateString);
     Date date;
     try {
       Pattern timezone = Pattern.compile("([+-]\\d\\d:\\d\\d)$");

@@ -1,11 +1,10 @@
 package org.gbif.metadata.eml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * This enumeration mirrors the MaintUpFreqType enumeration coming from EML. The maintenance update frequency is
@@ -72,13 +71,13 @@ public enum MaintenanceUpdateFrequency {
 
   static {
     // populate list
-    List<String> ls = new ArrayList<String>();
+    List<String> ls = new ArrayList<>();
     ls.add(MaintenanceUpdateFrequency.ANNUALLY.getIdentifier());
     ls.add(MaintenanceUpdateFrequency.BIANNUALLY.getIdentifier());
     ls.add(MaintenanceUpdateFrequency.MONTHLY.getIdentifier());
     ls.add(MaintenanceUpdateFrequency.WEEKLY.getIdentifier());
     ls.add(MaintenanceUpdateFrequency.DAILY.getIdentifier());
-    NON_ZERO_DAYS_UPDATE_PERIODS = ImmutableList.copyOf(ls);
+    NON_ZERO_DAYS_UPDATE_PERIODS = Collections.unmodifiableList(ls);
   }
 
   /**
@@ -112,7 +111,7 @@ public enum MaintenanceUpdateFrequency {
   public static MaintenanceUpdateFrequency findByIdentifier(@Nullable String id) {
     if (id != null) {
       for (MaintenanceUpdateFrequency entry : MaintenanceUpdateFrequency.values()) {
-        if (entry.getIdentifier().toLowerCase().equals(id.trim().toLowerCase())) {
+        if (entry.getIdentifier().equalsIgnoreCase(id.trim())) {
           return entry;
         }
       }

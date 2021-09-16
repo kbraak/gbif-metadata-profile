@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ***************************************************************************/
-
 package org.gbif.metadata.eml;
 
 import org.gbif.file.FreemarkerWriter;
@@ -37,7 +36,7 @@ public class EmlWriter extends FreemarkerWriter {
    * @param eml the EML object
    */
   public static void writeEmlFile(File f, Eml eml) throws IOException, TemplateException {
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
     map.put("eml", eml);
     writeFile(f, EML_TEMPLATE, map);
   }

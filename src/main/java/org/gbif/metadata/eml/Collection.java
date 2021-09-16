@@ -1,8 +1,8 @@
 package org.gbif.metadata.eml;
 
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate information about collection data.
@@ -80,30 +80,26 @@ public class Collection implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Collection other = (Collection) obj;
-        return Objects.equal(this.collectionId, other.collectionId) && Objects
-                .equal(this.collectionName, other.collectionName) && Objects
-                .equal(this.parentCollectionId, other.parentCollectionId);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Collection that = (Collection) o;
+        return Objects.equals(collectionName, that.collectionName)
+            && Objects.equals(collectionId, that.collectionId)
+            && Objects.equals(parentCollectionId, that.parentCollectionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(collectionId, collectionName, parentCollectionId);
+        return Objects.hash(collectionName, collectionId, parentCollectionId);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).
-                add("collectionId", collectionId).
-                add("collectionName", collectionName).
-                add("parentCollectionId", parentCollectionId).
-                toString();
+        return new StringJoiner(", ", Collection.class.getSimpleName() + "[", "]")
+            .add("collectionName='" + collectionName + "'")
+            .add("collectionId='" + collectionId + "'")
+            .add("parentCollectionId='" + parentCollectionId + "'")
+            .toString();
     }
 }

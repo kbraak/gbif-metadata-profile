@@ -16,10 +16,10 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Encapsulates the descriptive elements of the geospatial coverage
@@ -40,7 +40,7 @@ public class GeospatialCoverage implements Serializable {
    * These are derived from associatedMetadata and represent codes referencing a thesaurus (e.g. DE,DK from the 3166
    * country codes)
    */
-  private List<String> keywords = Lists.newArrayList();
+  private List<String> keywords = new ArrayList<>();
 
   /**
    * Define the coordinates
@@ -96,30 +96,24 @@ public class GeospatialCoverage implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final GeospatialCoverage other = (GeospatialCoverage) obj;
-    return Objects.equal(this.description, other.description) && Objects.equal(this.keywords, other.keywords) && Objects
-      .equal(this.boundingCoordinates, other.boundingCoordinates);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    GeospatialCoverage that = (GeospatialCoverage) o;
+    return Objects.equals(description, that.description) && Objects.equals(keywords, that.keywords) && Objects.equals(boundingCoordinates, that.boundingCoordinates);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(description, keywords, boundingCoordinates);
+    return Objects.hash(description, keywords, boundingCoordinates);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("description", description).
-      add("keywords", keywords).
-      add("boundingCoordinates", boundingCoordinates).
-      toString();
+    return new StringJoiner(", ", GeospatialCoverage.class.getSimpleName() + "[", "]")
+        .add("description='" + description + "'")
+        .add("keywords=" + keywords)
+        .add("boundingCoordinates=" + boundingCoordinates)
+        .toString();
   }
-
 }

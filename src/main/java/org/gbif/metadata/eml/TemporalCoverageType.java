@@ -17,9 +17,8 @@ package org.gbif.metadata.eml;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Enumeration of temporal coverage types.
@@ -34,7 +33,7 @@ public enum TemporalCoverageType implements Serializable {
   private final String name;
 
   static {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
     for (TemporalCoverageType rt : TemporalCoverageType.values()) {
       map.put(rt.name(), "temporalCoverageType." + rt.name());
     }

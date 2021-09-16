@@ -12,10 +12,10 @@
  */
 package org.gbif.metadata.eml;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -49,7 +49,7 @@ public class AttributeTest {
 
   @Test
   public final void testCreate() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     create("Should fail with null params", null, null, null, null);
     create("Should fail with null category", null, lb, "n", "v");
     create("Should fail with empty category", "", lb, "n", "v");
@@ -63,53 +63,53 @@ public class AttributeTest {
 
   @Test
   public final void testEqualsObject() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     assertEquals(create("c", lb, "n", "v"), create("c", lb, "n", "v"));
   }
 
   @Test
   public final void testGetCategory() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     String category = "c";
     assertEquals(category, create(category, lb, "n", "v").getCategory());
   }
 
   @Test
   public final void testGetLocaleBundle() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     assertEquals(lb, create("c", lb, "n", "v").getLocaleBundle());
   }
 
   @Test
   public final void testGetName() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     String name = "n";
     assertEquals(name, create("c", lb, name, "v").getName());
   }
 
   @Test
   public final void testGetValue() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     String value = "v";
     assertEquals(value, create("c", lb, "n", value).getValue());
   }
 
   @Test
   public final void testHashCode() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     Attribute a = create("c", lb, "n", "v");
     assertEquals(a.hashCode(), create("c", lb, "n", "v").hashCode());
-    Map<Attribute, String> map = Maps.newHashMap();
+    Map<Attribute, String> map = new HashMap<>();
     map.put(a, "foo");
     assertTrue(map.containsKey(create("c", lb, "n", "v")));
   }
 
   @Test
   public final void testToString() {
-    LocaleBundle lb = LocaleBundle.create("EN", "USA", Charsets.UTF_8);
+    LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     Attribute a = create("c", lb, "n", "v");
     assertEquals(
-      "Attribute{category=c, localeBundle=LocaleBundle{country=USA, language=en, charset=UTF-8}, name=n, value=v}",
+      "Attribute[category='c', localeBundle=LocaleBundle[country=USA, language=en, charset=UTF-8], name='n', value='v']",
       a.toString());
   }
 }

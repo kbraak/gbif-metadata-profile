@@ -18,10 +18,10 @@ package org.gbif.metadata.eml;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The description of the Taxonomic scope that the resource covers.
@@ -100,8 +100,8 @@ public class TaxonomicCoverage implements Serializable {
       delimiter = "|";
     }
     int count = 0;
-    for (String sciname : Splitter.on(delimiter).split(scientificNames)) {
-      sciname = Strings.emptyToNull(sciname.trim());
+    for (String sciname : StringUtils.split(scientificNames, delimiter)) {
+      sciname = StringUtils.trimToNull(sciname);
       if (sciname != null) {
         taxonKeywords.add(new TaxonKeyword(sciname, null, null));
         count++;
@@ -111,28 +111,24 @@ public class TaxonomicCoverage implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final TaxonomicCoverage other = (TaxonomicCoverage) obj;
-    return Objects.equal(this.description, other.description) && Objects.equal(this.taxonKeywords, other.taxonKeywords);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TaxonomicCoverage that = (TaxonomicCoverage) o;
+    return Objects.equals(description, that.description)
+        && Objects.equals(taxonKeywords, that.taxonKeywords);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(description, taxonKeywords);
+    return Objects.hash(description, taxonKeywords);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("description", description).
-      add("taxonKeywords", taxonKeywords).
-      toString();
+    return new StringJoiner(", ", TaxonomicCoverage.class.getSimpleName() + "[", "]")
+        .add("description='" + description + "'")
+        .add("taxonKeywords=" + taxonKeywords)
+        .toString();
   }
-
 }

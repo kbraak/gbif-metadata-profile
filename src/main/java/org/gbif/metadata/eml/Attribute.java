@@ -15,17 +15,16 @@
  */
 package org.gbif.metadata.eml;
 
+import org.gbif.utils.PreconditionUtils;
+
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate generic attribute information. Each attribute has a category, a name, and a
  * type within the context of a {@link LocaleBundle}.
- * Note that this class is immuatable. New instances can be created using the create method.
+ * Note that this class is immutable. New instances can be created using the create method.
  */
 public class Attribute implements Serializable {
 
@@ -48,13 +47,13 @@ public class Attribute implements Serializable {
    * @return new instance of Attribute
    */
   public static Attribute create(String category, LocaleBundle localeBundle, String name, String value) {
-    checkNotNull(category, "Category was null");
-    checkArgument(category.trim().length() != 0, "Category was empty");
-    checkNotNull(localeBundle, "LocaleBundle was null");
-    checkNotNull(name, "Name was null");
-    checkArgument(name.trim().length() != 0, "Name was empty");
-    checkNotNull(value, "Value was null");
-    checkArgument(value.trim().length() != 0, "Value was empty");
+    Objects.requireNonNull(category, "Category was null");
+    PreconditionUtils.checkArgument(category.trim().length() != 0, "Category was empty");
+    Objects.requireNonNull(localeBundle, "LocaleBundle was null");
+    Objects.requireNonNull(name, "Name was null");
+    PreconditionUtils.checkArgument(name.trim().length() != 0, "Name was empty");
+    Objects.requireNonNull(value, "Value was null");
+    PreconditionUtils.checkArgument(value.trim().length() != 0, "Value was empty");
     return new Attribute(category, localeBundle, name, value);
   }
 
@@ -82,31 +81,28 @@ public class Attribute implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Attribute other = (Attribute) obj;
-    return Objects.equal(this.category, other.category) && Objects.equal(this.localeBundle, other.localeBundle)
-           && Objects.equal(this.name, other.name) && Objects.equal(this.value, other.value);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Attribute attribute = (Attribute) o;
+    return Objects.equals(category, attribute.category)
+        && Objects.equals(localeBundle, attribute.localeBundle)
+        && Objects.equals(name, attribute.name)
+        && Objects.equals(value, attribute.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(category, localeBundle, name, value);
+    return Objects.hash(category, localeBundle, name, value);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("category", category).
-      add("localeBundle", localeBundle).
-      add("name", name).
-      add("value", value).
-      toString();
+    return new StringJoiner(", ", Attribute.class.getSimpleName() + "[", "]")
+        .add("category='" + category + "'")
+        .add("localeBundle=" + localeBundle)
+        .add("name='" + name + "'")
+        .add("value='" + value + "'")
+        .toString();
   }
-
 }

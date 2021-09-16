@@ -1,13 +1,13 @@
 package org.gbif.metadata.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.gbif.metadata.DateUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import org.xml.sax.SAXException;
 
 /**
@@ -23,7 +23,11 @@ public class EmlHandler extends BasicMetadataSaxHandler {
   @Override
   public void endDocument() throws SAXException {
     super.endDocument();
-    bm.setSubject(Strings.emptyToNull(Joiner.on("; ").useForNull("").join(keywords).trim()));
+    bm.setSubject(StringUtils.trimToNull(
+        keywords.stream()
+            .map(StringUtils::trimToEmpty)
+            .collect(Collectors.joining("; "))
+    ));
     bm.setDescription(description);
   }
 
@@ -43,7 +47,7 @@ public class EmlHandler extends BasicMetadataSaxHandler {
       } else if (parents.startsWith("/eml/dataset/abstract")) {
         // dataset/abstract/para
         if (localName.equalsIgnoreCase("para")) {
-          if (!Strings.isNullOrEmpty(content)) {
+          if (StringUtils.isNotEmpty(content)) {
             description.add(content.trim());
           }
         }
@@ -76,7 +80,7 @@ public class EmlHandler extends BasicMetadataSaxHandler {
   @Override
   public void startDocument() {
     super.startDocument();
-    keywords = Lists.newArrayList();
-    description = Lists.newArrayList();
+    keywords = new ArrayList<>();
+    description = new ArrayList<>();
   }
 }

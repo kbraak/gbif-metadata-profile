@@ -1,6 +1,5 @@
 package org.gbif.metadata.eml;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.validation.Schema;

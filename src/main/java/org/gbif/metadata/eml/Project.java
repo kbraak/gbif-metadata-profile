@@ -16,10 +16,10 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A class encapsulating the project information
@@ -61,7 +61,7 @@ public class Project implements Serializable {
    *      personnel
    *      keyword</a>
    */
-  private List<Agent> personnel = Lists.newArrayList();
+  private List<Agent> personnel = new ArrayList<>();
 
   /**
    * The funding field is used to provide information about funding sources for the project such as: grant and contract
@@ -211,32 +211,34 @@ public class Project implements Serializable {
     }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Project other = (Project) obj;
-    return Objects.equal(this.title, other.title) && Objects.equal(this.personnel, other.personnel) && Objects
-      .equal(this.funding, other.funding) && Objects.equal(this.studyAreaDescription, other.studyAreaDescription)
-           && Objects.equal(this.designDescription, other.designDescription);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Project project = (Project) o;
+    return Objects.equals(title, project.title)
+        && Objects.equals(identifier, project.identifier)
+        && Objects.equals(description, project.description)
+        && Objects.equals(personnel, project.personnel)
+        && Objects.equals(funding, project.funding)
+        && Objects.equals(studyAreaDescription, project.studyAreaDescription)
+        && Objects.equals(designDescription, project.designDescription);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(title, personnel, funding, studyAreaDescription, designDescription);
+    return Objects.hash(title, identifier, description, personnel, funding, studyAreaDescription, designDescription);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("title", title).
-      add("personnel", personnel).
-      add("funding", funding).
-      add("studyAreaDescription", studyAreaDescription).
-      add("designDescription", designDescription).
-      toString();
+    return new StringJoiner(", ", Project.class.getSimpleName() + "[", "]")
+        .add("title='" + title + "'")
+        .add("identifier='" + identifier + "'")
+        .add("description='" + description + "'")
+        .add("personnel=" + personnel)
+        .add("funding='" + funding + "'")
+        .add("studyAreaDescription=" + studyAreaDescription)
+        .add("designDescription='" + designDescription + "'")
+        .toString();
   }
 }

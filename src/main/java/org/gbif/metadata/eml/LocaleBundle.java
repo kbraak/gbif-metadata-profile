@@ -15,14 +15,13 @@
  */
 package org.gbif.metadata.eml;
 
+import org.gbif.utils.PreconditionUtils;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Locale;
-
-import com.google.common.base.Objects;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to bundle a {@link Locale} with a {@link Charset} encoding.
@@ -47,11 +46,11 @@ public class LocaleBundle implements Serializable {
    * @return new instance of LocalBundle
    */
   public static LocaleBundle create(String language, String country, Charset charset) {
-    checkNotNull(language, "Language was null");
-    checkArgument(!language.trim().isEmpty(), "Language was empty");
-    checkNotNull(country, "Country was null");
-    checkArgument(!country.trim().isEmpty(), "Country was empty");
-    checkNotNull(charset, "Charset was null");
+    Objects.requireNonNull(language, "Language was null");
+    PreconditionUtils.checkArgument(!language.trim().isEmpty(), "Language was empty");
+    Objects.requireNonNull(country, "Country was null");
+    PreconditionUtils.checkArgument(!country.trim().isEmpty(), "Country was empty");
+    Objects.requireNonNull(charset, "Charset was null");
     return new LocaleBundle(language, country, charset);
   }
 
@@ -73,29 +72,25 @@ public class LocaleBundle implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final LocaleBundle other = (LocaleBundle) obj;
-    return Objects.equal(this.locale, other.locale) && Objects.equal(this.charset, other.charset);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    LocaleBundle that = (LocaleBundle) o;
+    return Objects.equals(locale, that.locale)
+        && Objects.equals(charset, that.charset);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(locale, charset);
+    return Objects.hash(locale, charset);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("country", getCountry()).
-      add("language", getLanguage()).
-      add("charset", charset).
-      toString();
+    return new StringJoiner(", ", LocaleBundle.class.getSimpleName() + "[", "]")
+        .add("country=" + getCountry())
+        .add("language=" + getLanguage())
+        .add("charset=" + charset)
+        .toString();
   }
-
 }

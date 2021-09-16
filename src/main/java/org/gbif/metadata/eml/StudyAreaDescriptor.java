@@ -17,9 +17,8 @@ package org.gbif.metadata.eml;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 public enum StudyAreaDescriptor implements Serializable {
   THEMATIC("thematic"),
@@ -30,7 +29,7 @@ public enum StudyAreaDescriptor implements Serializable {
   private final String name;
 
   static {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
     for (StudyAreaDescriptor sad : StudyAreaDescriptor.values()) {
       map.put(sad.name(), "studyAreaDescriptorType." + sad.name());
     }

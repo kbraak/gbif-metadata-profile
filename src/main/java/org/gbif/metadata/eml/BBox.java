@@ -17,8 +17,8 @@ package org.gbif.metadata.eml;
 
 import java.io.Serializable;
 import java.util.Arrays;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Bounding box representation with 2 points. P1 has maximum latitude and longitude, while p2 represents the minimum
@@ -383,28 +383,23 @@ public class BBox implements Serializable {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hashCode(max, min);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    BBox bBox = (BBox) o;
+    return Objects.equals(max, bBox.max) && Objects.equals(min, bBox.min);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final BBox other = (BBox) obj;
-    return Objects.equal(this.max, other.max) && Objects.equal(this.min, other.min);
+  public int hashCode() {
+    return Objects.hash(max, min);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("max", max).
-      add("min", min).
-      toString();
+    return new StringJoiner(", ", BBox.class.getSimpleName() + "[", "]")
+        .add("max=" + max)
+        .add("min=" + min)
+        .toString();
   }
-
 }

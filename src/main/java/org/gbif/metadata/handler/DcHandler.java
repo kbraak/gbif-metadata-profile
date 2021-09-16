@@ -1,15 +1,16 @@
 package org.gbif.metadata.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.gbif.metadata.DateUtils;
 import org.gbif.utils.text.EmailUtils;
 import org.gbif.utils.text.EmailUtils.EmailWithName;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import org.xml.sax.SAXException;
 
 public class DcHandler extends BasicMetadataSaxHandler {
@@ -34,9 +35,11 @@ public class DcHandler extends BasicMetadataSaxHandler {
 
       } else if (localName.equalsIgnoreCase("description") || localName.equalsIgnoreCase("abstract")) {
         // split description into paragraphs
-        for (String para : Splitter.onPattern("\r?\n").trimResults().omitEmptyStrings().split(content)) {
-          description.add(para);
-        }
+        List<String> paragraphs = Arrays.stream(content.split("\r?\n"))
+            .filter(StringUtils::isNotBlank)
+            .map(String::trim)
+            .collect(Collectors.toList());
+        description.addAll(paragraphs);
       } else if (localName.equalsIgnoreCase("subject") || localName.equalsIgnoreCase("coverage") || localName
         .equalsIgnoreCase("spatial") || localName.equalsIgnoreCase("temporal")) {
         bm.addSubject(content);
@@ -59,7 +62,7 @@ public class DcHandler extends BasicMetadataSaxHandler {
 
       } else if (localName.equalsIgnoreCase("creator") || localName.equalsIgnoreCase("publisher")) {
         // try to parse our email and name
-        String creator = Strings.emptyToNull(content.trim());
+        String creator = StringUtils.trimToNull(content);
         if (creator != null) {
           EmailWithName n = EmailUtils.parseEmail(creator);
           bm.setCreatorEmail(n.email);
@@ -79,6 +82,6 @@ public class DcHandler extends BasicMetadataSaxHandler {
   @Override
   public void startDocument() {
     super.startDocument();
-    description = Lists.newArrayList();
+    description = new ArrayList<>();
   }
 }

@@ -16,8 +16,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate taxonomic keyword information.
@@ -106,30 +106,26 @@ public class TaxonKeyword implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final TaxonKeyword other = (TaxonKeyword) obj;
-    return Objects.equal(this.scientificName, other.scientificName) && Objects.equal(this.rank, other.rank) && Objects
-      .equal(this.commonName, other.commonName);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TaxonKeyword that = (TaxonKeyword) o;
+    return Objects.equals(scientificName, that.scientificName)
+        && Objects.equals(rank, that.rank)
+        && Objects.equals(commonName, that.commonName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(scientificName, rank, commonName);
+    return Objects.hash(scientificName, rank, commonName);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("scientificName", scientificName).
-      add("rank", rank).
-      add("commonName", commonName).
-      toString();
+    return new StringJoiner(", ", TaxonKeyword.class.getSimpleName() + "[", "]")
+        .add("scientificName='" + scientificName + "'")
+        .add("rank='" + rank + "'")
+        .add("commonName='" + commonName + "'")
+        .toString();
   }
-
 }

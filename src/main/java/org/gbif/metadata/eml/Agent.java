@@ -13,11 +13,12 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Encapsulates all the information for an Agent.
@@ -35,7 +36,7 @@ public class Agent implements Serializable {
   private String email;
   private String role;
   private String homepage;
-  private List<UserId> userIds = Lists.newArrayList();
+  private List<UserId> userIds = new ArrayList<>();
 
   public Address getAddress() {
     return address;
@@ -146,7 +147,7 @@ public class Agent implements Serializable {
     if (lastName != null && !lastName.isEmpty()) {
       name += " " + lastName;
     }
-    return Strings.emptyToNull(name.trim());
+    return StringUtils.trimToNull(name);
   }
 
   /**
@@ -159,47 +160,46 @@ public class Agent implements Serializable {
   }
 
   public boolean isEmpty() {
-    return Strings.nullToEmpty(firstName).trim().isEmpty() && Strings.nullToEmpty(lastName).trim().isEmpty() &&
-           Strings.nullToEmpty(organisation).trim().isEmpty() && Strings.nullToEmpty(position).trim().isEmpty() &&
-           address.isEmpty() && Strings.nullToEmpty(phone).trim().isEmpty() &&
-           Strings.nullToEmpty(email).trim().isEmpty() && userIds.isEmpty() &&
-           Strings.nullToEmpty(role).trim().isEmpty() && Strings.nullToEmpty(homepage).trim().isEmpty();
+    return StringUtils.isAllBlank(firstName, lastName, organisation, position, phone, email, role, homepage)
+        && address.isEmpty()
+        && userIds.isEmpty();
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Agent other = (Agent) obj;
-    return Objects.equal(this.firstName, other.firstName) && Objects.equal(this.lastName, other.lastName) && Objects
-      .equal(this.organisation, other.organisation) && Objects.equal(this.position, other.position) && Objects
-      .equal(this.address, other.address) && Objects.equal(this.phone, other.phone) && Objects
-      .equal(this.email, other.email) && Objects.equal(this.userIds, other.userIds) && Objects
-      .equal(this.role, other.role) && Objects.equal(this.homepage, other.homepage);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Agent agent = (Agent) o;
+    return Objects.equals(firstName, agent.firstName)
+        && Objects.equals(lastName, agent.lastName)
+        && Objects.equals(organisation, agent.organisation)
+        && Objects.equals(position, agent.position)
+        && Objects.equals(address, agent.address)
+        && Objects.equals(phone, agent.phone)
+        && Objects.equals(email, agent.email)
+        && Objects.equals(role, agent.role)
+        && Objects.equals(homepage, agent.homepage)
+        && Objects.equals(userIds, agent.userIds);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(firstName, lastName, organisation, position, address, phone, email, userIds, role, homepage);
+    return Objects.hash(firstName, lastName, organisation, position, address, phone, email, role, homepage, userIds);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("firstName", firstName).
-      add("lastName", lastName).
-      add("organisation", organisation).
-      add("position", position).
-      add("address", address).
-      add("phone", phone).
-      add("email", email).
-      add("userIds", userIds).
-      add("role", role).
-      add("homepage", homepage).
-      toString();
+    return new StringJoiner(", ", Agent.class.getSimpleName() + "[", "]")
+        .add("firstName='" + firstName + "'")
+        .add("lastName='" + lastName + "'")
+        .add("organisation='" + organisation + "'")
+        .add("position='" + position + "'")
+        .add("address=" + address)
+        .add("phone='" + phone + "'")
+        .add("email='" + email + "'")
+        .add("role='" + role + "'")
+        .add("homepage='" + homepage + "'")
+        .add("userIds=" + userIds)
+        .toString();
   }
 }

@@ -16,8 +16,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate information about physical data.
@@ -118,32 +118,30 @@ public class PhysicalData implements Serializable {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hashCode(charset, distributionUrl, format, formatVersion, name);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    PhysicalData that = (PhysicalData) o;
+    return Objects.equals(charset, that.charset)
+        && Objects.equals(distributionUrl, that.distributionUrl)
+        && Objects.equals(format, that.format)
+        && Objects.equals(formatVersion, that.formatVersion)
+        && Objects.equals(name, that.name);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final PhysicalData other = (PhysicalData) obj;
-    return Objects.equal(this.charset, other.charset) && Objects.equal(this.distributionUrl, other.distributionUrl)
-           && Objects.equal(this.format, other.format) && Objects.equal(this.formatVersion, other.formatVersion)
-           && Objects.equal(this.name, other.name);
+  public int hashCode() {
+    return Objects.hash(charset, distributionUrl, format, formatVersion, name);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("charset", charset).
-      add("distributionUrl", distributionUrl).
-      add("format", format).
-      add("formatVersion", formatVersion).
-      add("name", name).
-      toString();
+    return new StringJoiner(", ", PhysicalData.class.getSimpleName() + "[", "]")
+        .add("charset='" + charset + "'")
+        .add("distributionUrl='" + distributionUrl + "'")
+        .add("format='" + format + "'")
+        .add("formatVersion='" + formatVersion + "'")
+        .add("name='" + name + "'")
+        .toString();
   }
 }

@@ -16,9 +16,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
-
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * There are several formats for writing degrees, all of them appearing in the same Lat, Long order. In DD Decimal
@@ -123,7 +122,7 @@ public class Point implements Serializable {
     if (longitude != null && (longitude < MIN_LONGITUDE || longitude > MAX_LONGITUDE)) {
       throw new IllegalArgumentException();
     }
-    this.longitude = longitude == null ? null : longitude;
+    this.longitude = longitude;
   }
 
   public void setY(Double y) {
@@ -134,7 +133,7 @@ public class Point implements Serializable {
     if (latitude != null && (latitude < MIN_LATITUDE || latitude > MAX_LATITUDE)) {
       throw new IllegalArgumentException();
     }
-    this.latitude = latitude == null ? null : latitude;
+    this.latitude = latitude;
   }
 
   public String toStringShort(int decimals) {
@@ -146,28 +145,23 @@ public class Point implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Point other = (Point) obj;
-    return Objects.equal(this.longitude, other.longitude) && Objects.equal(this.latitude, other.latitude);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Point point = (Point) o;
+    return Objects.equals(longitude, point.longitude) && Objects.equals(latitude, point.latitude);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(longitude, latitude);
+    return Objects.hash(longitude, latitude);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("longitude", longitude).
-      add("latitude", latitude).
-      toString();
+    return new StringJoiner(", ", Point.class.getSimpleName() + "[", "]")
+        .add("longitude=" + longitude)
+        .add("latitude=" + latitude)
+        .toString();
   }
-
 }

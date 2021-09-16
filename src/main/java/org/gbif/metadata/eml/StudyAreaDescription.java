@@ -16,8 +16,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Encapsulates all the information for a StudyAreaDescription.
@@ -62,31 +62,26 @@ public class StudyAreaDescription implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final StudyAreaDescription other = (StudyAreaDescription) obj;
-    return Objects.equal(this.name, other.name) && Objects
-      .equal(this.citableClassificationSystem, other.citableClassificationSystem) && Objects
-      .equal(this.descriptorValue, other.descriptorValue);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    StudyAreaDescription that = (StudyAreaDescription) o;
+    return name == that.name
+        && Objects.equals(citableClassificationSystem, that.citableClassificationSystem)
+        && Objects.equals(descriptorValue, that.descriptorValue);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, citableClassificationSystem, descriptorValue);
+    return Objects.hash(name, citableClassificationSystem, descriptorValue);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("name", name).
-      add("citableClassificationSystem", citableClassificationSystem).
-      add("descriptorValue", descriptorValue).
-      toString();
+    return new StringJoiner(", ", StudyAreaDescription.class.getSimpleName() + "[", "]")
+        .add("name=" + name)
+        .add("citableClassificationSystem='" + citableClassificationSystem + "'")
+        .add("descriptorValue='" + descriptorValue + "'")
+        .toString();
   }
-
 }

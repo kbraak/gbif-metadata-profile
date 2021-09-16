@@ -16,8 +16,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * Joint GeoTaxonomic Index (JGTI) Curatorial Unit A quantitative descriptor (number of specimens, samples or batches).
@@ -92,32 +92,30 @@ public class JGTICuratorialUnit implements Serializable {
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hashCode(unitType, rangeStart, rangeEnd, rangeMean, uncertaintyMeasure);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    JGTICuratorialUnit that = (JGTICuratorialUnit) o;
+    return Objects.equals(unitType, that.unitType)
+        && Objects.equals(rangeStart, that.rangeStart)
+        && Objects.equals(rangeEnd, that.rangeEnd)
+        && Objects.equals(rangeMean, that.rangeMean)
+        && Objects.equals(uncertaintyMeasure, that.uncertaintyMeasure);
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final JGTICuratorialUnit other = (JGTICuratorialUnit) obj;
-    return Objects.equal(this.unitType, other.unitType) && Objects.equal(this.rangeStart, other.rangeStart) && Objects
-      .equal(this.rangeEnd, other.rangeEnd) && Objects.equal(this.rangeMean, other.rangeMean) && Objects
-      .equal(this.uncertaintyMeasure, other.uncertaintyMeasure);
+  public int hashCode() {
+    return Objects.hash(unitType, rangeStart, rangeEnd, rangeMean, uncertaintyMeasure);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("unitType", unitType).
-      add("rangeStart", rangeStart).
-      add("rangeEnd", rangeEnd).
-      add("rangeMean", rangeMean).
-      add("uncertaintyMeasure", uncertaintyMeasure).
-      toString();
+    return new StringJoiner(", ", JGTICuratorialUnit.class.getSimpleName() + "[", "]")
+        .add("unitType='" + unitType + "'")
+        .add("rangeStart=" + rangeStart)
+        .add("rangeEnd=" + rangeEnd)
+        .add("rangeMean=" + rangeMean)
+        .add("uncertaintyMeasure=" + uncertaintyMeasure)
+        .toString();
   }
 }

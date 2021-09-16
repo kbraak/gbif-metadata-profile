@@ -1,8 +1,8 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
-
-import com.google.common.base.Objects;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate information about a citation having an identifier (e.g. DOI) plus
@@ -52,28 +52,24 @@ public class Citation implements Serializable {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Citation other = (Citation) obj;
-    return Objects.equal(this.identifier, other.identifier) && Objects.equal(this.citation, other.citation);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Citation citation1 = (Citation) o;
+    return Objects.equals(identifier, citation1.identifier)
+        && Objects.equals(citation, citation1.citation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(identifier, citation);
+    return Objects.hash(identifier, citation);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("identifier", identifier).
-      add("citation", citation).
-      toString();
+    return new StringJoiner(", ", Citation.class.getSimpleName() + "[", "]")
+        .add("identifier='" + identifier + "'")
+        .add("citation='" + citation + "'")
+        .toString();
   }
-
 }

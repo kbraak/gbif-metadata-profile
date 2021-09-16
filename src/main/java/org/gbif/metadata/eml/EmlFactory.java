@@ -12,14 +12,14 @@
  */
 package org.gbif.metadata.eml;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.digester3.*;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.NodeCreateRule;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This class is considered a utility for testing but should be migrated to the source when stable, as this is an EML

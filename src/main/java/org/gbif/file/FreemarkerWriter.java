@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ***************************************************************************/
-
 package org.gbif.file;
 
 import org.gbif.utils.file.FileUtils;
@@ -48,7 +47,7 @@ public class FreemarkerWriter {
     // load templates from classpath by prefixing /templates
     TemplateLoader tl = new ClassTemplateLoader(FreemarkerWriter.class, "/templates");
 
-    Configuration fm = new Configuration();
+    Configuration fm = new Configuration(Configuration.VERSION_2_3_31);
     fm.setDefaultEncoding("utf8");
     fm.setTemplateLoader(tl);
 

@@ -1,11 +1,9 @@
 package org.gbif.metadata.eml;
 
 import java.io.Serializable;
+import java.util.StringJoiner;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
-
-import static com.google.common.base.Objects.equal;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * This class is used to represent an address with address, city, province and postal-code information.
@@ -74,27 +72,24 @@ public class Address implements Serializable {
   }
 
   public boolean isEmpty() {
-    return Strings.nullToEmpty(address).trim().isEmpty() && Strings.nullToEmpty(city).trim().isEmpty() && Strings
-      .nullToEmpty(province).trim().isEmpty() && Strings.nullToEmpty(postalCode).trim().isEmpty() && Strings
-      .nullToEmpty(country).trim().isEmpty();
+    return StringUtils.isAllBlank(address, city, province, postalCode, country);
   }
 
   @Override
-  public boolean equals(Object other) {
-    if (this == other) {
-      return true;
-    }
-    if (!(other instanceof Address)) {
-      return false;
-    }
-    Address o = (Address) other;
-    return equal(address, o.address) && equal(city, o.city) && equal(province, o.province) &&
-           equal(country, o.country) && equal(postalCode, o.postalCode);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Address address1 = (Address) o;
+    return java.util.Objects.equals(address, address1.address)
+        && java.util.Objects.equals(city, address1.city)
+        && java.util.Objects.equals(province, address1.province)
+        && java.util.Objects.equals(country, address1.country)
+        && java.util.Objects.equals(postalCode, address1.postalCode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(address, city, province, country, postalCode);
+    return java.util.Objects.hash(address, city, province, country, postalCode);
   }
 
   /**
@@ -104,8 +99,13 @@ public class Address implements Serializable {
    */
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).add("country", country).add("address", address).add("province", province)
-      .add("postalCode", postalCode).add("city", city).toString();
+    return new StringJoiner(", ", Address.class.getSimpleName() + "[", "]")
+        .add("address='" + address + "'")
+        .add("city='" + city + "'")
+        .add("province='" + province + "'")
+        .add("country='" + country + "'")
+        .add("postalCode='" + postalCode + "'")
+        .toString();
   }
 
   /**
@@ -116,35 +116,35 @@ public class Address implements Serializable {
    */
   public String toFormattedString() {
     String formattedAddress = null;
-    if (!Strings.isNullOrEmpty(address)) {
+    if (StringUtils.isNotBlank(address)) {
       formattedAddress = address;
     }
-    if (!Strings.isNullOrEmpty(city)) {
-      if (!Strings.isNullOrEmpty(formattedAddress)) {
+    if (StringUtils.isNotBlank(city)) {
+      if (StringUtils.isNotBlank(formattedAddress)) {
         formattedAddress = formattedAddress + ", " + city;
       } else {
         formattedAddress = city;
       }
 
     }
-    if (!Strings.isNullOrEmpty(province)) {
-      if (!Strings.isNullOrEmpty(formattedAddress)) {
+    if (StringUtils.isNotBlank(province)) {
+      if (StringUtils.isNotBlank(formattedAddress)) {
         formattedAddress = formattedAddress + ", " + province;
       } else {
         formattedAddress = province;
       }
 
     }
-    if (!Strings.isNullOrEmpty(country)) {
-      if (!Strings.isNullOrEmpty(formattedAddress)) {
+    if (StringUtils.isNotBlank(country)) {
+      if (StringUtils.isNotBlank(formattedAddress)) {
         formattedAddress = formattedAddress + " " + country;
       } else {
         formattedAddress = country;
       }
 
     }
-    if (!Strings.isNullOrEmpty(postalCode)) {
-      if (!Strings.isNullOrEmpty(formattedAddress)) {
+    if (StringUtils.isNotBlank(postalCode)) {
+      if (StringUtils.isNotBlank(formattedAddress)) {
         formattedAddress = formattedAddress + ", " + postalCode;
       } else {
         formattedAddress = postalCode;

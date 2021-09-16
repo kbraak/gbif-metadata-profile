@@ -17,9 +17,8 @@ package org.gbif.metadata.eml;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Enumeration of JGTICuratorial Unit types.
@@ -59,7 +58,7 @@ public enum JGTICuratorialUnitType implements Serializable {
   }
 
   static {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
     for (JGTICuratorialUnitType rt : JGTICuratorialUnitType.values()) {
       map.put(rt.name(), "jgtiCuratorialUnitType." + rt.name());
     }

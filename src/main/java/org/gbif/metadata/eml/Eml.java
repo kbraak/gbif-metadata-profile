@@ -12,9 +12,22 @@
  */
 package org.gbif.metadata.eml;
 
+import org.apache.commons.lang3.StringUtils;
 import org.gbif.metadata.BasicMetadata;
 import org.gbif.metadata.DateUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -22,24 +35,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.util.stream.Collectors;
 
 /**
  * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT 1.1 In addition to standard Bean
@@ -47,15 +47,15 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @see EmlFactory
  */
+@SuppressWarnings("unused")
 public class Eml implements Serializable, BasicMetadata {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
-  private static final Pattern PACKAGED_ID_PATTERN =  Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
 
-  private static final Joiner JOINER = Joiner.on("; ").useForNull("");
-  private static final Splitter SEMICOLON_SPLITTER = Splitter.on(';');
-  private static final Splitter COMMA_SPLITTER = Splitter.on(',');
-  private static final Splitter PIPE_SPLITTER = Splitter.on('|');
+  private static final Pattern PACKAGED_ID_PATTERN =  Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
+  private static final char SEMICOLON = ';';
+  private static final char COMMA = ',';
+  private static final char PIPE = '|';
   private static final int MAJOR_VERSION_START = 1;
   private static final int MINOR_VERSION_START = 0;
 
@@ -67,7 +67,7 @@ public class Eml implements Serializable, BasicMetadata {
   /**
    * Description, composed of one or more paragraphs.
    */
-  private List<String> description = Lists.newArrayList();
+  private List<String> description = new ArrayList<>();
 
   /**
    * This is not in the GBIF extended metadata document, but seems like a sensible placeholder that can be used to
@@ -75,14 +75,14 @@ public class Eml implements Serializable, BasicMetadata {
    */
   private String additionalInfo;
 
-  private List<String> alternateIdentifiers = Lists.newArrayList();
+  private List<String> alternateIdentifiers = new ArrayList<>();
 
   /**
    * The 'associatedParty' element provides the full name of other people, organizations, or positions who should be
    * associated with the resource. These parties might play various roles in the creation or maintenance of the
    * resource, and these roles should be indicated in the "role" element.
    */
-  private List<Agent> associatedParties = Lists.newArrayList();
+  private List<Agent> associatedParties = new ArrayList<>();
 
   private BibliographicCitationSet bibliographicCitationSet = new BibliographicCitationSet();
 
@@ -109,7 +109,7 @@ public class Eml implements Serializable, BasicMetadata {
   private BigDecimal previousEmlVersion = new BigDecimal("1.0");
   private int majorVersion = 1;
   private int minorVersion = 0;
-  private List<GeospatialCoverage> geospatialCoverages = Lists.newArrayList();
+  private List<GeospatialCoverage> geospatialCoverages = new ArrayList<>();
 
   /**
    * Dataset level to which the metadata applies. The default value for GBIF is "dataset"
@@ -136,14 +136,14 @@ public class Eml implements Serializable, BasicMetadata {
    * (x
    * to x), with the lower value representing an exact number, when the higher value is omitted.
    */
-  private List<JGTICuratorialUnit> jgtiCuratorialUnits = Lists.newArrayList();
+  private List<JGTICuratorialUnit> jgtiCuratorialUnits = new ArrayList<>();
 
   // Note that while Sets would be fine, to ease testing, Lists are
   // used to preserve ordering. A Set implementation that respects ordering
   // would also suffice
   // please refer to typed classes for descriptions of the properties and how
   // they map to EML
-  private List<KeywordSet> keywords = Lists.newArrayList();
+  private List<KeywordSet> keywords = new ArrayList<>();
 
   /**
    * The language in which the resource is written. This can be a well-known language name, or one of the ISO language
@@ -173,9 +173,9 @@ public class Eml implements Serializable, BasicMetadata {
    */
   private LocaleBundle metadataLocale;
 
-  private List<Collection> collections = Lists.newArrayList();
+  private List<Collection> collections = new ArrayList<>();
 
-  private List<PhysicalData> physicalData = Lists.newArrayList();
+  private List<PhysicalData> physicalData = new ArrayList<>();
 
   /**
    * The project this resource is associated with
@@ -217,7 +217,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#creator">EML Resource creator</a>
    */
-  private List<Agent> creators = Lists.newArrayList();
+  private List<Agent> creators = new ArrayList<>();
 
   /**
    * The 'metadataProvider' element provides the full name of the person, organization, or position who created
@@ -225,7 +225,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#metadataProvider">EML Resource metadataProvider</a>
    */
-  private List<Agent> metadataProviders = Lists.newArrayList();
+  private List<Agent> metadataProviders = new ArrayList<>();
 
   /**
    * The 'contact' field contains contact information for this dataset. This is the person or institution to contact
@@ -233,7 +233,7 @@ public class Eml implements Serializable, BasicMetadata {
    *
    * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#contact">EML Dataset contact</a>
    */
-  private List<Agent> contacts = Lists.newArrayList();
+  private List<Agent> contacts = new ArrayList<>();
 
   /**
    * Picklist keyword indicating the process or technique used to prevent physical deterioration of non-living
@@ -242,11 +242,11 @@ public class Eml implements Serializable, BasicMetadata {
    * @see <a href="http://rs.tdwg.org/ontology/voc/Collection#specimenPreservationMethod">TDWG Natural Collection
    *      Description</a>
    */
-  private List<String> specimenPreservationMethods = Lists.newArrayList();;
+  private List<String> specimenPreservationMethods = new ArrayList<>();
 
-  private List<TaxonomicCoverage> taxonomicCoverages = Lists.newArrayList();
+  private List<TaxonomicCoverage> taxonomicCoverages = new ArrayList<>();
 
-  private List<TemporalCoverage> temporalCoverages = Lists.newArrayList();
+  private List<TemporalCoverage> temporalCoverages = new ArrayList<>();
 
   /**
    * URL linking to the resource homepage
@@ -295,7 +295,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#methodStep">EML Methods
    *      methodStep keyword</a>
    */
-  private List<String> methodSteps = Lists.newArrayList();
+  private List<String> methodSteps = new ArrayList<>();
 
   /**
    * Default constructor needed by Struts2
@@ -444,7 +444,7 @@ public class Eml implements Serializable, BasicMetadata {
      * @return intellectualRights (XML/EML ulink will have been converted into HTML anchor)
      */
     public String getIntellectualRights() {
-        if (Strings.isNullOrEmpty(intellectualRights)) {
+        if (StringUtils.isEmpty(intellectualRights)) {
             return null;
         }
         return intellectualRights;
@@ -456,7 +456,7 @@ public class Eml implements Serializable, BasicMetadata {
      * @return intellectualRights with HTML anchor converted back into XML/EML ulink.
      */
     public String getIntellectualRightsXml() {
-        if (Strings.isNullOrEmpty(intellectualRights)) {
+        if (StringUtils.isEmpty(intellectualRights)) {
             return null;
         }
         return paraHtmToXml(intellectualRights);
@@ -464,8 +464,6 @@ public class Eml implements Serializable, BasicMetadata {
 
     /**
      * Converts XML/EML ulink into HTML anchor, and then sets the intellectualRights.
-     *
-     * @param intellectualRights
      */
     public void setIntellectualRights(String intellectualRights) {
         this.intellectualRights = paraXmlToHtml(intellectualRights);
@@ -477,11 +475,11 @@ public class Eml implements Serializable, BasicMetadata {
      * @return paragraph string, but with XML/EML ulink converted into an HTML link.
      */
     private static String paraXmlToHtml(String xml) {
-        if (!Strings.isNullOrEmpty(xml)) {
-            return xml.replaceAll("\\<citetitle\\>", "").
-                    replaceAll("\\</citetitle\\>", "").
-                    replaceAll("\\<ulink url=", "<a href=").
-                    replaceAll("\\</ulink\\>", "</a>");
+        if (StringUtils.isNotEmpty(xml)) {
+            return xml.replaceAll("<citetitle>", "").
+                    replaceAll("</citetitle>", "").
+                    replaceAll("<ulink url=", "<a href=").
+                    replaceAll("</ulink>", "</a>");
         }
         return xml;
     }
@@ -492,10 +490,10 @@ public class Eml implements Serializable, BasicMetadata {
      * @return paragraph string, but with HTML anchors converted back into XML/EML ulink.
      */
     private static String paraHtmToXml(String html) {
-        if (!Strings.isNullOrEmpty(html)) {
-            return html.replaceAll("\"\\>", "\"><citetitle>").
-                    replaceAll("\\<a href=", "<ulink url=").
-                    replaceAll("\\</a>", "</citetitle></ulink>");
+        if (StringUtils.isNotEmpty(html)) {
+            return html.replaceAll("\">", "\"><citetitle>").
+                    replaceAll("<a href=", "<ulink url=").
+                    replaceAll("</a>", "</citetitle></ulink>");
         }
         return html;
     }
@@ -618,7 +616,7 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   public String getUpdateFrequencyDescription() {
-    if (Strings.isNullOrEmpty(updateFrequencyDescription)) {
+    if (StringUtils.isEmpty(updateFrequencyDescription)) {
       return null;
     }
     return updateFrequencyDescription;
@@ -799,11 +797,10 @@ public class Eml implements Serializable, BasicMetadata {
 
   @Override
   public String getSubject() {
-    List<String> subjects = new ArrayList<String>();
-    for (KeywordSet ks : keywords) {
-      subjects.add(JOINER.join(ks.getKeywords()));
-    }
-    return JOINER.join(subjects);
+    return keywords.stream()
+        .flatMap(set -> set.getKeywords().stream())
+        .map(StringUtils::trimToEmpty)
+        .collect(Collectors.joining("; "));
   }
 
   public void addAlternateIdentifier(String alternateIdentifier) {
@@ -1033,30 +1030,30 @@ public class Eml implements Serializable, BasicMetadata {
 
   public void setSubject(List<String> keywords) {
     KeywordSet ks = new KeywordSet(keywords);
-    List<KeywordSet> list = new ArrayList<KeywordSet>();
+    List<KeywordSet> list = new ArrayList<>();
     list.add(ks);
     this.keywords = list;
   }
 
   public void setSubject(String keywords) {
     if (keywords != null) {
-      Iterable<String> tokens;
-      int commas = CharMatcher.is(',').countIn(keywords);
-      int semicolon = CharMatcher.is(';').countIn(keywords);
-      int pipes = CharMatcher.is('|').countIn(keywords);
+      String[] tokens;
+      int commas = StringUtils.countMatches(keywords, COMMA);
+      int semicolon = StringUtils.countMatches(keywords, SEMICOLON);
+      int pipes = StringUtils.countMatches(keywords, PIPE);
       if (semicolon >= commas && semicolon >= pipes) {
         // semicolons
-        tokens = SEMICOLON_SPLITTER.split(keywords);
+        tokens = StringUtils.split(keywords, SEMICOLON);
       } else if (pipes >= semicolon && pipes >= commas) {
         // pipes
-        tokens = PIPE_SPLITTER.split(keywords);
+        tokens = StringUtils.split(keywords, PIPE);
       } else {
         // commas
-        tokens = COMMA_SPLITTER.split(keywords);
+        tokens = StringUtils.split(keywords, COMMA);
       }
-      List<String> keyList = new ArrayList<String>();
+      List<String> keyList = new ArrayList<>();
       for (String kw : tokens) {
-        String k = Strings.emptyToNull(kw.trim());
+        String k = StringUtils.trimToNull(kw);
         keyList.add(k);
       }
       setSubject(keyList);
@@ -1090,7 +1087,7 @@ public class Eml implements Serializable, BasicMetadata {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             transformer.transform(new DOMSource(element), new StreamResult(buffer));
             // strip off leading <para> and trailing </para>, and trim any leading and trailing whitespace also
-            str = buffer.toString().replaceAll("\\<para\\>", "").replaceAll("\\</para\\>", "").trim();
+            str = buffer.toString().replaceAll("<para>", "").replaceAll("</para>", "").trim();
         } catch (TransformerConfigurationException e) {
             LOG.error("An error occurred creating new XML Transformer: " + e.getLocalizedMessage());
         } catch (TransformerException e) {
@@ -1100,97 +1097,109 @@ public class Eml implements Serializable, BasicMetadata {
     }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    final Eml other = (Eml) obj;
-    return Objects.equal(this.description, other.description)
-            && Objects.equal(this.additionalInfo, other.additionalInfo)
-            && Objects.equal(this.alternateIdentifiers, other.alternateIdentifiers)
-            && Objects.equal(this.associatedParties, other.associatedParties)
-            && Objects.equal(this.bibliographicCitationSet, other.bibliographicCitationSet)
-            && Objects.equal(this.citation, other.citation) && Objects.equal(this.contacts, other.contacts)
-            && Objects.equal(this.dateStamp, other.dateStamp)
-            && Objects.equal(this.distributionUrl, other.distributionUrl)
-            && Objects.equal(this.emlVersion, other.emlVersion)
-            && Objects.equal(this.geospatialCoverages, other.geospatialCoverages)
-            && Objects.equal(this.hierarchyLevel, other.hierarchyLevel)
-            && Objects.equal(this.intellectualRights, other.intellectualRights)
-            && Objects.equal(this.jgtiCuratorialUnits, other.jgtiCuratorialUnits)
-            && Objects.equal(this.keywords, other.keywords) && Objects.equal(this.language, other.language)
-            && Objects.equal(this.logoUrl, other.logoUrl)
-            && Objects.equal(this.metadataLanguage, other.metadataLanguage)
-            && Objects.equal(this.metadataLocale, other.metadataLocale)
-            && Objects.equal(this.metadataProviders, other.metadataProviders)
-            && Objects.equal(this.collections, other.collections)
-            && Objects.equal(this.physicalData, other.physicalData) && Objects.equal(this.project, other.project)
-            && Objects.equal(this.pubDate, other.pubDate) && Objects.equal(this.purpose, other.purpose)
-            && Objects.equal(this.creators, other.creators)
-            && Objects.equal(this.specimenPreservationMethods, other.specimenPreservationMethods)
-            && Objects.equal(this.taxonomicCoverages, other.taxonomicCoverages)
-            && Objects.equal(this.temporalCoverages, other.temporalCoverages) && Objects.equal(this.link, other.link)
-            && Objects.equal(this.guid, other.guid) && Objects.equal(this.title, other.title)
-            && Objects.equal(this.studyExtent, other.studyExtent)
-            && Objects.equal(this.sampleDescription, other.sampleDescription)
-            && Objects.equal(this.qualityControl, other.qualityControl)
-            && Objects.equal(this.methodSteps, other.methodSteps);
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Eml eml = (Eml) o;
+    return majorVersion == eml.majorVersion
+        && minorVersion == eml.minorVersion
+        && Objects.equals(description, eml.description)
+        && Objects.equals(additionalInfo, eml.additionalInfo)
+        && Objects.equals(alternateIdentifiers, eml.alternateIdentifiers)
+        && Objects.equals(associatedParties, eml.associatedParties)
+        && Objects.equals(bibliographicCitationSet, eml.bibliographicCitationSet)
+        && Objects.equals(citation, eml.citation)
+        && Objects.equals(dateStamp, eml.dateStamp)
+        && Objects.equals(distributionUrl, eml.distributionUrl)
+        && Objects.equals(emlVersion, eml.emlVersion)
+        && Objects.equals(previousEmlVersion, eml.previousEmlVersion)
+        && Objects.equals(geospatialCoverages, eml.geospatialCoverages)
+        && Objects.equals(hierarchyLevel, eml.hierarchyLevel)
+        && Objects.equals(intellectualRights, eml.intellectualRights)
+        && Objects.equals(jgtiCuratorialUnits, eml.jgtiCuratorialUnits)
+        && Objects.equals(keywords, eml.keywords)
+        && Objects.equals(language, eml.language)
+        && Objects.equals(logoUrl, eml.logoUrl)
+        && Objects.equals(metadataLanguage, eml.metadataLanguage)
+        && Objects.equals(metadataLocale, eml.metadataLocale)
+        && Objects.equals(collections, eml.collections)
+        && Objects.equals(physicalData, eml.physicalData)
+        && Objects.equals(project, eml.project)
+        && Objects.equals(pubDate, eml.pubDate)
+        && Objects.equals(purpose, eml.purpose)
+        && Objects.equals(updateFrequencyDescription, eml.updateFrequencyDescription)
+        && updateFrequency == eml.updateFrequency
+        && Objects.equals(creators, eml.creators)
+        && Objects.equals(metadataProviders, eml.metadataProviders)
+        && Objects.equals(contacts, eml.contacts)
+        && Objects.equals(specimenPreservationMethods, eml.specimenPreservationMethods)
+        && Objects.equals(taxonomicCoverages, eml.taxonomicCoverages)
+        && Objects.equals(temporalCoverages, eml.temporalCoverages)
+        && Objects.equals(link, eml.link)
+        && Objects.equals(guid, eml.guid)
+        && Objects.equals(title, eml.title)
+        && Objects.equals(studyExtent, eml.studyExtent)
+        && Objects.equals(sampleDescription, eml.sampleDescription)
+        && Objects.equals(qualityControl, eml.qualityControl)
+        && Objects.equals(methodSteps, eml.methodSteps);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-      .hashCode(description, additionalInfo, alternateIdentifiers, associatedParties, bibliographicCitationSet,
-        citation, contacts, dateStamp, distributionUrl, emlVersion, geospatialCoverages, hierarchyLevel,
-        intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl, metadataLanguage, metadataLocale,
-        metadataProviders, collections, physicalData, project, pubDate, purpose, creators,
-        specimenPreservationMethods, taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent,
-        sampleDescription, qualityControl, methodSteps);
+    return Objects.hash(description, additionalInfo, alternateIdentifiers, associatedParties, bibliographicCitationSet,
+        citation, dateStamp, distributionUrl, emlVersion, previousEmlVersion, majorVersion, minorVersion,
+        geospatialCoverages, hierarchyLevel, intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl,
+        metadataLanguage, metadataLocale, collections, physicalData, project, pubDate, purpose,
+        updateFrequencyDescription, updateFrequency, creators, metadataProviders, contacts, specimenPreservationMethods,
+        taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent, sampleDescription, qualityControl,
+        methodSteps);
   }
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this).
-      add("description", description).
-      add("additionalInfo", additionalInfo).
-      add("alternateIdentifiers", alternateIdentifiers).
-      add("associatedParties", associatedParties).
-      add("bibliographicCitationSet", bibliographicCitationSet).
-      add("citation", citation).
-      add("contacts", contacts).
-      add("dateStamp", dateStamp).
-      add("distributionUrl", distributionUrl).
-      add("emlVersion", emlVersion).
-      add("geospatialCoverages", geospatialCoverages).
-      add("hierarchyLevel", hierarchyLevel).
-      add("intellectualRights", intellectualRights).
-      add("jgtiCuratorialUnits", jgtiCuratorialUnits).
-      add("keywords", keywords).
-      add("language", language).
-      add("logoUrl", logoUrl).
-      add("metadataLanguage", metadataLanguage).
-      add("metadataLocale", metadataLocale).
-      add("metadataProviders", metadataProviders).
-      add("collections", collections).
-      add("physicalData", physicalData).
-      add("project", project).
-      add("pubDate", pubDate).
-      add("purpose", purpose).
-      add("creator", creators).
-      add("specimenPreservationMethod", specimenPreservationMethods).
-      add("taxonomicCoverages", taxonomicCoverages).
-      add("temporalCoverages", temporalCoverages).
-      add("link", link).
-      add("guid", guid).
-      add("title", title).
-      add("studyExtent", studyExtent).
-      add("sampleDescription", sampleDescription).
-      add("qualityControl", qualityControl).
-      add("methodSteps", methodSteps).
-      toString();
+    return new StringJoiner(", ", Eml.class.getSimpleName() + "[", "]")
+        .add("description=" + description)
+        .add("additionalInfo='" + additionalInfo + "'")
+        .add("alternateIdentifiers=" + alternateIdentifiers)
+        .add("associatedParties=" + associatedParties)
+        .add("bibliographicCitationSet=" + bibliographicCitationSet)
+        .add("citation=" + citation)
+        .add("dateStamp=" + dateStamp)
+        .add("distributionUrl='" + distributionUrl + "'")
+        .add("emlVersion=" + emlVersion)
+        .add("previousEmlVersion=" + previousEmlVersion)
+        .add("majorVersion=" + majorVersion)
+        .add("minorVersion=" + minorVersion)
+        .add("geospatialCoverages=" + geospatialCoverages)
+        .add("hierarchyLevel='" + hierarchyLevel + "'")
+        .add("intellectualRights='" + intellectualRights + "'")
+        .add("jgtiCuratorialUnits=" + jgtiCuratorialUnits)
+        .add("keywords=" + keywords)
+        .add("language='" + language + "'")
+        .add("logoUrl='" + logoUrl + "'")
+        .add("metadataLanguage='" + metadataLanguage + "'")
+        .add("metadataLocale=" + metadataLocale)
+        .add("collections=" + collections)
+        .add("physicalData=" + physicalData)
+        .add("project=" + project)
+        .add("pubDate=" + pubDate)
+        .add("purpose='" + purpose + "'")
+        .add("updateFrequencyDescription='" + updateFrequencyDescription + "'")
+        .add("updateFrequency=" + updateFrequency)
+        .add("creators=" + creators)
+        .add("metadataProviders=" + metadataProviders)
+        .add("contacts=" + contacts)
+        .add("specimenPreservationMethods=" + specimenPreservationMethods)
+        .add("taxonomicCoverages=" + taxonomicCoverages)
+        .add("temporalCoverages=" + temporalCoverages)
+        .add("link='" + link + "'")
+        .add("guid='" + guid + "'")
+        .add("title='" + title + "'")
+        .add("studyExtent='" + studyExtent + "'")
+        .add("sampleDescription='" + sampleDescription + "'")
+        .add("qualityControl='" + qualityControl + "'")
+        .add("methodSteps=" + methodSteps)
+        .toString();
   }
 
   public BigDecimal getPreviousEmlVersion() {
@@ -1203,7 +1212,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @return the next eml version after major version change
    */
   public BigDecimal getNextEmlVersionAfterMajorVersionChange() {
-    return new BigDecimal(String.valueOf(majorVersion + 1) + ".0");
+    return new BigDecimal(majorVersion + 1 + ".0");
   }
 
   /**
@@ -1212,7 +1221,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @return the next eml version after minor version change
    */
   public BigDecimal getNextEmlVersionAfterMinorVersionChange() {
-    return new BigDecimal(String.valueOf(majorVersion) + "." + String.valueOf(minorVersion + 1));
+    return new BigDecimal(majorVersion + "." + (minorVersion + 1));
   }
 
   public void setPreviousEmlVersion(BigDecimal previousEmlVersion) {
@@ -1244,8 +1253,8 @@ public class Eml implements Serializable, BasicMetadata {
       if (versionAsString.contains(".") && versionAsString.indexOf(".") > 0) {
         int decimal = versionAsString.indexOf(".");
         try {
-          majorVersion = Integer.valueOf(versionAsString.substring(0, decimal));
-          minorVersion = Integer.valueOf(versionAsString.substring(decimal + 1));
+          majorVersion = Integer.parseInt(versionAsString.substring(0, decimal));
+          minorVersion = Integer.parseInt(versionAsString.substring(decimal + 1));
           setEmlVersion(majorVersion, minorVersion);
         } catch (NumberFormatException e) {
           LOG.error("Error parsing major and minor version numbers from version: " + versionAsString);

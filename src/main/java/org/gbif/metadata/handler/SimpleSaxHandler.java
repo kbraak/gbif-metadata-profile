@@ -2,7 +2,7 @@ package org.gbif.metadata.handler;
 
 import java.util.regex.Pattern;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -31,7 +31,7 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
 
   @Override
   public void endElement(String uri, String localName, String qName) throws SAXException {
-    content = Strings.emptyToNull(chars.toString().trim());
+    content = StringUtils.trimToNull(chars.toString());
     // norm whitespace
     if (content != null) {
       content = normWhitespace.matcher(content).replaceAll(" ");

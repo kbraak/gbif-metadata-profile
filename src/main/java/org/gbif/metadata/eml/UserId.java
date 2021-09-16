@@ -1,8 +1,8 @@
 package org.gbif.metadata.eml;
 
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * This class can be used to encapsulate information about an identifier for the agent composed of an identifier and
@@ -51,27 +51,24 @@ public class UserId implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UserId other = (UserId) obj;
-        return Objects.equal(this.identifier, other.identifier) && Objects.equal(this.directory, other.directory);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserId userId = (UserId) o;
+        return Objects.equals(directory, userId.directory)
+            && Objects.equals(identifier, userId.identifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(identifier, directory);
+        return Objects.hash(directory, identifier);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).
-                add("identifier", identifier).
-                add("directory", directory).
-                toString();
+        return new StringJoiner(", ", UserId.class.getSimpleName() + "[", "]")
+            .add("directory='" + directory + "'")
+            .add("identifier='" + identifier + "'")
+            .toString();
     }
 }
