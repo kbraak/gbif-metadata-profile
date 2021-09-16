@@ -50,8 +50,7 @@ public class TaxonomicCoverage implements Serializable {
   /**
    * Required for struts2 params-interceptor, Digester and deserializing from XML
    */
-  public TaxonomicCoverage() {
-  }
+  public TaxonomicCoverage() {}
 
   /**
    * @return the description

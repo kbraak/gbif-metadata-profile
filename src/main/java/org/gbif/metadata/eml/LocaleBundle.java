@@ -76,8 +76,7 @@ public class LocaleBundle implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     LocaleBundle that = (LocaleBundle) o;
-    return Objects.equals(locale, that.locale)
-        && Objects.equals(charset, that.charset);
+    return Objects.equals(locale, that.locale) && Objects.equals(charset, that.charset);
   }
 
   @Override

@@ -44,7 +44,6 @@ public enum TemporalCoverageType implements Serializable {
     this.name = name;
   }
 
-
   /**
    * Returns a TemporalCoverageType created from a string description of the type. If the description is null or if
    * it's

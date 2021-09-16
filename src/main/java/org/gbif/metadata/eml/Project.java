@@ -52,7 +52,6 @@ public class Project implements Serializable {
    */
   private String description;
 
-
   /**
    * The Personnel field extends ResponsibleParty with role information and is used to document people involved in a
    * research project by providing contact information and their role in the project.
@@ -94,7 +93,7 @@ public class Project implements Serializable {
    * Required by Struts2
    */
   public Project() {
-    for (Agent agent: personnel) {
+    for (Agent agent : personnel) {
       agent.setRole("pointOfContact");
     }
   }
@@ -197,18 +196,18 @@ public class Project implements Serializable {
     this.title = title;
   }
 
-    /**
-     * Adds an Agent to the project personnel list. This method was introduced to ease the Digester rules for
-     * parsing of EML.
-     *
-     * @param agent to add
-     */
-    public void addProjectPersonnel(Agent agent) {
-        if (agent.getRole() == null) {
-            agent.setRole("pointOfContact");
-        }
-        getPersonnel().add(agent);
+  /**
+   * Adds an Agent to the project personnel list. This method was introduced to ease the Digester rules for
+   * parsing of EML.
+   *
+   * @param agent to add
+   */
+  public void addProjectPersonnel(Agent agent) {
+    if (agent.getRole() == null) {
+      agent.setRole("pointOfContact");
     }
+    getPersonnel().add(agent);
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -226,7 +225,14 @@ public class Project implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, identifier, description, personnel, funding, studyAreaDescription, designDescription);
+    return Objects.hash(
+        title,
+        identifier,
+        description,
+        personnel,
+        funding,
+        studyAreaDescription,
+        designDescription);
   }
 
   @Override

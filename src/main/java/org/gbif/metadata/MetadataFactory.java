@@ -55,11 +55,14 @@ public class MetadataFactory {
   /**
    * @return a suitable reader or null if none can be found
    */
-
   private boolean hasContent(BasicMetadataImpl bm) {
-    return bm != null && (bm.getTitle() != null || !bm.getDescription().isEmpty() || bm.getSubject() != null
-                          || bm.getSourceId() != null ||
-                          bm.getHomepageUrl() != null || bm.getPublished() != null);
+    return bm != null
+        && (bm.getTitle() != null
+            || !bm.getDescription().isEmpty()
+            || bm.getSubject() != null
+            || bm.getSourceId() != null
+            || bm.getHomepageUrl() != null
+            || bm.getPublished() != null);
   }
 
   public BasicMetadataImpl read(File metadataFile) throws MetadataException {
@@ -95,7 +98,8 @@ public class MetadataFactory {
     throw new MetadataException("Can't find suitable metadata parser");
   }
 
-  public BasicMetadataImpl read(InputStream stream, BasicMetadataSaxHandler handler) throws MetadataException {
+  public BasicMetadataImpl read(InputStream stream, BasicMetadataSaxHandler handler)
+      throws MetadataException {
     try {
       SAXParser p = saxFactory.newSAXParser();
       p.parse(new BomSafeInputStreamWrapper(stream), handler);

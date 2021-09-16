@@ -198,9 +198,7 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
   }
 
   public void setSubject(List<String> keywords) {
-    subject = keywords.stream()
-        .map(StringUtils::trimToEmpty)
-        .collect(Collectors.joining("; "));
+    subject = keywords.stream().map(StringUtils::trimToEmpty).collect(Collectors.joining("; "));
   }
 
   @Override
@@ -226,8 +224,21 @@ public class BasicMetadataImpl implements Serializable, BasicMetadata {
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, sourceId, description, homepageUrl, logoUrl, subject, rights, citation, creatorName,
-        creatorEmail, publisherName, publisherEmail, published, additionalMetadata);
+    return Objects.hash(
+        title,
+        sourceId,
+        description,
+        homepageUrl,
+        logoUrl,
+        subject,
+        rights,
+        citation,
+        creatorName,
+        creatorEmail,
+        publisherName,
+        publisherEmail,
+        published,
+        additionalMetadata);
   }
 
   @Override

@@ -54,8 +54,7 @@ public class TaxonKeyword implements Serializable {
   /**
    * Required by Struts2
    */
-  public TaxonKeyword() {
-  }
+  public TaxonKeyword() {}
 
   public TaxonKeyword(String scientificName, String rank, String commonName) {
     this.scientificName = scientificName;

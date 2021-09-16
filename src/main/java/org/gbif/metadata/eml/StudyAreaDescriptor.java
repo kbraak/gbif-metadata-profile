@@ -64,5 +64,4 @@ public enum StudyAreaDescriptor implements Serializable {
   public String getName() {
     return name;
   }
-
 }

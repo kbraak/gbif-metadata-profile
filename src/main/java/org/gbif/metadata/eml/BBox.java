@@ -79,8 +79,10 @@ public class BBox implements Serializable {
    */
   public boolean contains(Point p) {
     if (p != null && p.isValid() && isValid()) {
-      if (p.getLatitude() <= max.getLatitude() && p.getLatitude() >= min.getLatitude() &&
-          p.getLongitude() <= max.getLongitude() && p.getLongitude() >= min.getLongitude()) {
+      if (p.getLatitude() <= max.getLatitude()
+          && p.getLatitude() >= min.getLatitude()
+          && p.getLongitude() <= max.getLongitude()
+          && p.getLongitude() >= min.getLongitude()) {
         return true;
       }
     }
@@ -196,8 +198,8 @@ public class BBox implements Serializable {
     // heights of the two boxes,
     // then the two boxes overlap! A shared boundary is not considered an
     // overlap here.
-    return c1.distanceX(c2) < (this.width() / 2.0 + bbox.width() / 2.0) && (c1.distanceY(c2) < (this.height() / 2.0
-                                                                                                + bbox.height() / 2.0));
+    return c1.distanceX(c2) < (this.width() / 2.0 + bbox.width() / 2.0)
+        && (c1.distanceY(c2) < (this.height() / 2.0 + bbox.height() / 2.0));
   }
 
   /**
@@ -220,9 +222,13 @@ public class BBox implements Serializable {
     double width = maxX - minX;
     double height = maxY - minY;
     // detect maximum possible expand factor
-    double[] maxFactors =
-      {(factor - 1) / 2f, (Point.MAX_LATITUDE - maxY) / height, (Point.MAX_LATITUDE + minY) / height,
-        (Point.MAX_LONGITUDE - maxX) / width, (Point.MAX_LONGITUDE + minX) / width};
+    double[] maxFactors = {
+      (factor - 1) / 2f,
+      (Point.MAX_LATITUDE - maxY) / height,
+      (Point.MAX_LATITUDE + minY) / height,
+      (Point.MAX_LONGITUDE - maxX) / width,
+      (Point.MAX_LONGITUDE + minX) / width
+    };
     Arrays.sort(maxFactors);
     double expandFactor = maxFactors[0];
     // change bbox
@@ -358,8 +364,14 @@ public class BBox implements Serializable {
    * latitude-longitude pairs
    */
   public String toStringGeoRSS() {
-    return String.format("%s   %s %s   %s   %s %s", min.toStringSpace(), max.getLongitude(), min.getLatitude(),
-      max.toStringSpace(), min.getLongitude(), max.getLatitude());
+    return String.format(
+        "%s   %s %s   %s   %s %s",
+        min.toStringSpace(),
+        max.getLongitude(),
+        min.getLatitude(),
+        max.toStringSpace(),
+        min.getLongitude(),
+        max.getLatitude());
   }
 
   public String toStringShort(int decimals) {
@@ -372,7 +384,9 @@ public class BBox implements Serializable {
    */
   public String toStringWMS() {
     // minX,minY,maxX,maxY
-    return String.format("%s,%s,%s,%s", min.getLongitude(), min.getLatitude(), max.getLongitude(), max.getLatitude());
+    return String.format(
+        "%s,%s,%s,%s",
+        min.getLongitude(), min.getLatitude(), max.getLongitude(), max.getLatitude());
   }
 
   public double width() {

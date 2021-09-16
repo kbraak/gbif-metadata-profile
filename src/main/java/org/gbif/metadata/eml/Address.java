@@ -140,7 +140,6 @@ public class Address implements Serializable {
       } else {
         formattedAddress = city;
       }
-
     }
     if (StringUtils.isNotBlank(province)) {
       if (StringUtils.isNotBlank(formattedAddress)) {
@@ -148,7 +147,6 @@ public class Address implements Serializable {
       } else {
         formattedAddress = province;
       }
-
     }
     if (StringUtils.isNotBlank(country)) {
       if (StringUtils.isNotBlank(formattedAddress)) {
@@ -156,7 +154,6 @@ public class Address implements Serializable {
       } else {
         formattedAddress = country;
       }
-
     }
     if (StringUtils.isNotBlank(postalCode)) {
       if (StringUtils.isNotBlank(formattedAddress)) {
@@ -168,5 +165,4 @@ public class Address implements Serializable {
 
     return formattedAddress;
   }
-
 }

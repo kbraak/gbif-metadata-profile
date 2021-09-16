@@ -84,7 +84,8 @@ public class MetadataFactoryTest {
     bm = mf.read(FileUtils.getClasspathFile("metadata/worms_eml2.1.xml"));
     assertEquals("World Register of Marine Species", bm.getTitle());
     assertEquals(1, bm.getAdditionalMetadata().size());
-    assertEquals("http://www.marinespecies.org/aphia.php?p=taxdetails&id=146230",
-      bm.getAdditionalMetadata("recordLinkUrl"));
+    assertEquals(
+        "http://www.marinespecies.org/aphia.php?p=taxdetails&id=146230",
+        bm.getAdditionalMetadata("recordLinkUrl"));
   }
 }

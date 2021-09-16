@@ -38,11 +38,9 @@ public class EmlHandler extends BasicMetadataSaxHandler {
   @Override
   public void endDocument() throws SAXException {
     super.endDocument();
-    bm.setSubject(StringUtils.trimToNull(
-        keywords.stream()
-            .map(StringUtils::trimToEmpty)
-            .collect(Collectors.joining("; "))
-    ));
+    bm.setSubject(
+        StringUtils.trimToNull(
+            keywords.stream().map(StringUtils::trimToEmpty).collect(Collectors.joining("; "))));
     bm.setDescription(description);
   }
 

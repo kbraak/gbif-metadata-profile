@@ -48,15 +48,19 @@ public class DcHandler extends BasicMetadataSaxHandler {
       if (localName.equalsIgnoreCase("title")) {
         bm.setTitle(content);
 
-      } else if (localName.equalsIgnoreCase("description") || localName.equalsIgnoreCase("abstract")) {
+      } else if (localName.equalsIgnoreCase("description")
+          || localName.equalsIgnoreCase("abstract")) {
         // split description into paragraphs
-        List<String> paragraphs = Arrays.stream(content.split("\r?\n"))
-            .filter(StringUtils::isNotBlank)
-            .map(String::trim)
-            .collect(Collectors.toList());
+        List<String> paragraphs =
+            Arrays.stream(content.split("\r?\n"))
+                .filter(StringUtils::isNotBlank)
+                .map(String::trim)
+                .collect(Collectors.toList());
         description.addAll(paragraphs);
-      } else if (localName.equalsIgnoreCase("subject") || localName.equalsIgnoreCase("coverage") || localName
-        .equalsIgnoreCase("spatial") || localName.equalsIgnoreCase("temporal")) {
+      } else if (localName.equalsIgnoreCase("subject")
+          || localName.equalsIgnoreCase("coverage")
+          || localName.equalsIgnoreCase("spatial")
+          || localName.equalsIgnoreCase("temporal")) {
         bm.addSubject(content);
       } else if (localName.equalsIgnoreCase("created")) {
         Date published = DateUtils.parse(content, DateUtils.ISO_DATE_FORMAT);
@@ -86,10 +90,9 @@ public class DcHandler extends BasicMetadataSaxHandler {
 
       } else if (localName.equalsIgnoreCase("source")) {
         bm.setHomepageUrl(content);
-
       }
-    } else if (uri == null && localName.equalsIgnoreCase("onlineurl") || uri == null && localName
-      .equalsIgnoreCase("homepage")) {
+    } else if (uri == null && localName.equalsIgnoreCase("onlineurl")
+        || uri == null && localName.equalsIgnoreCase("homepage")) {
       bm.setHomepageUrl(content);
     }
   }

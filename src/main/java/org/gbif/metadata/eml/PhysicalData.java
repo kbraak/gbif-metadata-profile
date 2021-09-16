@@ -74,8 +74,7 @@ public class PhysicalData implements Serializable {
   /**
    * Required by Struts2
    */
-  public PhysicalData() {
-  }
+  public PhysicalData() {}
 
   public String getCharset() {
     return charset;

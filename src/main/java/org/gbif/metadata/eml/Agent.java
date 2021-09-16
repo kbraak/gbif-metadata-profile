@@ -163,7 +163,8 @@ public class Agent implements Serializable {
   }
 
   public boolean isEmpty() {
-    return StringUtils.isAllBlank(firstName, lastName, organisation, position, phone, email, role, homepage)
+    return StringUtils.isAllBlank(
+            firstName, lastName, organisation, position, phone, email, role, homepage)
         && address.isEmpty()
         && userIds.isEmpty();
   }
@@ -187,7 +188,17 @@ public class Agent implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(firstName, lastName, organisation, position, address, phone, email, role, homepage, userIds);
+    return Objects.hash(
+        firstName,
+        lastName,
+        organisation,
+        position,
+        address,
+        phone,
+        email,
+        role,
+        homepage,
+        userIds);
   }
 
   @Override

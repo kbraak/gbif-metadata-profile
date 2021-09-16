@@ -27,21 +27,24 @@ public class TaxonomicCoverageTest {
     TaxonomicCoverage tc = new TaxonomicCoverage();
     assertTrue(tc.getTaxonKeywords().isEmpty());
     tc.addTaxonKeywords(
-      "Abies alba; Puma concolor L.;Ea Distant 1911; Ge Nicéville 1895; Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
+        "Abies alba; Puma concolor L.;Ea Distant 1911; Ge Nicéville 1895; Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
     assertEquals(5, tc.getTaxonKeywords().size());
-    assertEquals("Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
-      tc.getTaxonKeywords().get(4).getScientificName());
+    assertEquals(
+        "Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
+        tc.getTaxonKeywords().get(4).getScientificName());
 
     tc.addTaxonKeywords(
-      "Ge Nicéville 1895   |  Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
+        "Ge Nicéville 1895   |  Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
     assertEquals(7, tc.getTaxonKeywords().size());
-    assertEquals("Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
-      tc.getTaxonKeywords().get(6).getScientificName());
+    assertEquals(
+        "Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
+        tc.getTaxonKeywords().get(6).getScientificName());
 
     tc.addTaxonKeywords(
-      "Ge Nicéville 1895   \n  Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
+        "Ge Nicéville 1895   \n  Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972 ");
     assertEquals(9, tc.getTaxonKeywords().size());
-    assertEquals("Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
-      tc.getTaxonKeywords().get(8).getScientificName());
+    assertEquals(
+        "Hydnellum (Hydnellum) scrobiculatum zonatum (Banker) D. Hall & D.E. Stuntz 1972",
+        tc.getTaxonKeywords().get(8).getScientificName());
   }
 }

@@ -46,7 +46,8 @@ public class Attribute implements Serializable {
    *
    * @return new instance of Attribute
    */
-  public static Attribute create(String category, LocaleBundle localeBundle, String name, String value) {
+  public static Attribute create(
+      String category, LocaleBundle localeBundle, String name, String value) {
     Objects.requireNonNull(category, "Category was null");
     PreconditionUtils.checkArgument(category.trim().length() != 0, "Category was empty");
     Objects.requireNonNull(localeBundle, "LocaleBundle was null");

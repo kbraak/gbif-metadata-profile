@@ -36,8 +36,7 @@ public class Citation implements Serializable {
   /**
    * Default constructor required by Struts2
    */
-  public Citation() {
-  }
+  public Citation() {}
 
   public Citation(String citation, String identifier) {
     this.citation = citation;

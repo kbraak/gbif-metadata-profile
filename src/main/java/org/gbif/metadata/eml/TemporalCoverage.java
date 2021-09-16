@@ -65,8 +65,7 @@ public class TemporalCoverage implements Serializable {
    */
   private String livingTimePeriod;
 
-  public TemporalCoverage() {
-  }
+  public TemporalCoverage() {}
 
   public String getFormationPeriod() {
     if (formationPeriod == null || formationPeriod.length() == 0) {
@@ -76,7 +75,8 @@ public class TemporalCoverage implements Serializable {
   }
 
   public void setFormationPeriod(String formationPeriod) {
-    this.formationPeriod = formationPeriod != null && formationPeriod.isEmpty() ? null : formationPeriod;
+    this.formationPeriod =
+        formationPeriod != null && formationPeriod.isEmpty() ? null : formationPeriod;
   }
 
   public String getLivingTimePeriod() {
@@ -87,7 +87,8 @@ public class TemporalCoverage implements Serializable {
   }
 
   public void setLivingTimePeriod(String livingTimePeriod) {
-    this.livingTimePeriod = livingTimePeriod != null && livingTimePeriod.isEmpty() ? null : livingTimePeriod;
+    this.livingTimePeriod =
+        livingTimePeriod != null && livingTimePeriod.isEmpty() ? null : livingTimePeriod;
   }
 
   public void setEndDate(Date endDate) {

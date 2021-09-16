@@ -65,7 +65,9 @@ public class EmlFactoryTest {
 
       assertTrue(eml.getAlternateIdentifiers().contains("619a4b95-1a82-4006-be6a-7dbe3c9b33c5"));
       assertTrue(eml.getAlternateIdentifiers().contains("doi:10.1093/ageing/29.1.57"));
-      assertTrue(eml.getAlternateIdentifiers().contains("http://ageing.oxfordjournals.org/content/29/1/57"));
+      assertTrue(
+          eml.getAlternateIdentifiers()
+              .contains("http://ageing.oxfordjournals.org/content/29/1/57"));
 
       assertEquals("7.41", eml.getEmlVersion().toPlainString());
       assertEquals("Tanzanian Entomological Collection", eml.getTitle());
@@ -122,7 +124,9 @@ public class EmlFactoryTest {
       assertNotNull(firstMetadataProvider.getHomepage());
       assertEquals("http://www.gbif.org", firstMetadataProvider.getHomepage());
       assertFalse(firstMetadataProvider.getUserIds().isEmpty());
-      assertEquals("http://www.researcherid.com/rid/", firstMetadataProvider.getUserIds().get(0).getDirectory());
+      assertEquals(
+          "http://www.researcherid.com/rid/",
+          firstMetadataProvider.getUserIds().get(0).getDirectory());
       assertEquals("A-8442-8050", firstMetadataProvider.getUserIds().get(0).getIdentifier());
 
       // agent test for contact
@@ -162,8 +166,11 @@ public class EmlFactoryTest {
       assertEquals(2, eml.getAssociatedParties().size());
       assertEquals("principleInvestigator", eml.getAssociatedParties().get(0).getRole());
       assertFalse(eml.getAssociatedParties().get(0).getUserIds().isEmpty());
-      assertEquals("http://ldap.org/", eml.getAssociatedParties().get(0).getUserIds().get(0).getDirectory());
-      assertEquals("0000-0002-8442-8075", eml.getAssociatedParties().get(0).getUserIds().get(0).getIdentifier());
+      assertEquals(
+          "http://ldap.org/", eml.getAssociatedParties().get(0).getUserIds().get(0).getDirectory());
+      assertEquals(
+          "0000-0002-8442-8075",
+          eml.getAssociatedParties().get(0).getUserIds().get(0).getIdentifier());
       assertEquals("pointOfContact", eml.getAssociatedParties().get(1).getRole());
 
       cal.clear();
@@ -186,12 +193,17 @@ public class EmlFactoryTest {
       assertEquals("Spider", eml.getKeywords().get(1).getKeywords().get(0));
       assertEquals("Zoology Vocabulary Version 1", eml.getKeywords().get(1).getKeywordThesaurus());
 
-      assertEquals("Where can the additional information possibly come from?!", eml.getAdditionalInfo());
+      assertEquals(
+          "Where can the additional information possibly come from?!", eml.getAdditionalInfo());
 
       // intellectual rights tests
       assertNotNull(eml.getIntellectualRights());
-      assertEquals("This work is licensed under <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>.", eml.getIntellectualRightsXml());
-      assertEquals("This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero 1.0 License</a>.", eml.getIntellectualRights());
+      assertEquals(
+          "This work is licensed under <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>.",
+          eml.getIntellectualRightsXml());
+      assertEquals(
+          "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero 1.0 License</a>.",
+          eml.getIntellectualRights());
 
       // homepage URL, aka distributionUrl
       assertNotNull(eml.getDistributionUrl());
@@ -201,23 +213,31 @@ public class EmlFactoryTest {
       assertNotNull(eml.getGeospatialCoverages());
       assertEquals(2, eml.getGeospatialCoverages().size());
       assertEquals("Bounding Box 1", eml.getGeospatialCoverages().get(0).getDescription());
-      assertEquals(new Double("23.975"),
-        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLatitude());
-      assertEquals(new Double("0.703"),
-        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLongitude());
-      assertEquals(new Double("-22.745"),
-        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLatitude());
-      assertEquals(new Double("-1.564"),
-        eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLongitude());
+      assertEquals(
+          new Double("23.975"),
+          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLatitude());
+      assertEquals(
+          new Double("0.703"),
+          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMax().getLongitude());
+      assertEquals(
+          new Double("-22.745"),
+          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLatitude());
+      assertEquals(
+          new Double("-1.564"),
+          eml.getGeospatialCoverages().get(0).getBoundingCoordinates().getMin().getLongitude());
       assertEquals("Bounding Box 2", eml.getGeospatialCoverages().get(1).getDescription());
-      assertEquals(new Double("43.975"),
-        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLatitude());
-      assertEquals(new Double("11.564"),
-        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLongitude());
-      assertEquals(new Double("-32.745"),
-        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLatitude());
-      assertEquals(new Double("-10.703"),
-        eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLongitude());
+      assertEquals(
+          new Double("43.975"),
+          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLatitude());
+      assertEquals(
+          new Double("11.564"),
+          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMax().getLongitude());
+      assertEquals(
+          new Double("-32.745"),
+          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLatitude());
+      assertEquals(
+          new Double("-10.703"),
+          eml.getGeospatialCoverages().get(1).getBoundingCoordinates().getMin().getLongitude());
 
       // temporal coverages tests
       assertEquals(4, eml.getTemporalCoverages().size());
@@ -234,17 +254,27 @@ public class EmlFactoryTest {
 
       // taxonomic coverages tests
       assertEquals(2, eml.getTaxonomicCoverages().size());
-      assertEquals("This is a general taxon coverage with only the scientific name",
-        eml.getTaxonomicCoverages().get(0).getDescription());
-      assertEquals("Mammalia", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(0).getScientificName());
-      assertEquals("Reptilia", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(1).getScientificName());
-      assertEquals("Coleoptera", eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(2).getScientificName());
+      assertEquals(
+          "This is a general taxon coverage with only the scientific name",
+          eml.getTaxonomicCoverages().get(0).getDescription());
+      assertEquals(
+          "Mammalia",
+          eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(0).getScientificName());
+      assertEquals(
+          "Reptilia",
+          eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(1).getScientificName());
+      assertEquals(
+          "Coleoptera",
+          eml.getTaxonomicCoverages().get(0).getTaxonKeywords().get(2).getScientificName());
 
-      assertEquals("This is a second taxon coverage with all fields",
-        eml.getTaxonomicCoverages().get(1).getDescription());
+      assertEquals(
+          "This is a second taxon coverage with all fields",
+          eml.getTaxonomicCoverages().get(1).getDescription());
       assertEquals("Class", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getRank());
-      assertEquals("Aves", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getScientificName());
-      assertEquals("Birds", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getCommonName());
+      assertEquals(
+          "Aves", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getScientificName());
+      assertEquals(
+          "Birds", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getCommonName());
 
       assertEquals("Provide data to the whole world.", eml.getPurpose());
 
@@ -260,7 +290,9 @@ public class EmlFactoryTest {
       assertNotNull(eml.getStudyExtent());
       assertEquals("Daily Obersevation of Pigeons Eating Habits", eml.getStudyExtent());
       assertNotNull(eml.getSampleDescription());
-      assertEquals("44KHz is what a CD has... I was more like one a day if I felt like it", eml.getSampleDescription());
+      assertEquals(
+          "44KHz is what a CD has... I was more like one a day if I felt like it",
+          eml.getSampleDescription());
       assertNotNull(eml.getQualityControl());
       assertEquals("None", eml.getQualityControl());
 
@@ -270,18 +302,26 @@ public class EmlFactoryTest {
       assertNotNull(eml.getProject().getPersonnel());
       assertEquals("David", eml.getProject().getPersonnel().get(0).getFirstName());
       assertEquals("Green", eml.getProject().getPersonnel().get(0).getLastName());
-      assertEquals("http://orcid.org/", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getDirectory());
-      assertEquals("0000-0002-1234-5678", eml.getProject().getPersonnel().get(0).getUserIds().get(0).getIdentifier());
+      assertEquals(
+          "http://orcid.org/",
+          eml.getProject().getPersonnel().get(0).getUserIds().get(0).getDirectory());
+      assertEquals(
+          "0000-0002-1234-5678",
+          eml.getProject().getPersonnel().get(0).getUserIds().get(0).getIdentifier());
       assertEquals("publisher", eml.getProject().getPersonnel().get(0).getRole());
       assertEquals("My Deep Pockets", eml.getProject().getFunding());
       assertNotNull(eml.getProject().getIdentifier());
       assertEquals("T123", eml.getProject().getIdentifier());
       assertNotNull(eml.getProject().getDescription(), "Part of a series of events.");
       assertEquals("Part of a series of events.", eml.getProject().getDescription());
-      assertEquals(StudyAreaDescriptor.GENERIC, eml.getProject().getStudyAreaDescription().getName());
-      assertEquals("false", eml.getProject().getStudyAreaDescription().getCitableClassificationSystem());
-      assertEquals("Turkish Mountains", eml.getProject().getStudyAreaDescription().getDescriptorValue());
-      assertEquals("This was done in Avian Migration patterns", eml.getProject().getDesignDescription());
+      assertEquals(
+          StudyAreaDescriptor.GENERIC, eml.getProject().getStudyAreaDescription().getName());
+      assertEquals(
+          "false", eml.getProject().getStudyAreaDescription().getCitableClassificationSystem());
+      assertEquals(
+          "Turkish Mountains", eml.getProject().getStudyAreaDescription().getDescriptorValue());
+      assertEquals(
+          "This was done in Avian Migration patterns", eml.getProject().getDesignDescription());
       assertEquals("doi:tims-ident.2135.ex43.33.d", eml.getCitation().getIdentifier());
       assertEquals("Tims assembled checklist", eml.getCitation().getCitation());
       assertEquals("en", eml.getMetadataLanguage());
@@ -311,15 +351,15 @@ public class EmlFactoryTest {
       assertEquals("shapefile", eml.getPhysicalData().get(0).getFormat());
       assertNull(eml.getPhysicalData().get(0).getFormatVersion());
       assertEquals(
-        "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
-        eml.getPhysicalData().get(0).getDistributionUrl());
+          "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
+          eml.getPhysicalData().get(0).getDistributionUrl());
       assertEquals("INV-GCEM-0305a1_1_2.shp", eml.getPhysicalData().get(1).getName());
       assertEquals("ASCII", eml.getPhysicalData().get(1).getCharset());
       assertEquals("shapefile", eml.getPhysicalData().get(1).getFormat());
       assertEquals("2.0.97", eml.getPhysicalData().get(1).getFormatVersion());
       assertEquals(
-        "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_2.TXT",
-        eml.getPhysicalData().get(1).getDistributionUrl());
+          "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_2.TXT",
+          eml.getPhysicalData().get(1).getDistributionUrl());
 
       // JGTI curatorial unit tests
       // A separate for the alternate JGTI structure that includes uncertainty

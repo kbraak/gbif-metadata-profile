@@ -118,8 +118,9 @@ public class EmlTest {
   public void testParseLicenseUrl() {
     Eml eml = new Eml();
     eml.setIntellectualRights(
-      "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
-    assertEquals("http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
+        "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
+    assertEquals(
+        "http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
 
     eml.setIntellectualRights("This work is licensed under CC0");
     assertNull(eml.parseLicenseUrl());
@@ -129,7 +130,7 @@ public class EmlTest {
   public void testParseLicenseTitle() {
     Eml eml = new Eml();
     eml.setIntellectualRights(
-      "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
+        "This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero (CC0) 1.0 License</a>.");
     assertEquals("Creative Commons CCZero (CC0) 1.0 License", eml.parseLicenseTitle());
 
     eml.setIntellectualRights("This work is licensed under CC0");

@@ -50,8 +50,7 @@ public class GeospatialCoverage implements Serializable {
   /**
    * Required by Struts2
    */
-  public GeospatialCoverage() {
-  }
+  public GeospatialCoverage() {}
 
   /**
    * @return the boundingCoordinates
@@ -100,7 +99,9 @@ public class GeospatialCoverage implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     GeospatialCoverage that = (GeospatialCoverage) o;
-    return Objects.equals(description, that.description) && Objects.equals(keywords, that.keywords) && Objects.equals(boundingCoordinates, that.boundingCoordinates);
+    return Objects.equals(description, that.description)
+        && Objects.equals(keywords, that.keywords)
+        && Objects.equals(boundingCoordinates, that.boundingCoordinates);
   }
 
   @Override

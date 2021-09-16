@@ -33,7 +33,7 @@ public class FreemarkerWriter {
   protected static final Configuration FTL = provideFreemarker();
 
   private static String processTemplateIntoString(Template template, Object model)
-    throws IOException, TemplateException {
+      throws IOException, TemplateException {
     StringWriter result = new StringWriter();
     template.process(model, result);
     return result.toString();
@@ -57,11 +57,11 @@ public class FreemarkerWriter {
   /**
    * Writes a map of data to a utf8 encoded file using a Freemarker {@link Configuration}.
    */
-  public static void writeFile(File f, String template, Object data) throws IOException, TemplateException {
+  public static void writeFile(File f, String template, Object data)
+      throws IOException, TemplateException {
     String result = processTemplateIntoString(FTL.getTemplate(template), data);
     Writer out = FileUtils.startNewUtf8File(f);
     out.write(result);
     out.close();
   }
-
 }

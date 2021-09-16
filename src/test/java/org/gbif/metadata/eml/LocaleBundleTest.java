@@ -29,7 +29,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class LocaleBundleTest {
 
   @SuppressWarnings("UnusedReturnValue")
-  private static LocaleBundle create(String failMsg, String language, String country, Charset charset) {
+  private static LocaleBundle create(
+      String failMsg, String language, String country, Charset charset) {
     LocaleBundle lb = null;
     try {
       lb = LocaleBundle.create(language, country, charset);
@@ -62,7 +63,9 @@ public class LocaleBundleTest {
 
   @Test
   public final void testEqualsObject() {
-    assertEquals(LocaleBundle.create("l", "c", StandardCharsets.UTF_8), LocaleBundle.create("l", "c", StandardCharsets.UTF_8));
+    assertEquals(
+        LocaleBundle.create("l", "c", StandardCharsets.UTF_8),
+        LocaleBundle.create("l", "c", StandardCharsets.UTF_8));
   }
 
   @Test
@@ -90,13 +93,15 @@ public class LocaleBundleTest {
 
   @Test
   public final void testHashCode() {
-    assertEquals(LocaleBundle.create("l", "c", StandardCharsets.UTF_8).hashCode(),
-      LocaleBundle.create("l", "c", StandardCharsets.UTF_8).hashCode());
+    assertEquals(
+        LocaleBundle.create("l", "c", StandardCharsets.UTF_8).hashCode(),
+        LocaleBundle.create("l", "c", StandardCharsets.UTF_8).hashCode());
   }
 
   @Test
   public final void testToString() {
-    assertEquals("LocaleBundle[country=C, language=l, charset=UTF-8]",
-      LocaleBundle.create("l", "c", StandardCharsets.UTF_8).toString());
+    assertEquals(
+        "LocaleBundle[country=C, language=l, charset=UTF-8]",
+        LocaleBundle.create("l", "c", StandardCharsets.UTF_8).toString());
   }
 }

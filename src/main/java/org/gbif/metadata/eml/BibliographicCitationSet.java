@@ -43,8 +43,7 @@ public class BibliographicCitationSet implements Serializable {
   /**
    * Default constructor required by Struts2
    */
-  public BibliographicCitationSet() {
-  }
+  public BibliographicCitationSet() {}
 
   /**
    * @param citations to initialise with

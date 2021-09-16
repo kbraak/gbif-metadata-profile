@@ -46,8 +46,7 @@ public class Point implements Serializable {
   // y (north/south), -90/90
   private Double latitude;
 
-  public Point() {
-  }
+  public Point() {}
 
   public Point(Point p) {
     setLatitude(p.latitude);

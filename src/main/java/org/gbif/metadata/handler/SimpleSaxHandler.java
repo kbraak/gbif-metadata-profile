@@ -60,7 +60,8 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
   }
 
   @Override
-  public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+  public void startElement(String uri, String localName, String qName, Attributes attributes)
+      throws SAXException {
     chars = new StringBuffer();
     parents += "/" + localName.toLowerCase();
   }
@@ -69,5 +70,4 @@ public abstract class SimpleSaxHandler extends DefaultHandler {
   public String toString() {
     return getClass().getSimpleName();
   }
-
 }

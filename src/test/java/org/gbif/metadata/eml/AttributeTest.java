@@ -30,12 +30,13 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class AttributeTest {
 
-  private static Attribute create(String category, LocaleBundle localeBundle, String name, String value) {
+  private static Attribute create(
+      String category, LocaleBundle localeBundle, String name, String value) {
     return create(null, category, localeBundle, name, value);
   }
 
-  private static Attribute create(String failMsg, String category, LocaleBundle localeBundle, String name,
-    String value) {
+  private static Attribute create(
+      String failMsg, String category, LocaleBundle localeBundle, String name, String value) {
     Attribute m = null;
     try {
       m = Attribute.create(category, localeBundle, name, value);
@@ -112,7 +113,7 @@ public class AttributeTest {
     LocaleBundle lb = LocaleBundle.create("EN", "USA", StandardCharsets.UTF_8);
     Attribute a = create("c", lb, "n", "v");
     assertEquals(
-      "Attribute[category='c', localeBundle=LocaleBundle[country=USA, language=en, charset=UTF-8], name='n', value='v']",
-      a.toString());
+        "Attribute[category='c', localeBundle=LocaleBundle[country=USA, language=en, charset=UTF-8], name='n', value='v']",
+        a.toString());
   }
 }

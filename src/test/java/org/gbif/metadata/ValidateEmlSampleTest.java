@@ -40,7 +40,6 @@ public class ValidateEmlSampleTest {
     File sample1 = FileUtils.getClasspathFile("eml/sample.xml");
     File sample2 = FileUtils.getClasspathFile("eml/sample2.xml");
 
-
     Validator validator = ValidatorFactory.getGbifValidator();
     try {
       validator.validate(new StreamSource(sample1));

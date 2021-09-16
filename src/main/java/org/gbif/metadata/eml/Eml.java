@@ -57,7 +57,7 @@ public class Eml implements Serializable, BasicMetadata {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
 
-  private static final Pattern PACKAGED_ID_PATTERN =  Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
+  private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
   private static final char SEMICOLON = ';';
   private static final char COMMA = ',';
   private static final char PIPE = '|';
@@ -111,6 +111,7 @@ public class Eml implements Serializable, BasicMetadata {
    * Serialised data
    */
   private BigDecimal emlVersion = new BigDecimal("1.0");
+
   private BigDecimal previousEmlVersion = new BigDecimal("1.0");
   private int majorVersion = 1;
   private int minorVersion = 0;
@@ -352,37 +353,37 @@ public class Eml implements Serializable, BasicMetadata {
     this.citation = citation;
   }
 
-    /**
-     * Return the primary creator, the first creator in the list of creators. If there are
-     * no creators, return the primary contact, the first contact in the list of contacts.
-     *
-     * @return the creator, or null if no creators or contacts exist
-     */
-    private Agent getCreator() {
-        if (!creators.isEmpty()) {
-            return creators.get(0);
-        }
-        if (!contacts.isEmpty()) {
-            return contacts.get(0);
-        }
-        return null;
+  /**
+   * Return the primary creator, the first creator in the list of creators. If there are
+   * no creators, return the primary contact, the first contact in the list of contacts.
+   *
+   * @return the creator, or null if no creators or contacts exist
+   */
+  private Agent getCreator() {
+    if (!creators.isEmpty()) {
+      return creators.get(0);
     }
+    if (!contacts.isEmpty()) {
+      return contacts.get(0);
+    }
+    return null;
+  }
 
-    /**
-     * Return the primary metadataProvider, the first metadataProvider in the list of metadataProviders. If there are
-     * no metadataProviders, return the primary contact, the first contact in the list of contacts.
-     *
-     * @return the metadataProvider, or null if no metadataProviders or contacts exist
-     */
-    private Agent getPublisher() {
-        if (!metadataProviders.isEmpty()) {
-            return metadataProviders.get(0);
-        }
-        if (!contacts.isEmpty()) {
-            return contacts.get(0);
-        }
-        return null;
+  /**
+   * Return the primary metadataProvider, the first metadataProvider in the list of metadataProviders. If there are
+   * no metadataProviders, return the primary contact, the first contact in the list of contacts.
+   *
+   * @return the metadataProvider, or null if no metadataProviders or contacts exist
+   */
+  private Agent getPublisher() {
+    if (!metadataProviders.isEmpty()) {
+      return metadataProviders.get(0);
     }
+    if (!contacts.isEmpty()) {
+      return contacts.get(0);
+    }
+    return null;
+  }
 
   public Date getDateStamp() {
     return dateStamp;
@@ -445,63 +446,63 @@ public class Eml implements Serializable, BasicMetadata {
     this.hierarchyLevel = hierarchyLevel;
   }
 
-    /**
-     * @return intellectualRights (XML/EML ulink will have been converted into HTML anchor)
-     */
-    public String getIntellectualRights() {
-        if (StringUtils.isEmpty(intellectualRights)) {
-            return null;
-        }
-        return intellectualRights;
+  /**
+   * @return intellectualRights (XML/EML ulink will have been converted into HTML anchor)
+   */
+  public String getIntellectualRights() {
+    if (StringUtils.isEmpty(intellectualRights)) {
+      return null;
     }
+    return intellectualRights;
+  }
 
-    /**
-     * Called only when persisting intellectualRights in XML.
-     *
-     * @return intellectualRights with HTML anchor converted back into XML/EML ulink.
-     */
-    public String getIntellectualRightsXml() {
-        if (StringUtils.isEmpty(intellectualRights)) {
-            return null;
-        }
-        return paraHtmToXml(intellectualRights);
+  /**
+   * Called only when persisting intellectualRights in XML.
+   *
+   * @return intellectualRights with HTML anchor converted back into XML/EML ulink.
+   */
+  public String getIntellectualRightsXml() {
+    if (StringUtils.isEmpty(intellectualRights)) {
+      return null;
     }
+    return paraHtmToXml(intellectualRights);
+  }
 
-    /**
-     * Converts XML/EML ulink into HTML anchor, and then sets the intellectualRights.
-     */
-    public void setIntellectualRights(String intellectualRights) {
-        this.intellectualRights = paraXmlToHtml(intellectualRights);
-    }
+  /**
+   * Converts XML/EML ulink into HTML anchor, and then sets the intellectualRights.
+   */
+  public void setIntellectualRights(String intellectualRights) {
+    this.intellectualRights = paraXmlToHtml(intellectualRights);
+  }
 
-    /**
-     * Called on the paragraph string (<para>str</para>), to convert XML/EML ulink into HTML anchor.
-     *
-     * @return paragraph string, but with XML/EML ulink converted into an HTML link.
-     */
-    private static String paraXmlToHtml(String xml) {
-        if (StringUtils.isNotEmpty(xml)) {
-            return xml.replaceAll("<citetitle>", "").
-                    replaceAll("</citetitle>", "").
-                    replaceAll("<ulink url=", "<a href=").
-                    replaceAll("</ulink>", "</a>");
-        }
-        return xml;
+  /**
+   * Called on the paragraph string (<para>str</para>), to convert XML/EML ulink into HTML anchor.
+   *
+   * @return paragraph string, but with XML/EML ulink converted into an HTML link.
+   */
+  private static String paraXmlToHtml(String xml) {
+    if (StringUtils.isNotEmpty(xml)) {
+      return xml.replaceAll("<citetitle>", "")
+          .replaceAll("</citetitle>", "")
+          .replaceAll("<ulink url=", "<a href=")
+          .replaceAll("</ulink>", "</a>");
     }
+    return xml;
+  }
 
-    /**
-     * Called on the paragraph string (<para>str</para>), to convert HTML anchor into XML/EML ulink.
-     *
-     * @return paragraph string, but with HTML anchors converted back into XML/EML ulink.
-     */
-    private static String paraHtmToXml(String html) {
-        if (StringUtils.isNotEmpty(html)) {
-            return html.replaceAll("\">", "\"><citetitle>").
-                    replaceAll("<a href=", "<ulink url=").
-                    replaceAll("</a>", "</citetitle></ulink>");
-        }
-        return html;
+  /**
+   * Called on the paragraph string (<para>str</para>), to convert HTML anchor into XML/EML ulink.
+   *
+   * @return paragraph string, but with HTML anchors converted back into XML/EML ulink.
+   */
+  private static String paraHtmToXml(String html) {
+    if (StringUtils.isNotEmpty(html)) {
+      return html.replaceAll("\">", "\"><citetitle>")
+          .replaceAll("<a href=", "<ulink url=")
+          .replaceAll("</a>", "</citetitle></ulink>");
     }
+    return html;
+  }
 
   public List<JGTICuratorialUnit> getJgtiCuratorialUnits() {
     return jgtiCuratorialUnits;
@@ -578,11 +579,11 @@ public class Eml implements Serializable, BasicMetadata {
   }
 
   public List<Collection> getCollections() {
-      return collections;
+    return collections;
   }
 
   public void setCollections(List<Collection> collections) {
-      this.collections = collections;
+    this.collections = collections;
   }
 
   public List<PhysicalData> getPhysicalData() {
@@ -971,10 +972,9 @@ public class Eml implements Serializable, BasicMetadata {
    * @param element in an XML document
    */
   public void parseIntellectualRights(org.w3c.dom.Element element) {
-      String xmlStr = rawXmlToString(element);
-      this.intellectualRights = paraXmlToHtml(xmlStr);
+    String xmlStr = rawXmlToString(element);
+    this.intellectualRights = paraXmlToHtml(xmlStr);
   }
-
 
   public List<String> getAbstract() {
     return description;
@@ -1076,30 +1076,31 @@ public class Eml implements Serializable, BasicMetadata {
     }
   }
 
-    /**
-     * Transforms an para element of an XML document into its exact string representation, stripping
-     * off the leading and trailing para tags.
-     *
-     * @param element in an XML document
-     * @return element transformed into a string
-     */
-    private String rawXmlToString(org.w3c.dom.Element element) {
-        TransformerFactory transFactory = TransformerFactory.newInstance();
-        String str = null;
-        try {
-            Transformer transformer = transFactory.newTransformer();
-            StringWriter buffer = new StringWriter();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            transformer.transform(new DOMSource(element), new StreamResult(buffer));
-            // strip off leading <para> and trailing </para>, and trim any leading and trailing whitespace also
-            str = buffer.toString().replaceAll("<para>", "").replaceAll("</para>", "").trim();
-        } catch (TransformerConfigurationException e) {
-            LOG.error("An error occurred creating new XML Transformer: " + e.getLocalizedMessage());
-        } catch (TransformerException e) {
-            LOG.error("An error occurred transforming raw XML to string: " + e.getLocalizedMessage());
-        }
-        return str;
+  /**
+   * Transforms an para element of an XML document into its exact string representation, stripping
+   * off the leading and trailing para tags.
+   *
+   * @param element in an XML document
+   * @return element transformed into a string
+   */
+  private String rawXmlToString(org.w3c.dom.Element element) {
+    TransformerFactory transFactory = TransformerFactory.newInstance();
+    String str = null;
+    try {
+      Transformer transformer = transFactory.newTransformer();
+      StringWriter buffer = new StringWriter();
+      transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+      transformer.transform(new DOMSource(element), new StreamResult(buffer));
+      // strip off leading <para> and trailing </para>, and trim any leading and trailing whitespace
+      // also
+      str = buffer.toString().replaceAll("<para>", "").replaceAll("</para>", "").trim();
+    } catch (TransformerConfigurationException e) {
+      LOG.error("An error occurred creating new XML Transformer: " + e.getLocalizedMessage());
+    } catch (TransformerException e) {
+      LOG.error("An error occurred transforming raw XML to string: " + e.getLocalizedMessage());
     }
+    return str;
+  }
 
   @Override
   public boolean equals(Object o) {
@@ -1151,12 +1152,47 @@ public class Eml implements Serializable, BasicMetadata {
 
   @Override
   public int hashCode() {
-    return Objects.hash(description, additionalInfo, alternateIdentifiers, associatedParties, bibliographicCitationSet,
-        citation, dateStamp, distributionUrl, emlVersion, previousEmlVersion, majorVersion, minorVersion,
-        geospatialCoverages, hierarchyLevel, intellectualRights, jgtiCuratorialUnits, keywords, language, logoUrl,
-        metadataLanguage, metadataLocale, collections, physicalData, project, pubDate, purpose,
-        updateFrequencyDescription, updateFrequency, creators, metadataProviders, contacts, specimenPreservationMethods,
-        taxonomicCoverages, temporalCoverages, link, guid, title, studyExtent, sampleDescription, qualityControl,
+    return Objects.hash(
+        description,
+        additionalInfo,
+        alternateIdentifiers,
+        associatedParties,
+        bibliographicCitationSet,
+        citation,
+        dateStamp,
+        distributionUrl,
+        emlVersion,
+        previousEmlVersion,
+        majorVersion,
+        minorVersion,
+        geospatialCoverages,
+        hierarchyLevel,
+        intellectualRights,
+        jgtiCuratorialUnits,
+        keywords,
+        language,
+        logoUrl,
+        metadataLanguage,
+        metadataLocale,
+        collections,
+        physicalData,
+        project,
+        pubDate,
+        purpose,
+        updateFrequencyDescription,
+        updateFrequency,
+        creators,
+        metadataProviders,
+        contacts,
+        specimenPreservationMethods,
+        taxonomicCoverages,
+        temporalCoverages,
+        link,
+        guid,
+        title,
+        studyExtent,
+        sampleDescription,
+        qualityControl,
         methodSteps);
   }
 
@@ -1262,7 +1298,8 @@ public class Eml implements Serializable, BasicMetadata {
           minorVersion = Integer.parseInt(versionAsString.substring(decimal + 1));
           setEmlVersion(majorVersion, minorVersion);
         } catch (NumberFormatException e) {
-          LOG.error("Error parsing major and minor version numbers from version: " + versionAsString);
+          LOG.error(
+              "Error parsing major and minor version numbers from version: " + versionAsString);
         }
       }
       // otherwise reset major and minor version to 0

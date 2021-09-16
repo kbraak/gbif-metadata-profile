@@ -24,13 +24,11 @@ import java.util.Map;
  * Enumeration of JGTICuratorial Unit types.
  */
 public enum JGTICuratorialUnitType implements Serializable {
-
   COUNT_WITH_UNCERTAINTY("countWithUncertainty"),
   COUNT_RANGE("countRange");
 
   public static final Map<String, String> HTML_SELECT_MAP;
   private final String name;
-
 
   /**
    * Returns a jgtiCuratorialUnitType created from a string description of the type. If the
@@ -68,5 +66,4 @@ public enum JGTICuratorialUnitType implements Serializable {
   public String getName() {
     return name;
   }
-
 }

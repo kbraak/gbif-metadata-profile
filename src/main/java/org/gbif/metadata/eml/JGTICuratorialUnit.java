@@ -41,8 +41,7 @@ public class JGTICuratorialUnit implements Serializable {
   /**
    * Required by Struts2
    */
-  public JGTICuratorialUnit() {
-  }
+  public JGTICuratorialUnit() {}
 
   public String getUnitType() {
     return unitType;

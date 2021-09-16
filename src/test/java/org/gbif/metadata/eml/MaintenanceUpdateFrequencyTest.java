@@ -27,9 +27,11 @@ public class MaintenanceUpdateFrequencyTest {
   @Test
   public void testFindByIdentifier() {
     String id = "asneeded";
-    assertEquals(MaintenanceUpdateFrequency.AS_NEEDED, MaintenanceUpdateFrequency.findByIdentifier(id));
+    assertEquals(
+        MaintenanceUpdateFrequency.AS_NEEDED, MaintenanceUpdateFrequency.findByIdentifier(id));
 
     id = "asNeeded";
-    assertEquals(MaintenanceUpdateFrequency.AS_NEEDED, MaintenanceUpdateFrequency.findByIdentifier(id));
+    assertEquals(
+        MaintenanceUpdateFrequency.AS_NEEDED, MaintenanceUpdateFrequency.findByIdentifier(id));
   }
 }

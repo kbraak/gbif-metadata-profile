@@ -53,8 +53,7 @@ public class KeywordSet implements Serializable {
   /**
    * Default constructor required by Struts2
    */
-  public KeywordSet() {
-  }
+  public KeywordSet() {}
 
   /**
    * @param keywords To initialise with

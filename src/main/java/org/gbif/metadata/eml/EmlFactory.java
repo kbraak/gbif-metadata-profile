@@ -45,7 +45,8 @@ public class EmlFactory {
    * @throws IOException  If the Stream cannot be read from
    * @throws SAXException If the XML is not well formed
    */
-  public static Eml build(InputStream xml) throws IOException, SAXException, ParserConfigurationException {
+  public static Eml build(InputStream xml)
+      throws IOException, SAXException, ParserConfigurationException {
     Digester digester = new Digester();
     digester.setNamespaceAware(true);
 
@@ -82,21 +83,31 @@ public class EmlFactory {
     digester.addSetNext("eml/dataset/intellectualRights/para", "parseIntellectualRights");
     digester.addCallMethod("eml/dataset/methods/methodStep/description/para", "addMethodStep", 1);
     digester.addCallParam("eml/dataset/methods/methodStep/description/para", 0);
-    digester.addBeanPropertySetter("eml/dataset/methods/sampling/studyExtent/description/para", "studyExtent");
-    digester.addBeanPropertySetter("eml/dataset/methods/sampling/samplingDescription/para", "sampleDescription");
-    digester.addBeanPropertySetter("eml/dataset/methods/qualityControl/description/para", "qualityControl");
+    digester.addBeanPropertySetter(
+        "eml/dataset/methods/sampling/studyExtent/description/para", "studyExtent");
+    digester.addBeanPropertySetter(
+        "eml/dataset/methods/sampling/samplingDescription/para", "sampleDescription");
+    digester.addBeanPropertySetter(
+        "eml/dataset/methods/qualityControl/description/para", "qualityControl");
     digester.addBeanPropertySetter("eml/dataset/distribution/online/url", "distributionUrl");
     digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
-    digester.addBeanPropertySetter("eml/dataset/maintenance/description/para", "updateFrequencyDescription");
-    digester.addCallMethod("eml/dataset/maintenance/maintenanceUpdateFrequency", "setUpdateFrequency", 1);
+    digester.addBeanPropertySetter(
+        "eml/dataset/maintenance/description/para", "updateFrequencyDescription");
+    digester.addCallMethod(
+        "eml/dataset/maintenance/maintenanceUpdateFrequency", "setUpdateFrequency", 1);
     digester.addCallParam("eml/dataset/maintenance/maintenanceUpdateFrequency", 0);
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/citation", "setCitation", 2);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 0);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/citation", 1, "identifier");
-    digester.addCallMethod("eml/additionalMetadata/metadata/gbif/specimenPreservationMethod", "addSpecimenPreservationMethod", 1);
+    digester.addCallMethod(
+        "eml/additionalMetadata/metadata/gbif/specimenPreservationMethod",
+        "addSpecimenPreservationMethod",
+        1);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/specimenPreservationMethod", 0);
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoUrl");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/hierarchyLevel", "hierarchyLevel");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoUrl");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/hierarchyLevel", "hierarchyLevel");
     digester.addCallMethod("eml/dataset/pubDate", "setPubDateAsString", 1);
     digester.addCallParam("eml/dataset/pubDate", 0);
 
@@ -155,15 +166,18 @@ public class EmlFactory {
     digester.addBeanPropertySetter(prefix + "/address/postalCode", "postalCode");
     digester.addBeanPropertySetter(prefix + "/address/country", "country");
     digester.addBeanPropertySetter(prefix + "/address/deliveryPoint", "address");
-    digester.addSetNext(prefix + "/address", "setAddress"); // called on </address> to set on parent Agent
+    digester.addSetNext(
+        prefix + "/address", "setAddress"); // called on </address> to set on parent Agent
 
     digester.addObjectCreate(prefix + "/userId", UserId.class);
     digester.addCallMethod(prefix + "/userId", "setDirectory", 1);
     digester.addCallParam(prefix + "/userId", 0, "directory");
     digester.addBeanPropertySetter(prefix + "/userId", "identifier");
-    digester.addSetNext(prefix + "/userId", "addUserId"); // called on </userId> to set on parent Agent
+    digester.addSetNext(
+        prefix + "/userId", "addUserId"); // called on </userId> to set on parent Agent
 
-    digester.addSetNext(prefix, parentMethod); // method called on parent object which is the previous stack object
+    digester.addSetNext(
+        prefix, parentMethod); // method called on parent object which is the previous stack object
   }
 
   /**
@@ -189,12 +203,15 @@ public class EmlFactory {
    * @param digester to add the rules to
    */
   private static void addBibliographicCitations(Digester digester) {
-    digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/bibliography", BibliographicCitationSet.class);
+    digester.addObjectCreate(
+        "eml/additionalMetadata/metadata/gbif/bibliography", BibliographicCitationSet.class);
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/bibliography/citation", "add", 2);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/bibliography/citation", 0);
-    digester.addCallParam("eml/additionalMetadata/metadata/gbif/bibliography/citation", 1, "identifier");
+    digester.addCallParam(
+        "eml/additionalMetadata/metadata/gbif/bibliography/citation", 1, "identifier");
     // add the BibliographicCitations to the list in EML
-    digester.addSetNext("eml/additionalMetadata/metadata/gbif/bibliography", "setBibliographicCitationSet");
+    digester.addSetNext(
+        "eml/additionalMetadata/metadata/gbif/bibliography", "setBibliographicCitationSet");
   }
 
   /**
@@ -204,21 +221,28 @@ public class EmlFactory {
    */
   private static void addGeographicCoverageRules(Digester digester) {
     digester.addObjectCreate("eml/dataset/coverage/geographicCoverage", GeospatialCoverage.class);
-    digester.addBeanPropertySetter("eml/dataset/coverage/geographicCoverage/geographicDescription", "description");
-    digester.addObjectCreate("eml/dataset/coverage/geographicCoverage/boundingCoordinates", BBox.class);
-    digester.addBeanPropertySetter("eml/dataset/coverage/geographicCoverage/boundingCoordinates/westBoundingCoordinate",
-      "minX");
-    digester.addBeanPropertySetter("eml/dataset/coverage/geographicCoverage/boundingCoordinates/eastBoundingCoordinate",
-      "maxX");
-    digester
-      .addBeanPropertySetter("eml/dataset/coverage/geographicCoverage/boundingCoordinates/northBoundingCoordinate",
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/geographicCoverage/geographicDescription", "description");
+    digester.addObjectCreate(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates", BBox.class);
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates/westBoundingCoordinate",
+        "minX");
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates/eastBoundingCoordinate",
+        "maxX");
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates/northBoundingCoordinate",
         "maxY");
-    digester
-      .addBeanPropertySetter("eml/dataset/coverage/geographicCoverage/boundingCoordinates/southBoundingCoordinate",
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates/southBoundingCoordinate",
         "minY");
-    digester.addSetNext("eml/dataset/coverage/geographicCoverage/boundingCoordinates", "setBoundingCoordinates"); // add
+    digester.addSetNext(
+        "eml/dataset/coverage/geographicCoverage/boundingCoordinates",
+        "setBoundingCoordinates"); // add
     // the BBox to the GeospatialCoverage
-    digester.addSetNext("eml/dataset/coverage/geographicCoverage", "addGeospatialCoverage"); // add the
+    digester.addSetNext(
+        "eml/dataset/coverage/geographicCoverage", "addGeospatialCoverage"); // add the
     // GeospatialCoverage to the list in
     // EML
   }
@@ -230,14 +254,20 @@ public class EmlFactory {
    */
   private static void addTemporalCoverageRules(Digester digester) {
     digester.addObjectCreate("eml/dataset/coverage/temporalCoverage", TemporalCoverage.class);
-    digester.addCallMethod("eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", "setStart", 1);
+    digester.addCallMethod(
+        "eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", "setStart", 1);
     digester.addCallParam("eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", 0);
-    digester.addCallMethod("eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", "setEnd", 1);
+    digester.addCallMethod(
+        "eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", "setEnd", 1);
     digester.addCallParam("eml/dataset/coverage/temporalCoverage/singleDateTime/calendarDate", 0);
-    digester.addCallMethod("eml/dataset/coverage/temporalCoverage/rangeOfDates/beginDate/calendarDate", "setStart", 1);
-    digester.addCallParam("eml/dataset/coverage/temporalCoverage/rangeOfDates/beginDate/calendarDate", 0);
-    digester.addCallMethod("eml/dataset/coverage/temporalCoverage/rangeOfDates/endDate/calendarDate", "setEnd", 1);
-    digester.addCallParam("eml/dataset/coverage/temporalCoverage/rangeOfDates/endDate/calendarDate", 0);
+    digester.addCallMethod(
+        "eml/dataset/coverage/temporalCoverage/rangeOfDates/beginDate/calendarDate", "setStart", 1);
+    digester.addCallParam(
+        "eml/dataset/coverage/temporalCoverage/rangeOfDates/beginDate/calendarDate", 0);
+    digester.addCallMethod(
+        "eml/dataset/coverage/temporalCoverage/rangeOfDates/endDate/calendarDate", "setEnd", 1);
+    digester.addCallParam(
+        "eml/dataset/coverage/temporalCoverage/rangeOfDates/endDate/calendarDate", 0);
     // add the TemporalCoverage to the list in EML
     digester.addSetNext("eml/dataset/coverage/temporalCoverage", "addTemporalCoverage");
   }
@@ -248,10 +278,13 @@ public class EmlFactory {
    * @param digester to add the rules to
    */
   private static void addLivingTimePeriodRules(Digester digester) {
-    digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/livingTimePeriod", TemporalCoverage.class);
-    digester.addCallMethod("eml/additionalMetadata/metadata/gbif/livingTimePeriod", "setLivingTimePeriod", 1);
+    digester.addObjectCreate(
+        "eml/additionalMetadata/metadata/gbif/livingTimePeriod", TemporalCoverage.class);
+    digester.addCallMethod(
+        "eml/additionalMetadata/metadata/gbif/livingTimePeriod", "setLivingTimePeriod", 1);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/livingTimePeriod", 0);
-    digester.addSetNext("eml/additionalMetadata/metadata/gbif/livingTimePeriod", "addTemporalCoverage"); // add the
+    digester.addSetNext(
+        "eml/additionalMetadata/metadata/gbif/livingTimePeriod", "addTemporalCoverage"); // add the
     // TemporalCoverage to the list in EML
   }
 
@@ -261,10 +294,13 @@ public class EmlFactory {
    * @param digester to add the rules to
    */
   private static void addFormationPeriodRules(Digester digester) {
-    digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/formationPeriod", TemporalCoverage.class);
-    digester.addCallMethod("eml/additionalMetadata/metadata/gbif/formationPeriod", "setFormationPeriod", 1);
+    digester.addObjectCreate(
+        "eml/additionalMetadata/metadata/gbif/formationPeriod", TemporalCoverage.class);
+    digester.addCallMethod(
+        "eml/additionalMetadata/metadata/gbif/formationPeriod", "setFormationPeriod", 1);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/formationPeriod", 0);
-    digester.addSetNext("eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage"); // add the
+    digester.addSetNext(
+        "eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage"); // add the
     // TemporalCoverage to the list in EML
   }
 
@@ -275,38 +311,44 @@ public class EmlFactory {
    */
   private static void addTaxonomicCoverageRules(Digester digester) {
     digester.addObjectCreate("eml/dataset/coverage/taxonomicCoverage", TaxonomicCoverage.class);
-    digester.addBeanPropertySetter("eml/dataset/coverage/taxonomicCoverage/generalTaxonomicCoverage", "description");
-    digester.addObjectCreate("eml/dataset/coverage/taxonomicCoverage/taxonomicClassification", TaxonKeyword.class);
-    digester
-      .addBeanPropertySetter("eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankName", "rank");
-    digester.addBeanPropertySetter("eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankValue",
-      "scientificName");
-    digester
-      .addBeanPropertySetter("eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/commonName", "commonName");
-    digester.addSetNext("eml/dataset/coverage/taxonomicCoverage/taxonomicClassification",
-      "addTaxonKeyword"); // adds the TaxonKeyword part of the
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/taxonomicCoverage/generalTaxonomicCoverage", "description");
+    digester.addObjectCreate(
+        "eml/dataset/coverage/taxonomicCoverage/taxonomicClassification", TaxonKeyword.class);
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankName", "rank");
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/taxonRankValue",
+        "scientificName");
+    digester.addBeanPropertySetter(
+        "eml/dataset/coverage/taxonomicCoverage/taxonomicClassification/commonName", "commonName");
+    digester.addSetNext(
+        "eml/dataset/coverage/taxonomicCoverage/taxonomicClassification",
+        "addTaxonKeyword"); // adds the TaxonKeyword part of the
     // TaxonomicCoverage
-    digester.addSetNext("eml/dataset/coverage/taxonomicCoverage",
-      "addTaxonomicCoverage"); // add the TaxonomicCoverage to the list in EML
+    digester.addSetNext(
+        "eml/dataset/coverage/taxonomicCoverage",
+        "addTaxonomicCoverage"); // add the TaxonomicCoverage to the list in EML
   }
 
-    /**
-     * Add rules for parsing the project details.
-     *
-     * @param digester to add the rules to
-     */
-    private static void addProjectRules(Digester digester) {
-        digester.addObjectCreate("eml/dataset/project", Project.class);
-        digester.addCallMethod("eml/dataset/project", "setIdentifier", 1);
-        digester.addCallParam("eml/dataset/project", 0, "id");
-        digester.addBeanPropertySetter("eml/dataset/project/title", "title");
-        addAgentRules(digester, "eml/dataset/project/personnel", "addProjectPersonnel");
-        digester.addBeanPropertySetter("eml/dataset/project/abstract/para", "description");
-        digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
-        addStudyAreaDescriptionRules(digester);
-        digester.addBeanPropertySetter("eml/dataset/project/designDescription/description/para", "designDescription");
-        digester.addSetNext("eml/dataset/project", "setProject");
-    }
+  /**
+   * Add rules for parsing the project details.
+   *
+   * @param digester to add the rules to
+   */
+  private static void addProjectRules(Digester digester) {
+    digester.addObjectCreate("eml/dataset/project", Project.class);
+    digester.addCallMethod("eml/dataset/project", "setIdentifier", 1);
+    digester.addCallParam("eml/dataset/project", 0, "id");
+    digester.addBeanPropertySetter("eml/dataset/project/title", "title");
+    addAgentRules(digester, "eml/dataset/project/personnel", "addProjectPersonnel");
+    digester.addBeanPropertySetter("eml/dataset/project/abstract/para", "description");
+    digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
+    addStudyAreaDescriptionRules(digester);
+    digester.addBeanPropertySetter(
+        "eml/dataset/project/designDescription/description/para", "designDescription");
+    digester.addSetNext("eml/dataset/project", "setProject");
+  }
 
   /**
    * Adds rules for the study area description: <studyAreaDescription> <descriptor name="generic"
@@ -316,19 +358,22 @@ public class EmlFactory {
    * @param digester To add the rules to
    */
   private static void addStudyAreaDescriptionRules(Digester digester) {
-    digester.addObjectCreate("eml/dataset/project/studyAreaDescription", StudyAreaDescription.class);
+    digester.addObjectCreate(
+        "eml/dataset/project/studyAreaDescription", StudyAreaDescription.class);
 
     // get the descriptor@name attribute and set it
     digester.addCallMethod("eml/dataset/project/studyAreaDescription/descriptor", "setName", 1);
     digester.addCallParam("eml/dataset/project/studyAreaDescription/descriptor", 0, "name");
 
     // get the descriptor@citableClassificationSystem and set it
-    digester.addCallMethod("eml/dataset/project/studyAreaDescription/descriptor", "setCitableClassificationSystem", 1);
-    digester.addCallParam("eml/dataset/project/studyAreaDescription/descriptor", 0, "citableClassificationSystem");
+    digester.addCallMethod(
+        "eml/dataset/project/studyAreaDescription/descriptor", "setCitableClassificationSystem", 1);
+    digester.addCallParam(
+        "eml/dataset/project/studyAreaDescription/descriptor", 0, "citableClassificationSystem");
 
     // set the value of the StudyAreaDescription
-    digester
-      .addBeanPropertySetter("eml/dataset/project/studyAreaDescription/descriptor/descriptorValue", "descriptorValue");
+    digester.addBeanPropertySetter(
+        "eml/dataset/project/studyAreaDescription/descriptor/descriptorValue", "descriptorValue");
 
     // add the StudyAreaDescription to the project
     digester.addSetNext("eml/dataset/project/studyAreaDescription", "setStudyAreaDescription");
@@ -341,33 +386,41 @@ public class EmlFactory {
    */
   private static void addPhysicalDataRules(Digester digester) {
     digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/physical", PhysicalData.class);
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/physical/objectName", "name");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/physical/characterEncoding", "charset");
     digester.addBeanPropertySetter(
-      "eml/additionalMetadata/metadata/gbif/physical/dataFormat/externallyDefinedFormat/formatName", "format");
+        "eml/additionalMetadata/metadata/gbif/physical/objectName", "name");
     digester.addBeanPropertySetter(
-      "eml/additionalMetadata/metadata/gbif/physical/dataFormat/externallyDefinedFormat/formatVersion",
-      "formatVersion");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/physical/distribution/online/url",
-      "distributionUrl");
-    digester
-      .addSetNext("eml/additionalMetadata/metadata/gbif/physical", "addPhysicalData"); // add the PhysicalData to the
+        "eml/additionalMetadata/metadata/gbif/physical/characterEncoding", "charset");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/physical/dataFormat/externallyDefinedFormat/formatName",
+        "format");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/physical/dataFormat/externallyDefinedFormat/formatVersion",
+        "formatVersion");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/physical/distribution/online/url", "distributionUrl");
+    digester.addSetNext(
+        "eml/additionalMetadata/metadata/gbif/physical",
+        "addPhysicalData"); // add the PhysicalData to the
     // list in EML
   }
 
-    /**
-     * Add rules to extract the collection.
-     *
-     * @param digester to add the rules to
-     */
-    private static void addCollectionRules(Digester digester) {
-        digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/collection", Collection.class);
-        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/parentCollectionIdentifier", "parentCollectionId");
-        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionIdentifier", "collectionId");
-        digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/collection/collectionName", "collectionName");
-        // add the Collection to the list in EML
-        digester.addSetNext("eml/additionalMetadata/metadata/gbif/collection", "addCollection");
-    }
+  /**
+   * Add rules to extract the collection.
+   *
+   * @param digester to add the rules to
+   */
+  private static void addCollectionRules(Digester digester) {
+    digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/collection", Collection.class);
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/collection/parentCollectionIdentifier",
+        "parentCollectionId");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/collection/collectionIdentifier", "collectionId");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/collection/collectionName", "collectionName");
+    // add the Collection to the list in EML
+    digester.addSetNext("eml/additionalMetadata/metadata/gbif/collection", "addCollection");
+  }
 
   /**
    * Add rules to extract the jgtiCuratorialUnit.
@@ -375,18 +428,24 @@ public class EmlFactory {
    * @param digester to add the rules to
    */
   private static void addJGTICuratorialIUnit(Digester digester) {
-    digester.addObjectCreate("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit", JGTICuratorialUnit.class);
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitType", "unitType");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitRange/beginRange",
-      "rangeStart");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitRange/endRange",
-      "rangeEnd");
-    digester.addBeanPropertySetter("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnits", "rangeMean");
+    digester.addObjectCreate(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit", JGTICuratorialUnit.class);
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitType", "unitType");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitRange/beginRange",
+        "rangeStart");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnitRange/endRange",
+        "rangeEnd");
+    digester.addBeanPropertySetter(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnits", "rangeMean");
     // sets attributes of jgtiUnits (uncertaintyMeasure)
     digester.addSetProperties("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit/jgtiUnits");
-    digester.addSetNext("eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit", "addJgtiCuratorialUnit"); // add the
+    digester.addSetNext(
+        "eml/additionalMetadata/metadata/gbif/jgtiCuratorialUnit",
+        "addJgtiCuratorialUnit"); // add the
     // JGTICuratorialIUnit to the list in
     // EML
   }
-
 }
