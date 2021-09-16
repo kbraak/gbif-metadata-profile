@@ -58,7 +58,7 @@ public class LocaleBundleTest {
     create("Should fail with null charset", "language", "country", null);
     create("Should fail with empty country", "language", "", charset);
     create("Should fail with empty language", "", "country", charset);
-    create("Should fail", "language", "country", charset);
+    create(null, "language", "country", charset);
   }
 
   @Test
