@@ -13,20 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ***************************************************************************/
-
 package org.gbif.metadata;
+
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class DateUtilsTest {
 
@@ -102,7 +100,6 @@ public class DateUtilsTest {
     }
   }
 
-
   @Test
   public void testParseXmlSchemaDate() {
 
@@ -137,6 +134,5 @@ public class DateUtilsTest {
     cal2.setTimeZone(tz2);
 
     assertEquals(cal.getTimeInMillis(), cal2.getTimeInMillis());
-
   }
 }

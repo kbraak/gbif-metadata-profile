@@ -12,23 +12,20 @@
  */
 package org.gbif.metadata.eml;
 
+import org.junit.jupiter.api.Test;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * This class can be used for unit testing {@link LocaleBundle}.
  */
 public class LocaleBundleTest {
 
-  private static LocaleBundle create(String country, String language, Charset charset) {
-    return create(null, country, language, charset);
-  }
-
+  @SuppressWarnings("UnusedReturnValue")
   private static LocaleBundle create(String failMsg, String language, String country, Charset charset) {
     LocaleBundle lb = null;
     try {
@@ -57,7 +54,7 @@ public class LocaleBundleTest {
     create("Should fail with null charset", "language", "country", null);
     create("Should fail with empty country", "language", "", charset);
     create("Should fail with empty language", "", "country", charset);
-    create("language", "country", charset);
+    create("Should fail", "language", "country", charset);
   }
 
   @Test

@@ -1,11 +1,11 @@
 package org.gbif.metadata.eml;
 
+import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class EmlTest {
 

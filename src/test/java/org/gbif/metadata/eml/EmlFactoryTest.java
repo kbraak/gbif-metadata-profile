@@ -1,13 +1,17 @@
 package org.gbif.metadata.eml;
 
 import org.gbif.utils.file.FileUtils;
+import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class EmlFactoryTest {
 
@@ -170,8 +174,8 @@ public class EmlFactoryTest {
 
       // intellectual rights tests
       assertNotNull(eml.getIntellectualRights());
-      assertTrue(eml.getIntellectualRightsXml().equals("This work is licensed under <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>."));
-      assertTrue(eml.getIntellectualRights().equals("This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero 1.0 License</a>."));
+      assertEquals("This work is licensed under <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Creative Commons CCZero 1.0 License</citetitle></ulink>.", eml.getIntellectualRightsXml());
+      assertEquals("This work is licensed under <a href=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\">Creative Commons CCZero 1.0 License</a>.", eml.getIntellectualRights());
 
       // homepage URL, aka distributionUrl
       assertNotNull(eml.getDistributionUrl());
@@ -256,7 +260,7 @@ public class EmlFactoryTest {
       assertEquals("My Deep Pockets", eml.getProject().getFunding());
       assertNotNull(eml.getProject().getIdentifier());
       assertEquals("T123", eml.getProject().getIdentifier());
-      assertNotNull("Part of a series of events.", eml.getProject().getDescription());
+      assertNotNull(eml.getProject().getDescription(), "Part of a series of events.");
       assertEquals("Part of a series of events.", eml.getProject().getDescription());
       assertEquals(StudyAreaDescriptor.GENERIC, eml.getProject().getStudyAreaDescription().getName());
       assertEquals("false", eml.getProject().getStudyAreaDescription().getCitableClassificationSystem());
@@ -289,7 +293,7 @@ public class EmlFactoryTest {
       assertEquals("INV-GCEM-0305a1_1_1.shp", eml.getPhysicalData().get(0).getName());
       assertEquals("ASCII", eml.getPhysicalData().get(0).getCharset());
       assertEquals("shapefile", eml.getPhysicalData().get(0).getFormat());
-      assertEquals(null, eml.getPhysicalData().get(0).getFormatVersion());
+      assertNull(eml.getPhysicalData().get(0).getFormatVersion());
       assertEquals(
         "http://metacat.lternet.edu/knb/dataAccessServlet?docid=knb-lter-gce.109.10&urlTail=accession=INV-GCEM-0305a1&filename=INV-GCEM-0305a1_1_1.TXT",
         eml.getPhysicalData().get(0).getDistributionUrl());

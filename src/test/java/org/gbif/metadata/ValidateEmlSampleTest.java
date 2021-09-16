@@ -8,10 +8,10 @@ import java.net.MalformedURLException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * For validation of EML files see also http://knb.ecoinformatics.org/emlparser/.

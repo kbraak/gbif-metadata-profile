@@ -1,15 +1,13 @@
 package org.gbif.metadata;
 
 import org.gbif.utils.file.FileUtils;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MetadataFactoryTest {
 
@@ -31,11 +29,10 @@ public class MetadataFactoryTest {
     assertEquals("76", bm.getSourceId());
 
     // we cant parse this one. It is a utf16 encoded file but the xml declaration says its utf8
-    try {
-      bm = mf.read(FileUtils.getClasspathFile("metadata/eml-utf16_declared_as_utf8.xml"));
-      fail("This is a utf16 xml file which we should not be able to handle as things stand");
-    } catch (MetadataException e) {
-    }
+    assertThrows(
+        MetadataException.class,
+        () -> mf.read(FileUtils.getClasspathFile("metadata/eml-utf16_declared_as_utf8.xml")),
+        "This is a utf16 xml file which we should not be able to handle as things stand");
 
     // test proper archive
     bm = mf.read(FileUtils.getClasspathFile("archive-dwc/eml.xml"));
@@ -74,5 +71,4 @@ public class MetadataFactoryTest {
     assertEquals("http://www.marinespecies.org/aphia.php?p=taxdetails&id=146230",
       bm.getAdditionalMetadata("recordLinkUrl"));
   }
-
 }

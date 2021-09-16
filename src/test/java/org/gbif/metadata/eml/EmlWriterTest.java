@@ -10,7 +10,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ***************************************************************************/
-
 package org.gbif.metadata.eml;
 
 import org.gbif.utils.file.FileUtils;
@@ -21,17 +20,20 @@ import java.io.IOException;
 import java.util.Date;
 
 import freemarker.template.TemplateException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class EmlWriterTest {
 
-    @Test
+  @Test
   public void testRoundtrip() {
     try {
       // read EML
@@ -307,13 +309,13 @@ public class EmlWriterTest {
       assertNotNull(eml2);
 
       assertEquals(2, eml2.getCreators().size());
-      assertTrue(agent.equals(eml2.getCreators().get(1)));
+      assertEquals(agent, eml2.getCreators().get(1));
 
       assertEquals(2, eml2.getMetadataProviders().size());
-      assertTrue(agent.equals(eml2.getMetadataProviders().get(1)));
+      assertEquals(agent, eml2.getMetadataProviders().get(1));
 
       assertEquals(2, eml2.getContacts().size());
-      assertTrue(agent.equals(eml2.getContacts().get(1)));
+      assertEquals(agent, eml2.getContacts().get(1));
     } catch (Exception e) {
       e.printStackTrace();
       fail();
@@ -497,35 +499,35 @@ public class EmlWriterTest {
     // now read the EML in again and ensure format version is null - remember it's the 3rd Physical Data
     Eml eml2 = EmlFactory.build(new FileInputStream(temp));
     assertNotNull(eml2);
-    assertEquals(null, eml2.getPhysicalData().get(2).getFormatVersion());
+    assertNull(eml2.getPhysicalData().get(2).getFormatVersion());
     assertEquals("UTF-8", eml2.getPhysicalData().get(2).getCharset());
   }
 
-    /**
-     * @return mock agent used in testing
-     */
-    private Agent createMockAgent() {
-        Agent a = new Agent();
-        a.setFirstName("John");
-        a.setLastName("Stewart");
+  /**
+   * @return mock agent used in testing
+   */
+  private Agent createMockAgent() {
+    Agent a = new Agent();
+    a.setFirstName("John");
+    a.setLastName("Stewart");
 
-        Address address = new Address();
-        address.setAddress("Central Park");
-        address.setCity("New York");
-        address.setCountry("United States");
-        address.setPostalCode("5600");
-        address.setProvince("New York");
-        a.setAddress(address);
+    Address address = new Address();
+    address.setAddress("Central Park");
+    address.setCity("New York");
+    address.setCountry("United States");
+    address.setPostalCode("5600");
+    address.setProvince("New York");
+    a.setAddress(address);
 
-        a.setEmail("jstewart@ny-nhm.org");
-        a.setHomepage("http://www.ny-nhm.org");
-        a.setOrganisation("Natural History Museum");
-        a.setPhone("+19779779797");
-        a.setPosition("Head of Entomology");
+    a.setEmail("jstewart@ny-nhm.org");
+    a.setHomepage("http://www.ny-nhm.org");
+    a.setOrganisation("Natural History Museum");
+    a.setPhone("+19779779797");
+    a.setPosition("Head of Entomology");
 
-        UserId userId = new UserId("http://orcid.org/", "0000-0002-8442-9000");
-        a.addUserId(userId);
+    UserId userId = new UserId("http://orcid.org/", "0000-0002-8442-9000");
+    a.addUserId(userId);
 
-        return a;
-    }
+    return a;
+  }
 }
