@@ -53,8 +53,8 @@ public class DcHandler extends BasicMetadataSaxHandler {
         // split description into paragraphs
         List<String> paragraphs =
             Arrays.stream(content.split("\r?\n"))
-                .filter(StringUtils::isNotBlank)
-                .map(String::trim)
+                .map(org.gbif.utils.text.StringUtils::trim)
+                .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.toList());
         description.addAll(paragraphs);
       } else if (localName.equalsIgnoreCase("subject")

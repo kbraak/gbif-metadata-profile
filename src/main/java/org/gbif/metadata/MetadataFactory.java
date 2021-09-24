@@ -39,7 +39,7 @@ public class MetadataFactory {
 
   private final Logger log = LoggerFactory.getLogger(MetadataFactory.class);
   private final SAXParserFactory saxFactory;
-  private final List<BasicMetadataSaxHandler> handler = new ArrayList<BasicMetadataSaxHandler>();
+  private final List<BasicMetadataSaxHandler> handler = new ArrayList<>();
 
   {
     handler.add(new EmlHandler());
@@ -83,7 +83,7 @@ public class MetadataFactory {
         try {
           InputStream in = new ByteArrayInputStream(data);
           BasicMetadataImpl bm = read(in, h);
-          if (bm != null && hasContent(bm)) {
+          if (hasContent(bm)) {
             // works!
             log.debug("Using " + h.toString() + " for parsing metadata");
             return bm;

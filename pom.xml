@@ -24,7 +24,7 @@
     <commons-io.version>2.11.0</commons-io.version>
     <commons-lang.version>3.12.0</commons-lang.version>
     <freemarker.version>2.3.31</freemarker.version>
-    <gbif-common.version>0.51</gbif-common.version>
+    <gbif-common.version>0.52</gbif-common.version>
     <junit.version>5.8.0</junit.version>
     <slf4j.version>1.7.30</slf4j.version>
     <jsr305.version>3.0.2</jsr305.version>
