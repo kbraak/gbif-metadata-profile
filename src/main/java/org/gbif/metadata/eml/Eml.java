@@ -63,6 +63,12 @@ public class Eml implements Serializable, BasicMetadata {
   private static final char PIPE = '|';
   private static final int MAJOR_VERSION_START = 1;
   private static final int MINOR_VERSION_START = 0;
+  private static final String CC_ZERO_SHORT = "CC0-1.0";
+  private static final String CC_ZERO_DEFAULT = "To the extent possible under law, the publisher has waived all rights to these data and has dedicated them to the <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Public Domain (CC0 1.0)</citetitle></ulink>. Users may copy, modify, distribute and use the work, including for commercial purposes, without restriction.";
+  private static final String CC_BY_SHORT = "CC-BY-4.0";
+  private static final String CC_BY_DEFAULT = "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by/4.0/legalcode\"><citetitle>Creative Commons Attribution (CC-BY) 4.0 License</citetitle></ulink>.";
+  private static final String CC_BY_NC_SHORT = "CC-BY-NC-4.0";
+  private static final String CC_BY_NC_DEFAULT = "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by-nc/4.0/legalcode\"><citetitle>Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License</citetitle></ulink>.";
 
   /**
    * Generated
@@ -472,7 +478,38 @@ public class Eml implements Serializable, BasicMetadata {
    * Converts XML/EML ulink into HTML anchor, and then sets the intellectualRights.
    */
   public void setIntellectualRights(String intellectualRights) {
-    this.intellectualRights = paraXmlToHtml(intellectualRights);
+    this.intellectualRights = paraXmlToHtml(shortLicenseToFull(intellectualRights));
+  }
+
+  /**
+   * Converts if possible shorts license e.g. CC-1.0 to the full text xml license.
+   * For regular license just returns it as it is.
+   *
+   * @param shortLicense short license
+   * @return full text intellectual rights (xml form)
+   */
+  private String shortLicenseToFull(String shortLicense) {
+    if (StringUtils.isBlank(shortLicense)) {
+      return shortLicense;
+    }
+
+    String result;
+    switch (shortLicense.trim()) {
+      case CC_ZERO_SHORT:
+        result = CC_ZERO_DEFAULT;
+        break;
+      case CC_BY_SHORT:
+        result = CC_BY_DEFAULT;
+        break;
+      case CC_BY_NC_SHORT:
+        result = CC_BY_NC_DEFAULT;
+        break;
+      default:
+        result = shortLicense;
+        break;
+    }
+
+    return result;
   }
 
   /**
@@ -972,7 +1009,7 @@ public class Eml implements Serializable, BasicMetadata {
    * @param element in an XML document
    */
   public void parseIntellectualRights(org.w3c.dom.Element element) {
-    String xmlStr = rawXmlToString(element);
+    String xmlStr = shortLicenseToFull(rawXmlToString(element));
     this.intellectualRights = paraXmlToHtml(xmlStr);
   }
 

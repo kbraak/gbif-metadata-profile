@@ -124,6 +124,11 @@ public class EmlTest {
 
     eml.setIntellectualRights("This work is licensed under CC0");
     assertNull(eml.parseLicenseUrl());
+
+    // short version
+    eml.setIntellectualRights("CC0-1.0");
+    assertEquals(
+        "http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
   }
 
   @Test
@@ -135,5 +140,10 @@ public class EmlTest {
 
     eml.setIntellectualRights("This work is licensed under CC0");
     assertNull(eml.parseLicenseTitle());
+
+    // short version
+    eml.setIntellectualRights("CC0-1.0");
+    assertEquals(
+        "http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
   }
 }
