@@ -64,11 +64,14 @@ public class Eml implements Serializable, BasicMetadata {
   private static final int MAJOR_VERSION_START = 1;
   private static final int MINOR_VERSION_START = 0;
   private static final String CC_ZERO_SHORT = "CC0-1.0";
-  private static final String CC_ZERO_DEFAULT = "To the extent possible under law, the publisher has waived all rights to these data and has dedicated them to the <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Public Domain (CC0 1.0)</citetitle></ulink>. Users may copy, modify, distribute and use the work, including for commercial purposes, without restriction.";
+  private static final String CC_ZERO_DEFAULT =
+      "To the extent possible under law, the publisher has waived all rights to these data and has dedicated them to the <ulink url=\"http://creativecommons.org/publicdomain/zero/1.0/legalcode\"><citetitle>Public Domain (CC0 1.0)</citetitle></ulink>. Users may copy, modify, distribute and use the work, including for commercial purposes, without restriction.";
   private static final String CC_BY_SHORT = "CC-BY-4.0";
-  private static final String CC_BY_DEFAULT = "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by/4.0/legalcode\"><citetitle>Creative Commons Attribution (CC-BY) 4.0 License</citetitle></ulink>.";
+  private static final String CC_BY_DEFAULT =
+      "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by/4.0/legalcode\"><citetitle>Creative Commons Attribution (CC-BY) 4.0 License</citetitle></ulink>.";
   private static final String CC_BY_NC_SHORT = "CC-BY-NC-4.0";
-  private static final String CC_BY_NC_DEFAULT = "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by-nc/4.0/legalcode\"><citetitle>Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License</citetitle></ulink>.";
+  private static final String CC_BY_NC_DEFAULT =
+      "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by-nc/4.0/legalcode\"><citetitle>Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License</citetitle></ulink>.";
 
   /**
    * Generated
