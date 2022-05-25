@@ -126,7 +126,7 @@ public class EmlTest {
     assertNull(eml.parseLicenseUrl());
 
     // short version
-    eml.setIntellectualRights("CC0-1.0");
+    eml.setIntellectualRights("cC0-1.0");
     assertEquals(
         "http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
   }
@@ -142,7 +142,7 @@ public class EmlTest {
     assertNull(eml.parseLicenseTitle());
 
     // short version
-    eml.setIntellectualRights("CC0-1.0");
+    eml.setIntellectualRights("Cc0-1.0");
     assertEquals(
         "http://creativecommons.org/publicdomain/zero/1.0/legalcode", eml.parseLicenseUrl());
   }

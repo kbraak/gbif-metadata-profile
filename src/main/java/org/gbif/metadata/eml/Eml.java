@@ -497,7 +497,7 @@ public class Eml implements Serializable, BasicMetadata {
     }
 
     String result;
-    switch (shortLicense.trim()) {
+    switch (shortLicense.trim().toUpperCase()) {
       case CC_ZERO_SHORT:
         result = CC_ZERO_DEFAULT;
         break;
