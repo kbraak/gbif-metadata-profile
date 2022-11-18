@@ -271,10 +271,10 @@
     </#if>
   </methods>
   </#if>
-  <#if eml.project.title?has_content && (eml.project.personnel?size > 0)>
+  <#if eml.project.title?has_content>
   <project <#if eml.project.identifier?has_content>id="${eml.project.identifier}"</#if>>
     <title>${eml.project.title}</title>
-    <#list eml.project.getPersonnel() as personnel>
+    <#list (eml.project.getPersonnel())! as personnel>
       <personnel>
         <individualName>
           <#if (personnel.getFirstName())??>
