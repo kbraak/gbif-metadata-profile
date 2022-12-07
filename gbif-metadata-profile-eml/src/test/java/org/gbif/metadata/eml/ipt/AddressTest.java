@@ -14,6 +14,7 @@
 package org.gbif.metadata.eml.ipt;
 
 import org.gbif.metadata.eml.ipt.model.Address;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

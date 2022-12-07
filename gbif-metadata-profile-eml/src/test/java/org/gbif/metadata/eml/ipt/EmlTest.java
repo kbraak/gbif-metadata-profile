@@ -13,9 +13,10 @@
  */
 package org.gbif.metadata.eml.ipt;
 
+import org.gbif.metadata.eml.ipt.model.Eml;
+
 import java.math.BigDecimal;
 
-import org.gbif.metadata.eml.ipt.model.Eml;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

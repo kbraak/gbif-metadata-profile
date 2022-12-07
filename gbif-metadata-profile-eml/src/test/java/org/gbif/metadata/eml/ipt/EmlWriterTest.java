@@ -13,8 +13,6 @@
  */
 package org.gbif.metadata.eml.ipt;
 
-import org.gbif.metadata.eml.ipt.EmlFactory;
-import org.gbif.metadata.eml.ipt.IptEmlWriter;
 import org.gbif.metadata.eml.ipt.model.Address;
 import org.gbif.metadata.eml.ipt.model.Agent;
 import org.gbif.metadata.eml.ipt.model.Collection;

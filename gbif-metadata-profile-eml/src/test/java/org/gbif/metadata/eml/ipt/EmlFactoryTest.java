@@ -13,7 +13,6 @@
  */
 package org.gbif.metadata.eml.ipt;
 
-import org.gbif.metadata.eml.ipt.EmlFactory;
 import org.gbif.metadata.eml.ipt.model.Agent;
 import org.gbif.metadata.eml.ipt.model.Eml;
 import org.gbif.metadata.eml.ipt.model.MaintenanceUpdateFrequency;

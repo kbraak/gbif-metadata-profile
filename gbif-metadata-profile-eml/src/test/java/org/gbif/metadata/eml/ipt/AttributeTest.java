@@ -13,12 +13,13 @@
  */
 package org.gbif.metadata.eml.ipt;
 
+import org.gbif.metadata.eml.ipt.model.Attribute;
+import org.gbif.metadata.eml.ipt.model.LocaleBundle;
+
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.gbif.metadata.eml.ipt.model.Attribute;
-import org.gbif.metadata.eml.ipt.model.LocaleBundle;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

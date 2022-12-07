@@ -18,7 +18,6 @@ import java.util.Calendar;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import org.gbif.metadata.eml.ipt.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
