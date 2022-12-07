@@ -48,7 +48,7 @@ public class EmlWriterTest {
   public void testRoundtrip() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
 
       // write EML
@@ -166,7 +166,7 @@ public class EmlWriterTest {
   public void testSetNonNullPubDate() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample3.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample3.xml"));
       assertNotNull(eml);
       assertNull(eml.getPubDate());
 
@@ -195,7 +195,7 @@ public class EmlWriterTest {
   public void testSetNullPubDate() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
 
       Date pubDate = null;
@@ -215,7 +215,7 @@ public class EmlWriterTest {
   public void testMultipleProjectPersonnel() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getProject().getPersonnel().size());
       assertEquals("David", eml.getProject().getPersonnel().get(0).getFirstName());
@@ -265,7 +265,7 @@ public class EmlWriterTest {
   public void testMultipleCollection() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getCollections().size());
       assertEquals("urn:lsid:tim.org:12:1", eml.getCollections().get(0).getParentCollectionId());
@@ -301,7 +301,7 @@ public class EmlWriterTest {
   public void testMultipleCreatorsMetadataProvidersContacts() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getCreators().size());
       assertEquals("Remsen", eml.getCreators().get(0).getLastName());
@@ -346,7 +346,7 @@ public class EmlWriterTest {
   public void testMultipleUserIds() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getCreators().size());
       assertEquals(1, eml.getCreators().get(0).getUserIds().size());
@@ -386,7 +386,7 @@ public class EmlWriterTest {
   public void testWriteNewProjectIdAndDescription() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals("T123", eml.getProject().getIdentifier());
       assertEquals("Part of a series of events.", eml.getProject().getDescription());
@@ -414,7 +414,7 @@ public class EmlWriterTest {
   public void testDefaultMaintenanceUpdateFrequency() {
     try {
       // read EML with no update frequency - it should default to UNKOWN
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample2.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample2.xml"));
       assertNotNull(eml);
       assertNull(eml.getUpdateFrequencyDescription());
       assertEquals(MaintenanceUpdateFrequency.UNKOWN, eml.getUpdateFrequency());
@@ -439,7 +439,7 @@ public class EmlWriterTest {
   public void testMultipleSpecimenPreservationMethod() {
     try {
       // read EML
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getSpecimenPreservationMethods().size());
       assertEquals("alcohol", eml.getSpecimenPreservationMethods().get(0));
@@ -468,7 +468,7 @@ public class EmlWriterTest {
   public void testXmlEscaping() {
     try {
       // read EML to have some defaults
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
 
       // use ampersand values
@@ -499,7 +499,7 @@ public class EmlWriterTest {
   public void testEmptyFormatVersion()
       throws IOException, TemplateException, SAXException, ParserConfigurationException {
     // read EML
-    Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+    Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
     assertNotNull(eml);
     assertEquals(2, eml.getPhysicalData().size());
     // ensure the format version is optional - non existing = null

@@ -35,8 +35,8 @@ public class ValidateEmlSampleTest {
   @Test
   public void validateSamples() throws MalformedURLException, SAXException {
     // eml file to validate
-    File sample1 = FileUtils.getClasspathFile("eml/sample.xml");
-    File sample2 = FileUtils.getClasspathFile("eml/sample2.xml");
+    File sample1 = FileUtils.getClasspathFile("eml/ipt/sample.xml");
+    File sample2 = FileUtils.getClasspathFile("eml/ipt/sample2.xml");
 
     Validator validator = ValidatorFactory.getGbifValidator();
     try {

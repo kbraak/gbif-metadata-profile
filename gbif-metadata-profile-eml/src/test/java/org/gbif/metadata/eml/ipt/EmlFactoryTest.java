@@ -36,7 +36,7 @@ public class EmlFactoryTest {
   @Test
   public void testAlternateJGTIBuild() {
     try {
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample2.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample2.xml"));
 
       assertNotNull(eml);
 
@@ -57,7 +57,7 @@ public class EmlFactoryTest {
   @Test
   public void testBuild() {
     try {
-      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/sample.xml"));
+      Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       Calendar cal = Calendar.getInstance();
       cal.clear();
 
