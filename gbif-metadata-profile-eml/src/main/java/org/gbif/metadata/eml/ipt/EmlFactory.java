@@ -13,7 +13,6 @@
  */
 package org.gbif.metadata.eml.ipt;
 
-import org.gbif.api.model.registry.eml.temporal.TemporalCoverage;
 import org.gbif.metadata.eml.ipt.model.Address;
 import org.gbif.metadata.eml.ipt.model.Agent;
 import org.gbif.metadata.eml.ipt.model.BBox;
