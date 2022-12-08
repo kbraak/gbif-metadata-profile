@@ -148,7 +148,8 @@ public class DatasetEmlParserTest {
       // validate new file, written in XML GBIF Metadata Profile v1.1
       EmlValidator.newValidator(EMLProfileVersion.GBIF_1_1).validate(eml);
 
-      try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);) {
+      try (InputStream in =
+          new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8); ) {
         Dataset dataset2 = DatasetEmlParser.parse(in);
         // ensure new properties in v1.0.1 still properly set
         verifyV_1_0_1(dataset2);
@@ -1059,7 +1060,8 @@ public class DatasetEmlParserTest {
 
       // License
       assertEquals(License.CC0_1_0, dataset.getLicense());
-      assertNull(dataset.getRights()); // free-text rights statements are no longer supported by GBIF
+      assertNull(
+          dataset.getRights()); // free-text rights statements are no longer supported by GBIF
 
       // Creator equal to organisation
       Contact creator = dataset.getContacts().get(0);
@@ -1108,7 +1110,8 @@ public class DatasetEmlParserTest {
           Date.from(ZonedDateTime.parse("1986-01-01T00:00:00.001Z").toInstant()),
           dateRange.getStart());
       assertEquals(
-          Date.from(ZonedDateTime.parse("2018-12-31T00:00:00.001Z").toInstant()), dateRange.getEnd());
+          Date.from(ZonedDateTime.parse("2018-12-31T00:00:00.001Z").toInstant()),
+          dateRange.getEnd());
 
       assertEquals(
           Date.from(ZonedDateTime.parse("2018-12-12T00:00:00.000Z").toInstant()),
@@ -1122,7 +1125,8 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testEmlParsingPlaziLicense() throws IOException {
-    try (InputStream is = FileUtils.classpathStream("eml/3920856d-4923-4276-ae0b-e8b3478df276.xml")) {
+    try (InputStream is =
+        FileUtils.classpathStream("eml/3920856d-4923-4276-ae0b-e8b3478df276.xml")) {
       Dataset dataset = DatasetEmlParser.parse(is);
       assertEquals(License.CC0_1_0, dataset.getLicense());
     }

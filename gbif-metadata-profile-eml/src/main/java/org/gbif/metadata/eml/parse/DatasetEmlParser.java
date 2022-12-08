@@ -57,7 +57,7 @@ public class DatasetEmlParser {
    */
   public static Dataset build(byte[] data) throws IOException {
     try (InputStream streamToDetectMetadataType = new ByteArrayInputStream(data);
-         InputStream mainStream = new ByteArrayInputStream(data)) {
+        InputStream mainStream = new ByteArrayInputStream(data)) {
       MetadataType metadataType = MetadataUtils.detectParserType(streamToDetectMetadataType);
       // make sure metadata type is EML!
       if (metadataType != EML) {
