@@ -43,6 +43,7 @@ import org.gbif.common.parsers.LicenseParser;
 import org.gbif.common.parsers.RankParser;
 import org.gbif.common.parsers.core.ParseResult;
 import org.gbif.common.parsers.date.DateParsers;
+import org.gbif.metadata.common.util.CleanUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,7 +66,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.gbif.metadata.common.util.CleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

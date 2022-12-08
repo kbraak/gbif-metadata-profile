@@ -13,12 +13,12 @@
  */
 package org.gbif.metadata.common.parse.converter;
 
-import org.apache.commons.beanutils.converters.AbstractConverter;
-import org.apache.commons.lang3.StringUtils;
-
 import java.net.URI;
 import java.net.URL;
 import java.util.Objects;
+
+import org.apache.commons.beanutils.converters.AbstractConverter;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Greedy String to URI converter. Greedy in the sense that it will try to add a default protocol

@@ -30,7 +30,6 @@ import org.gbif.api.vocabulary.IdentifierType;
 import org.gbif.api.vocabulary.Language;
 import org.gbif.api.vocabulary.License;
 import org.gbif.api.vocabulary.MaintenanceUpdateFrequency;
-import org.gbif.api.vocabulary.MetadataType;
 import org.gbif.api.vocabulary.PreservationMethodType;
 import org.gbif.api.vocabulary.Rank;
 import org.gbif.metadata.eml.EMLProfileVersion;
@@ -503,8 +502,7 @@ public class DatasetEmlParserTest {
   public void testEmlParsingBreaking() throws IOException {
     // throws a ConversionException/Throwable that is caught - but build still returns the dataset
     // populated partially
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml/sample-breaking.xml"));
+    Dataset dataset = DatasetEmlParser.parse(FileUtils.classpathStream("eml/sample-breaking.xml"));
     assertEquals(
         "Estimates of walleye abundance for Oneida\n" + "      Lake, NY (1957-2008)",
         dataset.getTitle());
@@ -515,8 +513,7 @@ public class DatasetEmlParserTest {
     // Gracefully handles ConversionException/Throwable during conversion of URLs, and fully
     // populates the dataset
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample1-v1.0.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample1-v1.0.xml"));
     assertEquals("WII Herbarium Dataset", dataset.getTitle());
     assertEquals(buildURI("http://www.wii.gov.in"), dataset.getHomepage());
   }
@@ -535,8 +532,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testUnsupportedLicenseSet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
     assertEquals(License.UNSUPPORTED, dataset.getLicense());
     assertNull(dataset.getRights());
   }
@@ -548,8 +544,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testMalformedLicenseURLSet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
     assertEquals(License.CC_BY_4_0, dataset.getLicense());
     assertNull(dataset.getRights());
   }
@@ -557,8 +552,7 @@ public class DatasetEmlParserTest {
   /** Simply test we can extract the version of dataset has provided by the IPT */
   @Test
   public void testDatasetVersion() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml/ipt_eml.xml"));
+    Dataset dataset = DatasetEmlParser.parse(FileUtils.classpathStream("eml/ipt_eml.xml"));
     assertEquals("2.1", dataset.getVersion());
   }
 
@@ -569,8 +563,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testUnspecifiedLicenseSet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample7-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample7-v1.1.xml"));
     assertNull(dataset.getLicense());
     assertNull(dataset.getRights());
   }
@@ -583,8 +576,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testAcceptedAlternateMaintenanceUpdateFrequencySet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
     assertEquals(MaintenanceUpdateFrequency.CONTINUALLY, dataset.getMaintenanceUpdateFrequency());
   }
 
@@ -595,8 +587,7 @@ public class DatasetEmlParserTest {
   @Test
   public void tesInvalidMaintenanceUpdateFrequencySet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
     assertNull(dataset.getMaintenanceUpdateFrequency());
   }
 
@@ -607,8 +598,7 @@ public class DatasetEmlParserTest {
   @Test
   public void tesInvalidCitationSet() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
     assertNotNull(dataset.getCitation());
     assertNull(dataset.getCitation().getText());
     assertNull(dataset.getCitation().getIdentifier());
@@ -840,8 +830,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testHandlingBiocaseEml() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml-metadata-profile/sample8-v1.1.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample8-v1.1.xml"));
 
     // Title
     assertEquals(
@@ -898,8 +887,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testEmlParsingYearCoverage() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml/temporalCoverageRange.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml/temporalCoverageRange.xml"));
     assertEquals("Testing date range", dataset.getTitle());
     DateRange dateRange = (DateRange) dataset.getTemporalCoverages().get(0);
     assertEquals(
@@ -931,8 +919,7 @@ public class DatasetEmlParserTest {
   @Test
   public void testEmlParsingMultipleParagraphs() throws IOException {
     Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml/multiple-paragraphs-html.xml"));
+        DatasetEmlParser.parse(FileUtils.classpathStream("eml/multiple-paragraphs-html.xml"));
 
     // Multiple paragraphs in description
     assertNotNull(dataset.getDescription());

@@ -15,6 +15,8 @@ package org.gbif.metadata.eml.parse;
 
 import org.gbif.api.model.registry.Dataset;
 import org.gbif.api.vocabulary.MetadataType;
+import org.gbif.metadata.common.parse.DatasetWrapper;
+import org.gbif.metadata.common.util.MetadataUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,8 +24,6 @@ import java.io.InputStream;
 
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.digester3.Digester;
-import org.gbif.metadata.common.parse.DatasetWrapper;
-import org.gbif.metadata.common.util.MetadataUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
