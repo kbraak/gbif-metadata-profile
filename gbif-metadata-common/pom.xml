@@ -10,17 +10,12 @@
     <version>2.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>gbif-metadata-profile-dc</artifactId>
+  <artifactId>gbif-metadata-common</artifactId>
   <packaging>jar</packaging>
 
-  <name>GBIF Common :: Metadata profile : Dublin Core (DC)</name>
+  <name>GBIF Common :: Metadata profile : Common</name>
 
   <dependencies>
-    <dependency>
-      <groupId>org.gbif</groupId>
-      <artifactId>gbif-metadata-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.gbif</groupId>
       <artifactId>gbif-api</artifactId>
@@ -33,28 +28,22 @@
     </dependency>
     <dependency>
       <groupId>org.gbif</groupId>
-      <artifactId>gbif-common</artifactId>
+      <artifactId>gbif-parsers</artifactId>
+      <version>${gbif-parsers.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.gbif</groupId>
+          <artifactId>name-parser-v1</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-digester3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -15,6 +15,7 @@ package org.gbif.metadata.eml.parse.converter;
 
 import org.gbif.api.vocabulary.MaintenanceUpdateFrequency;
 import org.gbif.common.parsers.MaintenanceUpdateFrequencyParser;
+import org.gbif.metadata.common.parse.converter.AbstractGbifParserConvert;
 
 /**
  * {@link org.apache.commons.beanutils.Converter} implementation that handles conversion to and from

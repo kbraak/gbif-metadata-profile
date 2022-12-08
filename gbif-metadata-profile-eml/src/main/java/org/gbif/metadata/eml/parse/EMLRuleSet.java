@@ -38,12 +38,13 @@ import org.gbif.api.vocabulary.Language;
 import org.gbif.api.vocabulary.MaintenanceUpdateFrequency;
 import org.gbif.api.vocabulary.PreservationMethodType;
 import org.gbif.api.vocabulary.Rank;
+import org.gbif.metadata.common.parse.ParagraphContainer;
+import org.gbif.metadata.common.parse.converter.GreedyUriConverter;
+import org.gbif.metadata.common.parse.converter.LanguageTypeConverter;
 import org.gbif.metadata.eml.parse.converter.ContactTypeConverter;
 import org.gbif.metadata.eml.parse.converter.CountryTypeConverter;
 import org.gbif.metadata.eml.parse.converter.DateConverter;
-import org.gbif.metadata.eml.parse.converter.GreedyUriConverter;
 import org.gbif.metadata.eml.parse.converter.IdentifierTypeConverter;
-import org.gbif.metadata.eml.parse.converter.LanguageTypeConverter;
 import org.gbif.metadata.eml.parse.converter.MaintenanceUpdateFrequencyConverter;
 import org.gbif.metadata.eml.parse.converter.PreservationMethodTypeConverter;
 

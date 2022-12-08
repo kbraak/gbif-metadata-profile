@@ -11,17 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gbif.metadata.eml;
+package org.gbif.metadata.dc;
+
+import java.nio.charset.StandardCharsets;
+import java.text.ChoiceFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.nio.charset.StandardCharsets;
-import java.text.ChoiceFormat;
 
 /**
  * Configuration provider for XML based dataset writer. Currently providing Freemarker

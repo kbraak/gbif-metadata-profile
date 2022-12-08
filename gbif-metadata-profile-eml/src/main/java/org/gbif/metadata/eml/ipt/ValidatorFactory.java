@@ -29,7 +29,6 @@ import org.xml.sax.SAXException;
  */
 public class ValidatorFactory {
 
-  // public static final String EML_SCHEMA_URL = "http://rs.gbif.org/schema/eml-2.1.1/eml.xsd";
   public static final String EML_SCHEMA_URL =
       "https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1/eml.xsd";
 
@@ -54,7 +53,7 @@ public class ValidatorFactory {
     String schemaLang = "http://www.w3.org/2001/XMLSchema";
     // get validation driver:
     SchemaFactory factory = SchemaFactory.newInstance(schemaLang);
-    // create schema by reading it from an URL:
+    // create schema by reading it from a URL:
     Schema schema = factory.newSchema(new URL(schemaUrl));
     return schema.newValidator();
   }

@@ -22,7 +22,7 @@ import org.gbif.api.model.registry.eml.temporal.VerbatimTimePeriod;
 import org.gbif.api.model.registry.eml.temporal.VerbatimTimePeriodType;
 import org.gbif.api.util.ContactAdapter;
 import org.gbif.api.vocabulary.ContactType;
-import org.gbif.metadata.eml.parse.ParagraphContainer;
+import org.gbif.metadata.common.parse.ParagraphContainer;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -17,7 +17,8 @@ import org.gbif.api.model.common.DOI;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Dataset;
 import org.gbif.api.model.registry.eml.Project;
-import org.gbif.metadata.eml.parse.DatasetParser;
+import org.gbif.metadata.dc.parse.DatasetDcParser;
+import org.gbif.metadata.eml.parse.DatasetEmlParser;
 import org.gbif.utils.file.FileUtils;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +44,7 @@ public class EMLWriterTest {
 
   @Test
   public void testWrite() throws Exception {
-    Dataset d = DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
+    Dataset d = DatasetEmlParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
     d.setKey(UUID.randomUUID());
     StringWriter writer = new StringWriter();
     emlWriter.writeTo(d, writer);
@@ -53,7 +54,7 @@ public class EMLWriterTest {
   @Test
   public void testWriteOmitXmlDeclaration() throws Exception {
     EMLWriter emlWriter = EMLWriter.newInstance(false, true);
-    Dataset d = DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
+    Dataset d = DatasetEmlParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
     d.setKey(UUID.randomUUID());
     StringWriter writer = new StringWriter();
     emlWriter.writeTo(d, writer);
@@ -62,7 +63,7 @@ public class EMLWriterTest {
 
   @Test
   public void testWriteNullContact() throws Exception {
-    Dataset d = DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
+    Dataset d = DatasetEmlParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
     d.setKey(UUID.randomUUID());
     d.getContacts().clear();
     StringWriter writer = new StringWriter();
@@ -82,7 +83,7 @@ public class EMLWriterTest {
 
   @Test
   public void testNullAddress() throws Exception {
-    Dataset d = DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
+    Dataset d = DatasetEmlParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
     d.setKey(UUID.randomUUID());
     Contact c = d.getContacts().get(0);
     c.getAddress().add(null);
@@ -93,7 +94,7 @@ public class EMLWriterTest {
 
   @Test
   public void testNoLastName() throws Exception {
-    Dataset d = DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
+    Dataset d = DatasetEmlParser.build(IOUtils.toByteArray(FileUtils.classpathStream(TEST_EML_FILE)));
     d.setKey(UUID.randomUUID());
 
     // remove all lastName for this test
@@ -116,7 +117,7 @@ public class EMLWriterTest {
   @Test
   public void testWriteDC() throws Exception {
     Dataset d =
-        DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream("dc/worms_dc.xml")));
+        DatasetDcParser.build(IOUtils.toByteArray(org.gbif.utils.file.FileUtils.classpathStream("dc/worms_dc.xml")));
     d.setKey(UUID.randomUUID());
     StringWriter writer = new StringWriter();
     emlWriter.writeTo(d, writer);
@@ -125,7 +126,7 @@ public class EMLWriterTest {
   @Test
   public void testWriteDoiAsPrimaryId() throws Exception {
     Dataset d =
-        DatasetParser.build(IOUtils.toByteArray(FileUtils.classpathStream("dc/worms_dc.xml")));
+        DatasetDcParser.build(IOUtils.toByteArray(org.gbif.utils.file.FileUtils.classpathStream("dc/worms_dc.xml")));
     d.setKey(UUID.randomUUID());
     d.setDoi(new DOI("10.1234/5679"));
     StringWriter writer = new StringWriter();

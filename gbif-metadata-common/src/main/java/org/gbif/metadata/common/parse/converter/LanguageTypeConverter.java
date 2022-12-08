@@ -11,20 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gbif.metadata.eml.parse.converter;
+package org.gbif.metadata.common.parse.converter;
 
-import org.gbif.api.vocabulary.Country;
-import org.gbif.common.parsers.CountryParser;
-import org.gbif.metadata.common.parse.converter.AbstractGbifParserConvert;
+import org.gbif.api.vocabulary.Language;
+import org.gbif.common.parsers.LanguageParser;
 
 /**
  * {@link org.apache.commons.beanutils.Converter} implementation that handles conversion to and from
- * <b>Country</b> ENUM objects.
+ * <b>Language</b> ENUM objects.
  */
-public class CountryTypeConverter extends AbstractGbifParserConvert<Country> {
+public class LanguageTypeConverter extends AbstractGbifParserConvert<Language> {
 
-  /** Construct a <b>CountryTypeConverter</b> <i>Converter</i>. */
-  public CountryTypeConverter() {
-    super(Country.class, CountryParser.getInstance());
+  /** Construct a <b>LanguageTypeConverter</b> <i>Converter</i>. */
+  public LanguageTypeConverter() {
+    super(Language.class, LanguageParser.getInstance());
   }
 }
