@@ -40,14 +40,14 @@ import freemarker.template.TemplateException;
 
 /**
  * A simple tool to serialize a dataset object into an XML document compliant with the latest
- * version of the GBIF Metadata Profile, currently version 1.1.
+ * version of the GBIF Metadata Profile, currently version 1.2.
  */
 @ThreadSafe
 public class EMLWriter {
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
   private static final String EML_TEMPLATE =
-      String.format("eml-dataset-%s.ftl", EMLProfileVersion.GBIF_1_1.getVersion());
+      String.format("eml-dataset-%s.ftl", EMLProfileVersion.GBIF_1_2.getVersion());
   private final Configuration freemarkerConfig;
   private final boolean useDoiAsIdentifier;
   private final boolean omitXmlDeclaration;

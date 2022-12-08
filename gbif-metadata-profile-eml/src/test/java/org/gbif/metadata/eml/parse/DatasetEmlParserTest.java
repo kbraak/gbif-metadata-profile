@@ -118,10 +118,8 @@ public class DatasetEmlParserTest {
 
   @Test
   public void testEmlParsingBadEnum() {
-    try {
-      Dataset dataset =
-          DatasetEmlParser.parse(
-              FileUtils.classpathStream("eml-metadata-profile/sample3-v1.0.1.xml"));
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample3-v1.0.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
       // check bad/unrecognized PreservationMethodType enum defaults to PreservationMethodType.OTHER
       assertEquals(
           PreservationMethodType.OTHER,
@@ -132,26 +130,29 @@ public class DatasetEmlParserTest {
     }
   }
 
-  /** Roundtripping test for parsing GBIF Metadata Profile version 1.0.1. */
+  /**
+   * Roundtripping test for parsing GBIF Metadata Profile version 1.0.1.
+   */
   @Test
   public void testRoundtrippingV101() {
-    try {
-      Dataset dataset =
-          DatasetEmlParser.parse(
-              FileUtils.classpathStream("eml-metadata-profile/sample2-v1.0.1.xml"));
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample2-v1.0.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
       verifyV101(dataset);
 
       // write again to eml file and read again
       StringWriter writer = new StringWriter();
-      EMLWriter.write(dataset, writer);
+      EMLWriter emlWriter = EMLWriter.newInstance(true, true);
+      emlWriter.writeTo(dataset, writer);
 
       final String eml = writer.toString();
       // validate new file, written in XML GBIF Metadata Profile v1.1
       EmlValidator.newValidator(EMLProfileVersion.GBIF_1_1).validate(eml);
-      InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);
-      Dataset dataset2 = DatasetEmlParser.parse(in);
-      // ensure new properties in v1.0.1 still properly set
-      verifyV101(dataset2);
+
+      try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);) {
+        Dataset dataset2 = DatasetEmlParser.parse(in);
+        // ensure new properties in v1.0.1 still properly set
+        verifyV101(dataset2);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       fail();
@@ -502,20 +503,23 @@ public class DatasetEmlParserTest {
   public void testEmlParsingBreaking() throws IOException {
     // throws a ConversionException/Throwable that is caught - but build still returns the dataset
     // populated partially
-    Dataset dataset = DatasetEmlParser.parse(FileUtils.classpathStream("eml/sample-breaking.xml"));
-    assertEquals(
-        "Estimates of walleye abundance for Oneida\n" + "      Lake, NY (1957-2008)",
-        dataset.getTitle());
+    try (InputStream is = FileUtils.classpathStream("eml/sample-breaking.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals(
+          "Estimates of walleye abundance for Oneida\n" + "      Lake, NY (1957-2008)",
+          dataset.getTitle());
+    }
   }
 
   @Test
   public void testEmlParsingBreakingOnURLConversion() throws IOException {
     // Gracefully handles ConversionException/Throwable during conversion of URLs, and fully
     // populates the dataset
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample1-v1.0.xml"));
-    assertEquals("WII Herbarium Dataset", dataset.getTitle());
-    assertEquals(buildURI("http://www.wii.gov.in"), dataset.getHomepage());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample1-v1.0.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals("WII Herbarium Dataset", dataset.getTitle());
+      assertEquals(buildURI("http://www.wii.gov.in"), dataset.getHomepage());
+    }
   }
 
   private URI buildURI(String uri) {
@@ -531,10 +535,11 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testUnsupportedLicenseSet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
-    assertEquals(License.UNSUPPORTED, dataset.getLicense());
-    assertNull(dataset.getRights());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals(License.UNSUPPORTED, dataset.getLicense());
+      assertNull(dataset.getRights());
+    }
   }
 
   /**
@@ -543,17 +548,22 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testMalformedLicenseURLSet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
-    assertEquals(License.CC_BY_4_0, dataset.getLicense());
-    assertNull(dataset.getRights());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals(License.CC_BY_4_0, dataset.getLicense());
+      assertNull(dataset.getRights());
+    }
   }
 
-  /** Simply test we can extract the version of dataset has provided by the IPT */
+  /**
+   * Simply test we can extract the version of dataset has provided by the IPT
+   */
   @Test
   public void testDatasetVersion() throws IOException {
-    Dataset dataset = DatasetEmlParser.parse(FileUtils.classpathStream("eml/ipt_eml.xml"));
-    assertEquals("2.1", dataset.getVersion());
+    try (InputStream is = FileUtils.classpathStream("eml/ipt_eml.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals("2.1", dataset.getVersion());
+    }
   }
 
   /**
@@ -562,10 +572,11 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testUnspecifiedLicenseSet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample7-v1.1.xml"));
-    assertNull(dataset.getLicense());
-    assertNull(dataset.getRights());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample7-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertNull(dataset.getLicense());
+      assertNull(dataset.getRights());
+    }
   }
 
   /**
@@ -575,9 +586,10 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testAcceptedAlternateMaintenanceUpdateFrequencySet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml"));
-    assertEquals(MaintenanceUpdateFrequency.CONTINUALLY, dataset.getMaintenanceUpdateFrequency());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample5-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals(MaintenanceUpdateFrequency.CONTINUALLY, dataset.getMaintenanceUpdateFrequency());
+    }
   }
 
   /**
@@ -586,9 +598,10 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void tesInvalidMaintenanceUpdateFrequencySet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
-    assertNull(dataset.getMaintenanceUpdateFrequency());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertNull(dataset.getMaintenanceUpdateFrequency());
+    }
   }
 
   /**
@@ -597,34 +610,37 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void tesInvalidCitationSet() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml"));
-    assertNotNull(dataset.getCitation());
-    assertNull(dataset.getCitation().getText());
-    assertNull(dataset.getCitation().getIdentifier());
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample6-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertNotNull(dataset.getCitation());
+      assertNull(dataset.getCitation().getText());
+      assertNull(dataset.getCitation().getIdentifier());
+    }
   }
 
-  /** Roundtripping test for GBIF Metadata Profile version 1.1 */
+  /**
+   * Roundtripping test for GBIF Metadata Profile version 1.1
+   */
   @Test
   public void testRoundtrippingV11() {
-    try {
-      Dataset dataset =
-          DatasetEmlParser.parse(
-              FileUtils.classpathStream("eml-metadata-profile/sample4-v1.1.xml"));
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample4-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
       verifyV11(dataset);
 
       // write again to eml file and read again
       StringWriter writer = new StringWriter();
-      EMLWriter.write(dataset, writer);
+      EMLWriter emlWriter = EMLWriter.newInstance(true, true);
+      emlWriter.writeTo(dataset, writer);
 
       final String eml = writer.toString();
       // validate new file
       EmlValidator.newValidator(EMLProfileVersion.GBIF_1_1).validate(eml);
-      InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);
-      Dataset dataset2 = DatasetEmlParser.parse(in);
-      // ensure new properties in v1.1 still properly set
-      verifyV11(dataset2);
 
+      try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8)) {
+        Dataset dataset2 = DatasetEmlParser.parse(in);
+        // ensure new properties in v1.1 still properly set
+        verifyV11(dataset2);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       fail();
@@ -826,57 +842,60 @@ public class DatasetEmlParserTest {
     assertEquals(7, dataset.getBibliographicCitations().size());
   }
 
-  /** Tests parser can handle EML documents exported from BioCASe. */
+  /**
+   * Tests parser can handle EML documents exported from BioCASe.
+   */
   @Test
   public void testHandlingBiocaseEml() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml-metadata-profile/sample8-v1.1.xml"));
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample8-v1.1.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
 
-    // Title
-    assertEquals(
-        "BoBO - Botanic Garden and Botanical Museum Berlin-Dahlem Observations",
-        dataset.getTitle());
+      // Title
+      assertEquals(
+          "BoBO - Botanic Garden and Botanical Museum Berlin-Dahlem Observations",
+          dataset.getTitle());
 
-    // Description
-    assertNotNull(dataset.getDescription());
-    assertTrue(
-        dataset
-            .getDescription()
-            .startsWith("BoBO aims at providing biodiversity observation data to GBIF"));
+      // Description
+      assertNotNull(dataset.getDescription());
+      assertTrue(
+          dataset
+              .getDescription()
+              .startsWith("BoBO aims at providing biodiversity observation data to GBIF"));
 
-    // License
-    assertEquals(License.CC0_1_0, dataset.getLicense());
-    assertNull(dataset.getRights()); // free-text rights statements are no longer supported by GBIF
+      // License
+      assertEquals(License.CC0_1_0, dataset.getLicense());
+      assertNull(dataset.getRights()); // free-text rights statements are no longer supported by GBIF
 
-    // Creator equal to organisation
-    Contact creator = dataset.getContacts().get(0);
-    assertEquals(ContactType.ORIGINATOR, creator.getType());
-    assertTrue(creator.isPrimary());
-    assertEquals("Botanic Garden and Botanical Museum Berlin-Dahlem", creator.getOrganization());
+      // Creator equal to organisation
+      Contact creator = dataset.getContacts().get(0);
+      assertEquals(ContactType.ORIGINATOR, creator.getType());
+      assertTrue(creator.isPrimary());
+      assertEquals("Botanic Garden and Botanical Museum Berlin-Dahlem", creator.getOrganization());
 
-    // Metadata provider equal to organisation
-    Contact provider = dataset.getContacts().get(1);
-    assertEquals(ContactType.METADATA_AUTHOR, provider.getType());
-    assertTrue(provider.isPrimary());
-    assertEquals(
-        "Gabi Droege, Wolf-Henning Kusber",
-        provider.getOrganization()); // TODO fix - not an organisation
+      // Metadata provider equal to organisation
+      Contact provider = dataset.getContacts().get(1);
+      assertEquals(ContactType.METADATA_AUTHOR, provider.getType());
+      assertTrue(provider.isPrimary());
+      assertEquals(
+          "Gabi Droege, Wolf-Henning Kusber",
+          provider.getOrganization()); // TODO fix - not an organisation
 
-    // Contact equal to person
-    Contact contact = dataset.getContacts().get(2);
-    assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact.getType());
-    assertTrue(contact.isPrimary());
-    assertEquals(
-        "Gabi Droege, Wolf-Henning Kusber",
-        contact.getLastName()); // TODO fix - should be split into 2 contacts
+      // Contact equal to person
+      Contact contact = dataset.getContacts().get(2);
+      assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact.getType());
+      assertTrue(contact.isPrimary());
+      assertEquals(
+          "Gabi Droege, Wolf-Henning Kusber",
+          contact.getLastName()); // TODO fix - should be split into 2 contacts
 
-    assertNotNull(dataset.getCitation());
-    assertNotNull(dataset.getCitation().getText());
-    assertTrue(
-        dataset
-            .getCitation()
-            .getText()
-            .startsWith("Droege, G., Güntsch, A., Holetschek, J., Kusber"));
+      assertNotNull(dataset.getCitation());
+      assertNotNull(dataset.getCitation().getText());
+      assertTrue(
+          dataset
+              .getCitation()
+              .getText()
+              .startsWith("Droege, G., Güntsch, A., Holetschek, J., Kusber"));
+    }
   }
 
   /**
@@ -886,19 +905,20 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testEmlParsingYearCoverage() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml/temporalCoverageRange.xml"));
-    assertEquals("Testing date range", dataset.getTitle());
-    DateRange dateRange = (DateRange) dataset.getTemporalCoverages().get(0);
-    assertEquals(
-        Date.from(ZonedDateTime.parse("1986-01-01T00:00:00.001Z").toInstant()),
-        dateRange.getStart());
-    assertEquals(
-        Date.from(ZonedDateTime.parse("2018-12-31T00:00:00.001Z").toInstant()), dateRange.getEnd());
+    try (InputStream is = FileUtils.classpathStream("eml/temporalCoverageRange.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals("Testing date range", dataset.getTitle());
+      DateRange dateRange = (DateRange) dataset.getTemporalCoverages().get(0);
+      assertEquals(
+          Date.from(ZonedDateTime.parse("1986-01-01T00:00:00.001Z").toInstant()),
+          dateRange.getStart());
+      assertEquals(
+          Date.from(ZonedDateTime.parse("2018-12-31T00:00:00.001Z").toInstant()), dateRange.getEnd());
 
-    assertEquals(
-        Date.from(ZonedDateTime.parse("2018-12-12T00:00:00.000Z").toInstant()),
-        dataset.getPubDate());
+      assertEquals(
+          Date.from(ZonedDateTime.parse("2018-12-12T00:00:00.000Z").toInstant()),
+          dataset.getPubDate());
+    }
   }
 
   /**
@@ -907,10 +927,10 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testEmlParsingPlaziLicense() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(
-            FileUtils.classpathStream("eml/3920856d-4923-4276-ae0b-e8b3478df276.xml"));
-    assertEquals(License.CC0_1_0, dataset.getLicense());
+    try (InputStream is = FileUtils.classpathStream("eml/3920856d-4923-4276-ae0b-e8b3478df276.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      assertEquals(License.CC0_1_0, dataset.getLicense());
+    }
   }
 
   /**
@@ -918,37 +938,41 @@ public class DatasetEmlParserTest {
    */
   @Test
   public void testEmlParsingMultipleParagraphs() throws IOException {
-    Dataset dataset =
-        DatasetEmlParser.parse(FileUtils.classpathStream("eml/multiple-paragraphs-html.xml"));
+    try (InputStream is = FileUtils.classpathStream("eml/multiple-paragraphs-html.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
 
-    // Multiple paragraphs in description
-    assertNotNull(dataset.getDescription());
-    assertEquals(
-        "<p>Two CRLFs follow this word:\n"
-            + "\n"
-            + "One CRLF follows this word:\n"
-            + "A new paragraph follows this word:</p>\n"
-            + "<p>A list made with CRLFs follows:\n"
-            + "- Apple;\n"
-            + "- Ball;\n"
-            + "New paragraph.</p>\n"
-            + "<p>An HTML list follows this line break:\n"
-            + "<ul>\n"
-            + "<li><a href=\"https://en.wikipedia.org/wiki/Atlantic\">Atlantic</a> (ocean),</li>\n"
-            + "<li>Indo-Pacific</li>\n"
-            + "</ul>\n"
-            + "End paragraph.</p>\n"
-            + "<p>More HTML: <i>i</i>, <b>b</b>, <em>em</em>, <strong>strong</strong>.</p>",
-        dataset.getDescription());
+      // Multiple paragraphs in description
+      assertNotNull(dataset.getDescription());
+      assertEquals(
+          "<p>Two CRLFs follow this word:\n"
+              + "\n"
+              + "One CRLF follows this word:\n"
+              + "A new paragraph follows this word:</p>\n"
+              + "<p>A list made with CRLFs follows:\n"
+              + "- Apple;\n"
+              + "- Ball;\n"
+              + "New paragraph.</p>\n"
+              + "<p>An HTML list follows this line break:\n"
+              + "<ul>\n"
+              + "<li><a href=\"https://en.wikipedia.org/wiki/Atlantic\">Atlantic</a> (ocean),</li>\n"
+              + "<li>Indo-Pacific</li>\n"
+              + "</ul>\n"
+              + "End paragraph.</p>\n"
+              + "<p>More HTML: <i>i</i>, <b>b</b>, <em>em</em>, <strong>strong</strong>.</p>",
+          dataset.getDescription());
 
-    // Write the EML out, then read again
-    StringWriter writer = new StringWriter();
-    EMLWriter.write(dataset, writer);
-    final String eml = writer.toString();
-    InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);
-    Dataset dataset2 = DatasetEmlParser.parse(in);
+      // Write the EML out, then read again
+      StringWriter writer = new StringWriter();
+      EMLWriter emlWriter = EMLWriter.newInstance(true, true);
+      emlWriter.writeTo(dataset, writer);
+      final String eml = writer.toString();
 
-    // Check description is unchanged.
-    assertEquals(dataset.getDescription(), dataset2.getDescription());
+      try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8)) {
+        Dataset dataset2 = DatasetEmlParser.parse(in);
+
+        // Check description is unchanged.
+        assertEquals(dataset.getDescription(), dataset2.getDescription());
+      }
+    }
   }
 }

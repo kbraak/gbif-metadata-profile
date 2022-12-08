@@ -56,15 +56,18 @@ public class DatasetEmlParser {
    * @throws IllegalArgumentException If the XML is not well-formed or is not understood
    */
   public static Dataset build(byte[] data) throws IOException {
-    MetadataType metadataType = MetadataUtils.detectParserType(new ByteArrayInputStream(data));
-    // make sure metadata type is EML!
-    if (metadataType != EML) {
-      throw new IOException("Wrong metadata type " + metadataType + ", use proper parser!");
+    try (InputStream streamToDetectMetadataType = new ByteArrayInputStream(data);
+         InputStream mainStream = new ByteArrayInputStream(data)) {
+      MetadataType metadataType = MetadataUtils.detectParserType(streamToDetectMetadataType);
+      // make sure metadata type is EML!
+      if (metadataType != EML) {
+        throw new IOException("Wrong metadata type " + metadataType + ", use proper parser!");
+      }
+      return parse(mainStream);
     }
-    return parse(new ByteArrayInputStream(data));
   }
 
-  public static Dataset parse(InputStream xml) throws IOException {
+  static Dataset parse(InputStream xml) throws IOException {
     LOG.debug("Parsing EML document");
     Digester digester = new Digester();
     digester.setNamespaceAware(true);

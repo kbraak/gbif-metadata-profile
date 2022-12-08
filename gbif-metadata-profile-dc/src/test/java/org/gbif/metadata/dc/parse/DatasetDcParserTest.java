@@ -22,6 +22,7 @@ import org.gbif.api.vocabulary.IdentifierType;
 import org.gbif.api.vocabulary.License;
 import org.gbif.utils.file.FileUtils;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 import org.junit.jupiter.api.Test;
@@ -64,39 +65,41 @@ public class DatasetDcParserTest {
 
   @Test
   public void testDcParsing() throws Exception {
-    Dataset dataset = DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc.xml"));
+    try (InputStream is = FileUtils.classpathStream("dc/worms_dc.xml")) {
+      Dataset dataset = DatasetDcParser.parse(is);
 
-    Calendar cal = Calendar.getInstance();
-    cal.clear();
+      Calendar cal = Calendar.getInstance();
+      cal.clear();
 
-    assertNotNull(dataset);
+      assertNotNull(dataset);
 
-    assertEquals("World Register of Marine Species", dataset.getTitle());
-    assertTrue(
-        dataset
-            .getDescription()
-            .startsWith(
-                "The aim of a World Register of Marine Species (WoRMS) is to provide an authoritative and comprehensive list of names of marine organisms, including information on synonymy. While highest priority goes to valid names, other names in use are included so that this register can serve as a guide to interpret taxonomic literature."));
-    assertEquals("http://www.marinespecies.org/", dataset.getHomepage().toString());
-    assertEquals("Ward Appeltans", contactByType(dataset, ContactType.ORIGINATOR).getLastName());
-    assertEquals("World Register of Marine Species", dataset.getTitle());
-    assertEquals("World Register of Marine Species", dataset.getTitle());
-    assertEquals("World Register of Marine Species", dataset.getTitle());
+      assertEquals("World Register of Marine Species", dataset.getTitle());
+      assertTrue(
+          dataset
+              .getDescription()
+              .startsWith(
+                  "The aim of a World Register of Marine Species (WoRMS) is to provide an authoritative and comprehensive list of names of marine organisms, including information on synonymy. While highest priority goes to valid names, other names in use are included so that this register can serve as a guide to interpret taxonomic literature."));
+      assertEquals("http://www.marinespecies.org/", dataset.getHomepage().toString());
+      assertEquals("Ward Appeltans", contactByType(dataset, ContactType.ORIGINATOR).getLastName());
+      assertEquals("World Register of Marine Species", dataset.getTitle());
+      assertEquals("World Register of Marine Species", dataset.getTitle());
+      assertEquals("World Register of Marine Species", dataset.getTitle());
 
-    assertIdentifierExists(dataset, "1234", IdentifierType.UNKNOWN);
-    assertIdentifierExists(dataset, "doi:10.1093/ageing/29.1.57", IdentifierType.UNKNOWN);
-    assertIdentifierExists(
-        dataset, "http://ageing.oxfordjournals.org/content/29/1/57", IdentifierType.UNKNOWN);
+      assertIdentifierExists(dataset, "1234", IdentifierType.UNKNOWN);
+      assertIdentifierExists(dataset, "doi:10.1093/ageing/29.1.57", IdentifierType.UNKNOWN);
+      assertIdentifierExists(
+          dataset, "http://ageing.oxfordjournals.org/content/29/1/57", IdentifierType.UNKNOWN);
 
-    assertKeywordExists(dataset, "Specimens");
-    assertKeywordExists(dataset, "Authoritative");
-    assertKeywordExists(dataset, "Species Checklist");
-    assertKeywordExists(dataset, "Taxonomy");
-    assertKeywordExists(dataset, "Marine");
+      assertKeywordExists(dataset, "Specimens");
+      assertKeywordExists(dataset, "Authoritative");
+      assertKeywordExists(dataset, "Species Checklist");
+      assertKeywordExists(dataset, "Taxonomy");
+      assertKeywordExists(dataset, "Marine");
 
-    // License parsed from license element populated with GBIF supported license URL
-    assertEquals(License.CC0_1_0, dataset.getLicense());
-    assertEquals(License.CC0_1_0.getLicenseTitle(), dataset.getLicense().getLicenseTitle());
+      // License parsed from license element populated with GBIF supported license URL
+      assertEquals(License.CC0_1_0, dataset.getLicense());
+      assertEquals(License.CC0_1_0.getLicenseTitle(), dataset.getLicense().getLicenseTitle());
+    }
   }
 
   /**
@@ -105,8 +108,10 @@ public class DatasetDcParserTest {
    */
   @Test
   public void testDcParsingLicenseFromRights() throws Exception {
-    Dataset dataset = DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc2.xml"));
-    assertEquals(License.CC_BY_NC_4_0, dataset.getLicense());
-    assertEquals(License.CC_BY_NC_4_0.getLicenseTitle(), dataset.getLicense().getLicenseTitle());
+    try (InputStream is = FileUtils.classpathStream("dc/worms_dc2.xml")) {
+      Dataset dataset = DatasetDcParser.parse(is);
+      assertEquals(License.CC_BY_NC_4_0, dataset.getLicense());
+      assertEquals(License.CC_BY_NC_4_0.getLicenseTitle(), dataset.getLicense().getLicenseTitle());
+    }
   }
 }
