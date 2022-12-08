@@ -13,8 +13,6 @@
  */
 package org.gbif.metadata.dc;
 
-import org.apache.commons.io.IOUtils;
-import org.gbif.api.model.common.DOI;
 import org.gbif.api.model.registry.Citation;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Dataset;
@@ -41,11 +39,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.gbif.metadata.dc.parse.DatasetDcParser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test class for DublinCoreWriter.

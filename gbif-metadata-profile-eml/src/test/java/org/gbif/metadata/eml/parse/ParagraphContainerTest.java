@@ -14,6 +14,7 @@
 package org.gbif.metadata.eml.parse;
 
 import org.gbif.metadata.common.parse.ParagraphContainer;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

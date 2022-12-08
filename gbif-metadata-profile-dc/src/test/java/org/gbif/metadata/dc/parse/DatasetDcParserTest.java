@@ -64,8 +64,7 @@ public class DatasetDcParserTest {
 
   @Test
   public void testDcParsing() throws Exception {
-    Dataset dataset =
-        DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc.xml"));
+    Dataset dataset = DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc.xml"));
 
     Calendar cal = Calendar.getInstance();
     cal.clear();
@@ -106,8 +105,7 @@ public class DatasetDcParserTest {
    */
   @Test
   public void testDcParsingLicenseFromRights() throws Exception {
-    Dataset dataset =
-        DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc2.xml"));
+    Dataset dataset = DatasetDcParser.parse(FileUtils.classpathStream("dc/worms_dc2.xml"));
     assertEquals(License.CC_BY_NC_4_0, dataset.getLicense());
     assertEquals(License.CC_BY_NC_4_0.getLicenseTitle(), dataset.getLicense().getLicenseTitle());
   }
