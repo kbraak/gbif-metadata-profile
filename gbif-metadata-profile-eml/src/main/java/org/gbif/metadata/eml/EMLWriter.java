@@ -52,10 +52,6 @@ public class EMLWriter {
   private final boolean useDoiAsIdentifier;
   private final boolean omitXmlDeclaration;
 
-  // we keep to instances until we remove the 2 deprecated static methods
-  private static final EMLWriter LEGACY_METHOD_INSTANCE_NO_DOI = newInstance();
-  private static final EMLWriter LEGACY_METHOD_INSTANCE_WITH_DOI = newInstance(true);
-
   /**
    * Private constructor, use {@link #newInstance()}
    *
@@ -227,40 +223,6 @@ public class EMLWriter {
         }
       }
       return periods;
-    }
-  }
-
-  /**
-   * @param dataset
-   * @param writer
-   * @throws IOException
-   * @deprecated, please use an instance {@link #newInstance()}
-   *     <p>Same as calling {@link #write(Dataset, Writer, boolean) write} method with
-   *     useDoiAsIdentifier = false.
-   */
-  @Deprecated
-  public static void write(Dataset dataset, Writer writer) throws IOException {
-    write(dataset, writer, false);
-  }
-
-  /**
-   * @param dataset non null dataset object
-   * @param writer where the output document will go. The writer is not closed by this method.
-   * @param useDoiAsIdentifier should the packageId be the dataset.doi? If true, the dataset.doi
-   *     won't be included in the list of alternate identifiers.
-   * @throws IOException if an error occurs while processing the template
-   * @deprecated, please use an instance {@link #newInstance()}
-   *     <p>Write an EML document from a Dataset object.
-   */
-  @Deprecated
-  public static void write(Dataset dataset, Writer writer, boolean useDoiAsIdentifier)
-      throws IOException {
-    Objects.requireNonNull(dataset, "Dataset can't be null");
-
-    if (useDoiAsIdentifier) {
-      LEGACY_METHOD_INSTANCE_WITH_DOI.writeTo(dataset, writer);
-    } else {
-      LEGACY_METHOD_INSTANCE_NO_DOI.writeTo(dataset, writer);
     }
   }
 }

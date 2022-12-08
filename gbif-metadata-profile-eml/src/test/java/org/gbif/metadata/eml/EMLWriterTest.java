@@ -39,8 +39,8 @@ public class EMLWriterTest {
   private static final String TEST_EML_FILE = "eml-metadata-profile/sample2-v1.0.1.xml";
   private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 
-  private EMLWriter emlWriter = EMLWriter.newInstance();
-  private EMLWriter emlWriterDOI = EMLWriter.newInstance(true);
+  private final EMLWriter emlWriter = EMLWriter.newInstance();
+  private final EMLWriter emlWriterDOI = EMLWriter.newInstance(true);
 
   @Test
   public void testWrite() throws Exception {
@@ -111,11 +111,12 @@ public class EMLWriterTest {
               }
             });
     StringWriter writer = new StringWriter();
+    EMLWriter emlWriter = EMLWriter.newInstance(false, true);
     emlWriter.writeTo(d, writer);
     ByteArrayInputStream bas = new ByteArrayInputStream(writer.toString().getBytes());
     StreamSource ss = new StreamSource(bas);
 
-    EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_1);
+    EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_2);
     validator.validate(ss);
   }
 
