@@ -134,10 +134,10 @@ public class DatasetEmlParserTest {
    * Roundtripping test for parsing GBIF Metadata Profile version 1.0.1.
    */
   @Test
-  public void testRoundtrippingV101() {
+  public void testRoundtrippingV_1_0_1() {
     try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample2-v1.0.1.xml")) {
       Dataset dataset = DatasetEmlParser.parse(is);
-      verifyV101(dataset);
+      verifyV_1_0_1(dataset);
 
       // write again to eml file and read again
       StringWriter writer = new StringWriter();
@@ -151,7 +151,7 @@ public class DatasetEmlParserTest {
       try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8);) {
         Dataset dataset2 = DatasetEmlParser.parse(in);
         // ensure new properties in v1.0.1 still properly set
-        verifyV101(dataset2);
+        verifyV_1_0_1(dataset2);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -163,7 +163,7 @@ public class DatasetEmlParserTest {
    * Verify properties in GBIF Metadata Profile v1.0.1 are parsed and populated when building a
    * Dataset.
    */
-  public void verifyV101(Dataset dataset) {
+  public void verifyV_1_0_1(Dataset dataset) {
     Calendar cal = Calendar.getInstance();
     cal.clear();
     cal.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -622,10 +622,10 @@ public class DatasetEmlParserTest {
    * Roundtripping test for GBIF Metadata Profile version 1.1
    */
   @Test
-  public void testRoundtrippingV11() {
+  public void testRoundtrippingV_1_1() {
     try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample4-v1.1.xml")) {
       Dataset dataset = DatasetEmlParser.parse(is);
-      verifyV11(dataset);
+      verifyV_1_1(dataset);
 
       // write again to eml file and read again
       StringWriter writer = new StringWriter();
@@ -639,7 +639,7 @@ public class DatasetEmlParserTest {
       try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8)) {
         Dataset dataset2 = DatasetEmlParser.parse(in);
         // ensure new properties in v1.1 still properly set
-        verifyV11(dataset2);
+        verifyV_1_1(dataset2);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -659,7 +659,7 @@ public class DatasetEmlParserTest {
    * TODO handling multiple specimen preservation methods postponed because it would break API -
    * POR-2460) 8. multiple paragraphs in description
    */
-  private void verifyV11(Dataset dataset) {
+  private void verifyV_1_1(Dataset dataset) {
     // Tests parser can set License by lookup by license URI, when machine readable license EML is
     // well formatted.
     assertEquals(License.CC_BY_4_0, dataset.getLicense());
@@ -742,6 +742,201 @@ public class DatasetEmlParserTest {
 
     // test Contact #2
     Contact contact2 = contactList.get(7);
+    assertFalse(contact2.isPrimary());
+    assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact2.getType());
+    assertEquals("Contact 2", contact2.getFirstName());
+    assertEquals("Stuart-Smith", contact2.getLastName());
+    assertNotNull(contact2.getUserId());
+    assertEquals("http://www.researcherid.com/rid/Z-1234-2014", contact2.getUserId().get(0));
+
+    // Project personnel
+    List<Contact> personnelList = dataset.getProject().getContacts();
+    assertEquals(2, personnelList.size());
+
+    // test project personnel #1
+    Contact personnel1 = personnelList.get(0);
+    assertFalse(personnel1.isPrimary());
+    assertEquals(ContactType.PRINCIPAL_INVESTIGATOR, personnel1.getType());
+    assertEquals("Personnel 1", personnel1.getFirstName());
+    assertEquals("Edgar", personnel1.getLastName());
+    assertNotNull(personnel1.getUserId());
+    assertEquals("https://www.linkedin.com/in/john-smith-12345", personnel1.getUserId().get(0));
+
+    // test project personnel #2
+    Contact personnel2 = personnelList.get(1);
+    assertFalse(personnel2.isPrimary());
+    assertEquals(ContactType.PRINCIPAL_INVESTIGATOR, personnel2.getType());
+    assertEquals("Personnel 2", personnel2.getFirstName());
+    assertEquals("Stuart-Smith", personnel2.getLastName());
+    assertNotNull(personnel2.getUserId());
+    assertEquals("https://www.linkedin.com/in/john-smith-54321", personnel2.getUserId().get(0));
+
+    // Project ID
+    assertEquals("AODN:60978150-1641-11dd-a326-00188b4c0af8", dataset.getProject().getIdentifier());
+
+    // Project abstract and descriptions.
+    assertTrue(
+        dataset.getProject().getAbstract().startsWith("Reef Life Survey (RLS) aims to improve"));
+    assertTrue(
+        dataset
+            .getProject()
+            .getStudyAreaDescription()
+            .startsWith("RLS surveys have been undertaken"));
+    assertTrue(
+        dataset
+            .getProject()
+            .getDesignDescription()
+            .startsWith("As of December 2015, the majority of global data"));
+
+    // Multiple collections
+    List<Collection> collections = dataset.getCollections();
+    assertEquals(2, collections.size());
+
+    // Collection #1
+    Collection collection1 = collections.get(0);
+    assertEquals("urn:uuid:rls:fish:0", collection1.getParentIdentifier());
+    assertEquals("urn:uuid:rls:fish:1", collection1.getIdentifier());
+    assertEquals("Imaginary collection one", collection1.getName());
+
+    // POR-2460 - Handling multiple specimen preservation methods postponed
+    // assertEquals(PreservationMethodType.DEEP_FROZEN,
+    // collection1.getSpecimenPreservationMethod());
+
+    Collection collection2 = collections.get(1);
+    assertEquals("urn:uuid:rls:fish:1", collection2.getParentIdentifier());
+    assertEquals("urn:uuid:rls:fish:2", collection2.getIdentifier());
+    assertEquals("Imaginary collection two", collection2.getName());
+
+    // JGTI curatorial units (linked to first collection)
+    List<CuratorialUnitComposite> units = collection1.getCuratorialUnits();
+
+    // Curatorial unit #1
+    CuratorialUnitComposite unit1 = units.get(0);
+    assertEquals("Cabinets", unit1.getTypeVerbatim());
+    assertEquals(1, unit1.getLower());
+    assertEquals(10, unit1.getUpper());
+
+    // Curatorial unit #2
+    CuratorialUnitComposite unit2 = units.get(1);
+    assertEquals("Drawers", unit2.getTypeVerbatim());
+    assertEquals(5, unit2.getDeviation());
+    assertEquals(50, unit2.getCount());
+
+    // Multiple paragraphs in description
+    assertNotNull(dataset.getDescription());
+    assertTrue(dataset.getDescription().startsWith("<p>This dataset contains"));
+    assertTrue(
+        dataset
+            .getDescription()
+            .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
+    assertTrue(dataset.getDescription().endsWith("(Method 0).</p>"));
+
+    // Citation
+    assertNotNull(dataset.getCitation());
+    assertEquals("http://doi.org/10.15468/qjgwba", dataset.getCitation().getIdentifier());
+    assertEquals(
+        "Edgar G J, Stuart-Smith R D (2014): Reef Life Survey: Global reef fish dataset. v2.0. Reef Life Survey. Dataset/Samplingevent. http://doi.org/10.15468/qjgwba",
+        dataset.getCitation().getText());
+
+    // Bibliographic citations
+    assertEquals(7, dataset.getBibliographicCitations().size());
+  }
+
+  /**
+   * Roundtripping test for GBIF Metadata Profile version 1.1
+   */
+  @Test
+  public void testRoundtrippingV_1_2() {
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample9-v1.2.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+      verifyV_1_2(dataset);
+
+      // write again to eml file and read again
+      StringWriter writer = new StringWriter();
+      EMLWriter emlWriter = EMLWriter.newInstance(true, true);
+      emlWriter.writeTo(dataset, writer);
+
+      final String eml = writer.toString();
+      // validate new file
+      EmlValidator.newValidator(EMLProfileVersion.GBIF_1_2).validate(eml);
+
+      try (InputStream in = new ReaderInputStream(new StringReader(eml), StandardCharsets.UTF_8)) {
+        Dataset dataset2 = DatasetEmlParser.parse(in);
+        // ensure new properties in v1.1 still properly set
+        verifyV_1_2(dataset2);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      fail();
+    }
+  }
+
+  /**
+   * Verify GBIF Metadata Profile v1.2. Metadata provider - no more required.
+   */
+  private void verifyV_1_2(Dataset dataset) {
+    // Tests parser can set License by lookup by license URI, when machine-readable license EML is
+    // well formatted.
+    assertEquals(License.CC_BY_4_0, dataset.getLicense());
+    assertNull(dataset.getRights());
+
+    assertEquals(MaintenanceUpdateFrequency.NOT_PLANNED, dataset.getMaintenanceUpdateFrequency());
+    assertEquals("Data are updated in uneven intervals.", dataset.getMaintenanceDescription());
+
+    List<Contact> contactList = dataset.getContacts();
+    assertEquals(6, contactList.size());
+
+    // test Creator #1
+    Contact creator1 = contactList.get(0);
+    assertTrue(creator1.isPrimary());
+    assertEquals(ContactType.ORIGINATOR, creator1.getType());
+    assertEquals("Creator 1", creator1.getFirstName());
+    assertEquals("Edgar", creator1.getLastName());
+    assertNotNull(creator1.getUserId());
+    assertEquals("https://orcid.org/0000-0003-0833-9001", creator1.getUserId().get(0));
+
+    // test Creator #2
+    Contact creator2 = contactList.get(1);
+    assertFalse(creator2.isPrimary());
+    assertEquals(ContactType.ORIGINATOR, creator2.getType());
+    assertEquals("Creator 2", creator2.getFirstName());
+    assertEquals("Stuart-Smith", creator2.getLastName());
+    assertNotNull(creator2.getUserId());
+    assertEquals("https://orcid.org/0000-0002-8874-0083", creator2.getUserId().get(0));
+
+    // test Associated Party #1
+    Contact party1 = contactList.get(2);
+    assertFalse(party1.isPrimary());
+    assertEquals(ContactType.PRINCIPAL_INVESTIGATOR, party1.getType());
+    assertEquals("Party 1", party1.getFirstName());
+    assertEquals("Edgar", party1.getLastName());
+    assertNotNull(party1.getUserId());
+    assertEquals(
+        "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj1234",
+        party1.getUserId().get(0));
+
+    // test Associated Party #2
+    Contact party2 = contactList.get(3);
+    assertFalse(party2.isPrimary());
+    assertEquals(ContactType.PROCESSOR, party2.getType());
+    assertEquals("Party 2", party2.getFirstName());
+    assertEquals("Braak", party2.getLastName());
+    assertNotNull(party2.getUserId());
+    assertEquals(
+        "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj4321",
+        party2.getUserId().get(0));
+
+    // test Contact #1
+    Contact contact1 = contactList.get(4);
+    assertTrue(contact1.isPrimary());
+    assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact1.getType());
+    assertEquals("Contact 1", contact1.getFirstName());
+    assertEquals("Edgar", contact1.getLastName());
+    assertNotNull(contact1.getUserId());
+    assertEquals("http://www.researcherid.com/rid/Z-1234-2013", contact1.getUserId().get(0));
+
+    // test Contact #2
+    Contact contact2 = contactList.get(5);
     assertFalse(contact2.isPrimary());
     assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact2.getType());
     assertEquals("Contact 2", contact2.getFirstName());
