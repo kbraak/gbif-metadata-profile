@@ -1,7 +1,10 @@
 # gbif-metadata-profile
 
-The gbif-metadata-profile library provides:
- * Model and serialization utilities for the GBIF metadata profile
+The gbif-metadata-profile library provides model and serialization utilities for the GBIF metadata profiles:
+ 
+ * [Ecological Metadata Language (EML)](https://eml.ecoinformatics.org/)
+
+ * [Open Archive Initiative Darwin Core (OAI_DC)](https://www.openarchives.org/OAI/2.0/oai_dc.xsd)
 
 ## To build the project
 ```
