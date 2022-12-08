@@ -33,7 +33,7 @@ public class ValidatorFactory {
       "https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1/eml.xsd";
 
   public static final String EML_GBIF_PROFILE_SCHEMA_URL =
-      "http://rs.gbif.org/schema/eml-gbif-profile/1.1/eml-gbif-profile.xsd";
+      "http://rs.gbif.org/schema/eml-gbif-profile/1.2/eml-gbif-profile.xsd";
 
   /**
    * @return an xml validator based on the official eml 2.1.1 xml schema hosted at GBIF for network performance issues

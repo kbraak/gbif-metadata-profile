@@ -28,7 +28,7 @@ public class DateUtils {
   // 2010-02-22
 
   public static final List<ThreadSafeSimpleDateFormat> ALL_DATE_FORMATS =
-      new ArrayList<ThreadSafeSimpleDateFormat>(10);
+      new ArrayList<>(10);
 
   static {
     ALL_DATE_FORMATS.add(
