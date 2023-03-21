@@ -61,10 +61,10 @@
     </#macro>
     <#macro xmlSchemaDateTime dt><#assign dt2=dt?datetime?string("yyyy-MM-dd'T'HH:mm:ss.SSSZ")/>${dt2?substring(0, dt2?length-2)}:${dt2?substring(dt2?length-2, dt2?length)}</#macro>
     <#assign DATEIsoFormat="yyyy-MM-dd"/>
-    <eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1"
+    <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
              xmlns:dc="http://purl.org/dc/terms/"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://rs.gbif.org/schema/eml-gbif-profile/1.2/eml.xsd"
+             xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 http://rs.gbif.org/schema/eml-gbif-profile/1.3/eml.xsd"
              packageId="${eml.packageId}" system="http://gbif.org" scope="system"<#if (eml.metadataLanguage)??>
     xml:lang="${eml.metadataLanguage!}"</#if>>
 
