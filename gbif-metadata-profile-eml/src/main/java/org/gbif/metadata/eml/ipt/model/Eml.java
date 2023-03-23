@@ -222,7 +222,7 @@ public class Eml implements Serializable {
    *
    * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#MaintUpFreqType">MaintUpFreqType EML ENUM</a>
    */
-  private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKOWN;
+  private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKNOWN;
 
   /**
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.

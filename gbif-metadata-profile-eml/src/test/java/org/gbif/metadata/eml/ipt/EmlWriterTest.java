@@ -417,7 +417,7 @@ public class EmlWriterTest {
       Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample2.xml"));
       assertNotNull(eml);
       assertNull(eml.getUpdateFrequencyDescription());
-      assertEquals(MaintenanceUpdateFrequency.UNKOWN, eml.getUpdateFrequency());
+      assertEquals(MaintenanceUpdateFrequency.UNKNOWN, eml.getUpdateFrequency());
 
       // write EML
       File temp = File.createTempFile("eml", ".xml");
@@ -428,7 +428,7 @@ public class EmlWriterTest {
       Eml eml2 = EmlFactory.build(new FileInputStream(temp));
       assertNotNull(eml2);
       assertNull(eml2.getUpdateFrequencyDescription());
-      assertEquals(MaintenanceUpdateFrequency.UNKOWN, eml2.getUpdateFrequency());
+      assertEquals(MaintenanceUpdateFrequency.UNKNOWN, eml2.getUpdateFrequency());
     } catch (Exception e) {
       e.printStackTrace();
       fail();
