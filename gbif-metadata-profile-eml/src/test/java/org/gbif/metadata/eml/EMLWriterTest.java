@@ -116,7 +116,7 @@ public class EMLWriterTest {
     ByteArrayInputStream bas = new ByteArrayInputStream(writer.toString().getBytes());
     StreamSource ss = new StreamSource(bas);
 
-    EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_2);
+    EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_3);
     validator.validate(ss);
   }
 
