@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EMLWriterTest {
 
-  private static final String TEST_EML_FILE = "eml-metadata-profile/sample2-v1.0.1.xml";
+  private static final String TEST_EML_FILE = "eml-metadata-profile/sample10-v1.3.xml";
   private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 
   private final EMLWriter emlWriter = EMLWriter.newInstance();
