@@ -109,11 +109,15 @@ public class EmlFactoryTest {
       assertEquals(Arrays.asList("+4528261487", "+1234567890"), firstCreator.getPhone());
 
       assertEquals(2, firstCreator.getEmail().size());
-      assertEquals(Arrays.asList("dremsen@gbif.org", "trobertson@gbif.org"), firstCreator.getEmail());
+      assertEquals(
+          Arrays.asList("dremsen@gbif.org", "trobertson@gbif.org"), firstCreator.getEmail());
 
       assertNotNull(firstCreator.getHomepage());
       assertEquals(3, firstCreator.getHomepage().size());
-      assertEquals(Arrays.asList("https://www.gbif.org", "https://regsitry.gbif.org", "https://ipt.gbif.org"), firstCreator.getHomepage());
+      assertEquals(
+          Arrays.asList(
+              "https://www.gbif.org", "https://regsitry.gbif.org", "https://ipt.gbif.org"),
+          firstCreator.getHomepage());
 
       assertFalse(firstCreator.getUserIds().isEmpty());
       assertEquals(2, firstCreator.getUserIds().size());
@@ -138,9 +142,11 @@ public class EmlFactoryTest {
       assertEquals("DK", firstMetadataProvider.getAddress().getCountry());
       assertNotNull(firstMetadataProvider.getPhone());
       assertEquals(Collections.singletonList("+4528261487"), firstMetadataProvider.getPhone());
-      assertEquals(Collections.singletonList("trobertson@gbif.org"), firstMetadataProvider.getEmail());
+      assertEquals(
+          Collections.singletonList("trobertson@gbif.org"), firstMetadataProvider.getEmail());
       assertNotNull(firstMetadataProvider.getHomepage());
-      assertEquals(Collections.singletonList("http://www.gbif.org"), firstMetadataProvider.getHomepage());
+      assertEquals(
+          Collections.singletonList("http://www.gbif.org"), firstMetadataProvider.getHomepage());
       assertFalse(firstMetadataProvider.getUserIds().isEmpty());
       assertEquals(
           "http://www.researcherid.com/rid/",

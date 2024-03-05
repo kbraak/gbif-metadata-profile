@@ -166,8 +166,7 @@ public class Agent implements Serializable {
   }
 
   public boolean isEmpty() {
-    return StringUtils.isAllBlank(
-            firstName, lastName, organisation, position, role)
+    return StringUtils.isAllBlank(firstName, lastName, organisation, position, role)
         && phone.isEmpty()
         && email.isEmpty()
         && homepage.isEmpty()
