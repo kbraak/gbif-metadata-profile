@@ -169,9 +169,12 @@ public class EmlFactory {
     digester.addBeanPropertySetter(prefix + "/individualName/surName", "lastName");
     digester.addBeanPropertySetter(prefix + "/organizationName", "organisation");
     digester.addBeanPropertySetter(prefix + "/positionName", "position");
-    digester.addBeanPropertySetter(prefix + "/phone", "phone");
-    digester.addBeanPropertySetter(prefix + "/electronicMailAddress", "email");
-    digester.addBeanPropertySetter(prefix + "/onlineUrl", "homepage");
+    digester.addCallMethod(prefix + "/phone", "addPhone", 1);
+    digester.addCallParam(prefix + "/phone", 0);
+    digester.addCallMethod(prefix + "/electronicMailAddress", "addEmail", 1);
+    digester.addCallParam(prefix + "/electronicMailAddress", 0);
+    digester.addCallMethod(prefix + "/onlineUrl", "addHomepage", 1);
+    digester.addCallParam(prefix + "/onlineUrl", 0);
 
     digester.addBeanPropertySetter(prefix + "/role", "role");
 
@@ -180,7 +183,8 @@ public class EmlFactory {
     digester.addBeanPropertySetter(prefix + "/address/administrativeArea", "province");
     digester.addBeanPropertySetter(prefix + "/address/postalCode", "postalCode");
     digester.addBeanPropertySetter(prefix + "/address/country", "country");
-    digester.addBeanPropertySetter(prefix + "/address/deliveryPoint", "address");
+    digester.addCallMethod(prefix + "/address/deliveryPoint", "addAddress", 1);
+    digester.addCallParam(prefix + "/address/deliveryPoint", 0);
     digester.addSetNext(
         prefix + "/address", "setAddress"); // called on </address> to set on parent Agent
 

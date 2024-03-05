@@ -349,9 +349,9 @@ public class EmlWriterTest {
       Eml eml = EmlFactory.build(FileUtils.classpathStream("eml/ipt/sample.xml"));
       assertNotNull(eml);
       assertEquals(1, eml.getCreators().size());
-      assertEquals(1, eml.getCreators().get(0).getUserIds().size());
+      assertEquals(2, eml.getCreators().get(0).getUserIds().size());
       assertEquals(
-          "http://orcid.org/", eml.getCreators().get(0).getUserIds().get(0).getDirectory());
+          "https://orcid.org/", eml.getCreators().get(0).getUserIds().get(0).getDirectory());
       assertEquals(
           "0000-0002-8442-8025", eml.getCreators().get(0).getUserIds().get(0).getIdentifier());
 
@@ -372,10 +372,10 @@ public class EmlWriterTest {
       Eml eml2 = EmlFactory.build(new FileInputStream(temp));
       assertNotNull(eml2);
 
-      assertEquals(2, eml2.getCreators().get(0).getUserIds().size());
+      assertEquals(3, eml2.getCreators().get(0).getUserIds().size());
       assertEquals(
-          "http://otherorcid.org/", eml2.getCreators().get(0).getUserIds().get(1).getDirectory());
-      assertEquals("ABCD-123", eml2.getCreators().get(0).getUserIds().get(1).getIdentifier());
+          "http://otherorcid.org/", eml2.getCreators().get(0).getUserIds().get(2).getDirectory());
+      assertEquals("ABCD-123", eml2.getCreators().get(0).getUserIds().get(2).getIdentifier());
     } catch (Exception e) {
       e.printStackTrace();
       fail();
@@ -540,17 +540,17 @@ public class EmlWriterTest {
     a.setLastName("Stewart");
 
     Address address = new Address();
-    address.setAddress("Central Park");
+    address.addAddress("Central Park");
     address.setCity("New York");
     address.setCountry("United States");
     address.setPostalCode("5600");
     address.setProvince("New York");
     a.setAddress(address);
 
-    a.setEmail("jstewart@ny-nhm.org");
-    a.setHomepage("http://www.ny-nhm.org");
+    a.addEmail("jstewart@ny-nhm.org");
+    a.addHomepage("http://www.ny-nhm.org");
     a.setOrganisation("Natural History Museum");
-    a.setPhone("+19779779797");
+    a.addPhone("+19779779797");
     a.setPosition("Head of Entomology");
 
     UserId userId = new UserId("http://orcid.org/", "0000-0002-8442-9000");

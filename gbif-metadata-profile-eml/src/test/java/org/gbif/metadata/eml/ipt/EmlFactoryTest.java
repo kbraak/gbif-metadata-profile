@@ -19,7 +19,9 @@ import org.gbif.metadata.eml.ipt.model.MaintenanceUpdateFrequency;
 import org.gbif.metadata.eml.ipt.model.StudyAreaDescriptor;
 import org.gbif.utils.file.FileUtils;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.SimpleTimeZone;
 
 import org.junit.jupiter.api.Test;
@@ -86,9 +88,13 @@ public class EmlFactoryTest {
       assertEquals("ECAT Programme Officer", firstCreator.getPosition());
       assertNotNull(firstCreator.getOrganisation());
       assertEquals("GBIF", firstCreator.getOrganisation());
+
       assertNotNull(firstCreator.getAddress());
+      assertFalse(firstCreator.getAddress().isEmpty());
       assertNotNull(firstCreator.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstCreator.getAddress().getAddress());
+      assertEquals(2, firstCreator.getAddress().getAddress().size());
+      assertEquals("Universitestparken 15", firstCreator.getAddress().getAddress().get(0));
+      assertEquals("10 Downing Street", firstCreator.getAddress().getAddress().get(1));
       assertNotNull(firstCreator.getAddress().getCity());
       assertEquals("Copenhagen", firstCreator.getAddress().getCity());
       assertNotNull(firstCreator.getAddress().getProvince());
@@ -97,14 +103,24 @@ public class EmlFactoryTest {
       assertEquals("2100", firstCreator.getAddress().getPostalCode());
       assertNotNull(firstCreator.getAddress().getCountry());
       assertEquals("DK", firstCreator.getAddress().getCountry());
+
       assertNotNull(firstCreator.getPhone());
-      assertEquals("+4528261487", firstCreator.getPhone());
-      assertEquals("dremsen@gbif.org", firstCreator.getEmail());
+      assertEquals(2, firstCreator.getPhone().size());
+      assertEquals(Arrays.asList("+4528261487", "+1234567890"), firstCreator.getPhone());
+
+      assertEquals(2, firstCreator.getEmail().size());
+      assertEquals(Arrays.asList("dremsen@gbif.org", "trobertson@gbif.org"), firstCreator.getEmail());
+
       assertNotNull(firstCreator.getHomepage());
-      assertEquals("http://www.gbif.org", firstCreator.getHomepage());
+      assertEquals(3, firstCreator.getHomepage().size());
+      assertEquals(Arrays.asList("https://www.gbif.org", "https://regsitry.gbif.org", "https://ipt.gbif.org"), firstCreator.getHomepage());
+
       assertFalse(firstCreator.getUserIds().isEmpty());
-      assertEquals("http://orcid.org/", firstCreator.getUserIds().get(0).getDirectory());
+      assertEquals(2, firstCreator.getUserIds().size());
+      assertEquals("https://orcid.org/", firstCreator.getUserIds().get(0).getDirectory());
       assertEquals("0000-0002-8442-8025", firstCreator.getUserIds().get(0).getIdentifier());
+      assertEquals("https://orcid.org/", firstCreator.getUserIds().get(1).getDirectory());
+      assertEquals("0001-0002-0003-0004", firstCreator.getUserIds().get(1).getIdentifier());
 
       // agent test with some null values
       Agent firstMetadataProvider = eml.getMetadataProviders().get(0);
@@ -115,16 +131,16 @@ public class EmlFactoryTest {
       assertEquals("Robertson", firstMetadataProvider.getLastName());
       assertNotNull(firstMetadataProvider.getAddress());
       assertNotNull(firstMetadataProvider.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstMetadataProvider.getAddress().getAddress());
+      assertEquals("Universitestparken 15", firstMetadataProvider.getAddress().getAddress().get(0));
       assertEquals("Copenhagen", firstMetadataProvider.getAddress().getCity());
       assertEquals("Copenhagen", firstMetadataProvider.getAddress().getProvince());
       assertEquals("2100", firstMetadataProvider.getAddress().getPostalCode());
       assertEquals("DK", firstMetadataProvider.getAddress().getCountry());
       assertNotNull(firstMetadataProvider.getPhone());
-      assertEquals("+4528261487", firstMetadataProvider.getPhone());
-      assertEquals("trobertson@gbif.org", firstMetadataProvider.getEmail());
+      assertEquals(Collections.singletonList("+4528261487"), firstMetadataProvider.getPhone());
+      assertEquals(Collections.singletonList("trobertson@gbif.org"), firstMetadataProvider.getEmail());
       assertNotNull(firstMetadataProvider.getHomepage());
-      assertEquals("http://www.gbif.org", firstMetadataProvider.getHomepage());
+      assertEquals(Collections.singletonList("http://www.gbif.org"), firstMetadataProvider.getHomepage());
       assertFalse(firstMetadataProvider.getUserIds().isEmpty());
       assertEquals(
           "http://www.researcherid.com/rid/",
@@ -145,7 +161,7 @@ public class EmlFactoryTest {
       assertEquals("GBIF", firstContact.getOrganisation());
       assertNotNull(firstContact.getAddress());
       assertNotNull(firstContact.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstContact.getAddress().getAddress());
+      assertEquals("Universitestparken 15", firstContact.getAddress().getAddress().get(0));
       assertNotNull(firstContact.getAddress().getCity());
       assertEquals("Copenhagen", firstContact.getAddress().getCity());
       assertNotNull(firstContact.getAddress().getProvince());
@@ -155,10 +171,10 @@ public class EmlFactoryTest {
       assertNotNull(firstContact.getAddress().getCountry());
       assertEquals("DK", firstContact.getAddress().getCountry());
       assertNotNull(firstContact.getPhone());
-      assertEquals("+4528261487", firstContact.getPhone());
-      assertEquals("dremsen@gbif.org", firstContact.getEmail());
+      assertEquals(Collections.singletonList("+4528261487"), firstContact.getPhone());
+      assertEquals(Collections.singletonList("dremsen@gbif.org"), firstContact.getEmail());
       assertNotNull(firstContact.getHomepage());
-      assertEquals("http://www.gbif.org", firstContact.getHomepage());
+      assertEquals(Collections.singletonList("http://www.gbif.org"), firstContact.getHomepage());
       assertFalse(firstContact.getUserIds().isEmpty());
       assertEquals("http://orcid.org/", firstContact.getUserIds().get(0).getDirectory());
       assertEquals("0000-0002-8442-8025", firstContact.getUserIds().get(0).getIdentifier());

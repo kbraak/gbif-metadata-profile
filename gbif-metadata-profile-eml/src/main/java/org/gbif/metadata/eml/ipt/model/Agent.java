@@ -32,11 +32,13 @@ public class Agent implements Serializable {
   private String lastName;
   private String organisation;
   private String position;
+  // TODO: rename fields, phone -> phones etc. ???
+  // TODO: use lombok where possible?
   private Address address = new Address();
-  private String phone;
-  private String email;
+  private List<String> phone = new ArrayList<>();
+  private List<String> email = new ArrayList<>();
   private String role;
-  private String homepage;
+  private List<String> homepage = new ArrayList<>();
   private List<UserId> userIds = new ArrayList<>();
 
   public Address getAddress() {
@@ -47,15 +49,16 @@ public class Agent implements Serializable {
     this.address = address;
   }
 
-  public String getEmail() {
-    if (email == null || email.isEmpty()) {
-      return null;
-    }
+  public List<String> getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
+  public void setEmail(List<String> email) {
     this.email = email;
+  }
+
+  public void addEmail(String email) {
+    this.email.add(email);
   }
 
   public String getFirstName() {
@@ -69,15 +72,16 @@ public class Agent implements Serializable {
     this.firstName = firstName;
   }
 
-  public String getHomepage() {
-    if (homepage == null || homepage.isEmpty()) {
-      return null;
-    }
+  public List<String> getHomepage() {
     return homepage;
   }
 
-  public void setHomepage(String homepage) {
+  public void setHomepage(List<String> homepage) {
     this.homepage = homepage;
+  }
+
+  public void addHomepage(String homepage) {
+    this.homepage.add(homepage);
   }
 
   public String getLastName() {
@@ -102,15 +106,16 @@ public class Agent implements Serializable {
     this.organisation = organisation;
   }
 
-  public String getPhone() {
-    if (phone == null || phone.isEmpty()) {
-      return null;
-    }
+  public List<String> getPhone() {
     return phone;
   }
 
-  public void setPhone(String phone) {
+  public void setPhone(List<String> phone) {
     this.phone = phone;
+  }
+
+  public void addPhone(String phone) {
+    this.phone.add(phone);
   }
 
   public String getPosition() {
@@ -162,7 +167,10 @@ public class Agent implements Serializable {
 
   public boolean isEmpty() {
     return StringUtils.isAllBlank(
-            firstName, lastName, organisation, position, phone, email, role, homepage)
+            firstName, lastName, organisation, position, role)
+        && phone.isEmpty()
+        && email.isEmpty()
+        && homepage.isEmpty()
         && address.isEmpty()
         && userIds.isEmpty();
   }

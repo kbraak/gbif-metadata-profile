@@ -14,6 +14,8 @@
 package org.gbif.metadata.eml.ipt.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,18 +28,22 @@ import org.apache.commons.lang3.StringUtils;
 public class Address implements Serializable {
 
   private static final long serialVersionUID = 3617859655330969141L;
-  private String address;
+  private List<String> address = new ArrayList<>();
   private String city;
   private String province;
   private String country;
   private String postalCode;
 
-  public String getAddress() {
+  public List<String> getAddress() {
     return address;
   }
 
-  public void setAddress(String address) {
+  public void setAddress(List<String> address) {
     this.address = address;
+  }
+
+  public void addAddress(String address) {
+    this.address.add(address);
   }
 
   public String getCity() {
@@ -85,7 +91,7 @@ public class Address implements Serializable {
   }
 
   public boolean isEmpty() {
-    return StringUtils.isAllBlank(address, city, province, postalCode, country);
+    return address.isEmpty() && StringUtils.isAllBlank(city, province, postalCode, country);
   }
 
   @Override
@@ -129,8 +135,10 @@ public class Address implements Serializable {
    */
   public String toFormattedString() {
     String formattedAddress = null;
-    if (StringUtils.isNotBlank(address)) {
-      formattedAddress = address;
+
+    // TODO: only the first address? what can we do with the rest?
+    if (!address.isEmpty()) {
+      formattedAddress = address.get(0);
     }
     if (StringUtils.isNotBlank(city)) {
       if (StringUtils.isNotBlank(formattedAddress)) {

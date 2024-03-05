@@ -1,7 +1,7 @@
 <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
          xmlns:dc="http://purl.org/dc/terms/"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 http://rs.gbif-uat.org/schema/eml-gbif-profile/1.1/eml.xsd"
+         xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif-uat.org/schema/eml-gbif-profile/1.3/eml.xsd"
          packageId="http://ipt.gbif.org/resource?id=rls/v2.0" system="http://gbif.org" scope="system"
          xml:lang="eng">
 
@@ -172,17 +172,23 @@
       </individualName>
       <organizationName>Reef Life Survey Foundation</organizationName>
       <positionName>President</positionName>
+      <positionName>Director</positionName>
       <address>
         <deliveryPoint>c/o IMAS, Private Bag 49</deliveryPoint>
+        <deliveryPoint>Universitetsparken 15</deliveryPoint>
         <city>Hobart</city>
         <administrativeArea>Tasmania</administrativeArea>
         <postalCode>7001</postalCode>
         <country>AU</country>
       </address>
       <phone>+123456789</phone>
+      <phone>+987654321</phone>
       <electronicMailAddress>graham@rls.org</electronicMailAddress>
+      <electronicMailAddress>gbif@gbif.org</electronicMailAddress>
       <onlineUrl>http://reeflifesurvey.com/</onlineUrl>
+      <onlineUrl>https://gbif.org/</onlineUrl>
       <userId directory="http://www.researcherid.com/rid/">Z-1234-2013</userId>
+      <userId directory="https://orcid.org">0000-0000-0000-0000</userId>
     </contact>
     <contact>
       <individualName>

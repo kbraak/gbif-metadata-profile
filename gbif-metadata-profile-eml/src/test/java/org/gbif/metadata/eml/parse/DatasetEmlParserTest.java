@@ -1130,8 +1130,35 @@ public class DatasetEmlParserTest {
     assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact1.getType());
     assertEquals("Contact 1", contact1.getFirstName());
     assertEquals("Edgar", contact1.getLastName());
+    assertEquals("Reef Life Survey Foundation", contact1.getOrganization());
+    assertNotNull(contact1.getPosition());
+    assertEquals(2, contact1.getPosition().size());
+    assertEquals("President", contact1.getPosition().get(0));
+    assertEquals("Director", contact1.getPosition().get(1));
+    assertNotNull(contact1.getAddress());
+    assertEquals(2, contact1.getAddress().size());
+    assertEquals("c/o IMAS, Private Bag 49", contact1.getAddress().get(0));
+    assertEquals("Universitetsparken 15", contact1.getAddress().get(1));
+    assertEquals("Hobart", contact1.getCity());
+    assertEquals("Tasmania", contact1.getProvince());
+    assertEquals("7001", contact1.getPostalCode());
+    assertEquals(Country.AUSTRALIA, contact1.getCountry());
+    assertNotNull(contact1.getPhone());
+    assertEquals(2, contact1.getPhone().size());
+    assertEquals("+123456789", contact1.getPhone().get(0));
+    assertEquals("+987654321", contact1.getPhone().get(1));
+    assertNotNull(contact1.getEmail());
+    assertEquals(2, contact1.getEmail().size());
+    assertEquals("graham@rls.org", contact1.getEmail().get(0));
+    assertEquals("gbif@gbif.org", contact1.getEmail().get(1));
+    assertNotNull(contact1.getHomepage());
+    assertEquals(2, contact1.getHomepage().size());
+    assertEquals(URI.create("http://reeflifesurvey.com/"), contact1.getHomepage().get(0));
+    assertEquals(URI.create("https://gbif.org/"), contact1.getHomepage().get(1));
     assertNotNull(contact1.getUserId());
+    assertEquals(2, contact1.getUserId().size());
     assertEquals("http://www.researcherid.com/rid/Z-1234-2013", contact1.getUserId().get(0));
+    assertEquals("https://orcid.org/0000-0000-0000-0000", contact1.getUserId().get(1));
 
     // test Contact #2
     Contact contact2 = contactList.get(5);
@@ -1139,7 +1166,28 @@ public class DatasetEmlParserTest {
     assertEquals(ContactType.ADMINISTRATIVE_POINT_OF_CONTACT, contact2.getType());
     assertEquals("Contact 2", contact2.getFirstName());
     assertEquals("Stuart-Smith", contact2.getLastName());
+    assertEquals("Reef Life Survey Foundation", contact2.getOrganization());
+    assertNotNull(contact2.getPosition());
+    assertEquals(1, contact2.getPosition().size());
+    assertEquals("Executive Officer", contact2.getPosition().get(0));
+    assertNotNull(contact2.getAddress());
+    assertEquals(1, contact2.getAddress().size());
+    assertEquals("c/o IMAS, Private Bag 49", contact2.getAddress().get(0));
+    assertEquals("Hobart", contact2.getCity());
+    assertEquals("Tasmania", contact2.getProvince());
+    assertEquals("7001", contact2.getPostalCode());
+    assertEquals(Country.AUSTRALIA, contact2.getCountry());
+    assertNotNull(contact2.getPhone());
+    assertEquals(1, contact2.getPhone().size());
+    assertEquals("+123456789", contact2.getPhone().get(0));
+    assertNotNull(contact2.getEmail());
+    assertEquals(1, contact2.getEmail().size());
+    assertEquals("rick@rls.org", contact2.getEmail().get(0));
+    assertNotNull(contact2.getHomepage());
+    assertEquals(1, contact2.getHomepage().size());
+    assertEquals(URI.create("http://reeflifesurvey.com/"), contact2.getHomepage().get(0));
     assertNotNull(contact2.getUserId());
+    assertEquals(1, contact2.getUserId().size());
     assertEquals("http://www.researcherid.com/rid/Z-1234-2014", contact2.getUserId().get(0));
 
     // Project personnel

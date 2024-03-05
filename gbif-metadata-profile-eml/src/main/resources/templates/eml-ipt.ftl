@@ -22,9 +22,11 @@
         || (adr.getPostalCode())??
         || (adr.getCountry())?? >
             <address>
-                <#if (adr.getAddress())?has_content >
-                    <deliveryPoint>${adr.address}</deliveryPoint>
+                <#list adr.getAddress() as ad>
+                <#if ad?has_content >
+                    <deliveryPoint>${ad}</deliveryPoint>
                 </#if>
+                </#list>
                 <#if (adr.getCity())?? >
                     <city>${adr.city}</city>
                 </#if>
@@ -39,15 +41,21 @@
                 </#if>
             </address>
         </#if>
-        <#if (agent.getPhone())??>
-            <phone>${agent.phone}</phone>
-        </#if>
-        <#if (agent.getEmail())??>
-            <electronicMailAddress>${agent.email}</electronicMailAddress>
-        </#if>
-        <#if (agent.getHomepage())??>
-            <onlineUrl>${agent.homepage}</onlineUrl>
-        </#if>
+        <#list agent.getPhone() as phone>
+            <#if phone??>
+                <phone>${phone}</phone>
+            </#if>
+        </#list>
+        <#list agent.getEmail() as email>
+            <#if email??>
+                <electronicMailAddress>${email}</electronicMailAddress>
+            </#if>
+        </#list>
+        <#list agent.getHomepage() as homepage>
+            <#if homepage??>
+                <onlineUrl>${homepage}</onlineUrl>
+            </#if>
+        </#list>
         <#if (agent.userIds?size>0)>
             <#list agent.userIds as userId>
                 <#if userId.identifier?has_content && userId.directory?has_content>
@@ -64,7 +72,7 @@
     <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
              xmlns:dc="http://purl.org/dc/terms/"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 http://rs.gbif.org/schema/eml-gbif-profile/1.3/eml.xsd"
+             xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif-uat.org/schema/eml-gbif-profile/1.3/eml.xsd"
              packageId="${eml.packageId}" system="http://gbif.org" scope="system"<#if (eml.metadataLanguage)??>
     xml:lang="${eml.metadataLanguage!}"</#if>>
 

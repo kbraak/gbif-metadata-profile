@@ -772,8 +772,8 @@ public class Eml implements Serializable {
 
   public String getCreatorEmail() {
     Agent creator = getCreator();
-    if (creator != null) {
-      return creator.getEmail();
+    if (creator != null && creator.getEmail() != null && !creator.isEmpty()) {
+      return creator.getEmail().get(0);
     }
     return null;
   }
@@ -809,8 +809,8 @@ public class Eml implements Serializable {
 
   public String getPublisherEmail() {
     Agent publisher = getPublisher();
-    if (publisher != null) {
-      return publisher.getEmail();
+    if (publisher != null && publisher.getEmail() != null && !publisher.getEmail().isEmpty()) {
+      return publisher.getEmail().get(0);
     }
     return null;
   }

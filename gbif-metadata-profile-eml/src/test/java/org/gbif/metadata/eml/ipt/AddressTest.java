@@ -29,7 +29,7 @@ public class AddressTest {
   @Test
   public void testToFormattedString() {
     Address address1 = new Address();
-    address1.setAddress(ADDRESS);
+    address1.addAddress(ADDRESS);
     address1.setCity(CITY);
     address1.setCountry(COUNTRY);
     address1.setPostalCode(POSTAL_CODE);
@@ -59,7 +59,7 @@ public class AddressTest {
     assertEquals("2100", address5.toFormattedString());
 
     Address address6 = new Address();
-    address6.setAddress(ADDRESS);
+    address6.addAddress(ADDRESS);
     address6.setCity(CITY);
     assertEquals("63 Strandvejen, Aarhus", address6.toFormattedString());
   }
