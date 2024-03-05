@@ -1110,8 +1110,8 @@ public class DatasetEmlParserTest {
     assertEquals("Edgar", party1.getLastName());
     assertNotNull(party1.getUserId());
     assertEquals(
-      "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj1234",
-      party1.getUserId().get(0));
+        "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj1234",
+        party1.getUserId().get(0));
 
     // test Associated Party #2
     Contact party2 = contactList.get(3);
@@ -1121,8 +1121,8 @@ public class DatasetEmlParserTest {
     assertEquals("Braak", party2.getLastName());
     assertNotNull(party2.getUserId());
     assertEquals(
-      "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj4321",
-      party2.getUserId().get(0));
+        "https://www.linkedin.com/profile/view?id=AAkAAABiOnwBeoX3a3wKqe4IEqDkJ_ifoVj4321",
+        party2.getUserId().get(0));
 
     // test Contact #1
     Contact contact1 = contactList.get(4);
@@ -1169,17 +1169,17 @@ public class DatasetEmlParserTest {
 
     // Project abstract and descriptions.
     assertTrue(
-      dataset.getProject().getAbstract().startsWith("Reef Life Survey (RLS) aims to improve"));
+        dataset.getProject().getAbstract().startsWith("Reef Life Survey (RLS) aims to improve"));
     assertTrue(
-      dataset
-        .getProject()
-        .getStudyAreaDescription()
-        .startsWith("RLS surveys have been undertaken"));
+        dataset
+            .getProject()
+            .getStudyAreaDescription()
+            .startsWith("RLS surveys have been undertaken"));
     assertTrue(
-      dataset
-        .getProject()
-        .getDesignDescription()
-        .startsWith("As of December 2015, the majority of global data"));
+        dataset
+            .getProject()
+            .getDesignDescription()
+            .startsWith("As of December 2015, the majority of global data"));
 
     // Multiple collections
     List<Collection> collections = dataset.getCollections();
@@ -1219,17 +1219,17 @@ public class DatasetEmlParserTest {
     assertNotNull(dataset.getDescription());
     assertTrue(dataset.getDescription().startsWith("<p>This dataset contains"));
     assertTrue(
-      dataset
-        .getDescription()
-        .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
+        dataset
+            .getDescription()
+            .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
     assertTrue(dataset.getDescription().endsWith("(Method 0).</p>"));
 
     // Citation
     assertNotNull(dataset.getCitation());
     assertEquals("http://doi.org/10.15468/qjgwba", dataset.getCitation().getIdentifier());
     assertEquals(
-      "Edgar G J, Stuart-Smith R D (2014): Reef Life Survey: Global reef fish dataset. v2.0. Reef Life Survey. Dataset/Samplingevent. http://doi.org/10.15468/qjgwba",
-      dataset.getCitation().getText());
+        "Edgar G J, Stuart-Smith R D (2014): Reef Life Survey: Global reef fish dataset. v2.0. Reef Life Survey. Dataset/Samplingevent. http://doi.org/10.15468/qjgwba",
+        dataset.getCitation().getText());
 
     // Bibliographic citations
     assertEquals(7, dataset.getBibliographicCitations().size());

@@ -120,11 +120,13 @@ public class EMLWriter {
    * @param emlProfileVersion EML profile version
    * @throws IOException if an error occurs while processing the template
    */
-  public void writeTo(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion) throws IOException {
+  public void writeTo(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion)
+      throws IOException {
     innerWrite(dataset, writer, emlProfileVersion);
   }
 
-  private void innerWrite(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion) throws IOException {
+  private void innerWrite(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion)
+      throws IOException {
     Objects.requireNonNull(dataset, "Dataset can't be null");
 
     Map<String, Object> map = new HashMap<>();
