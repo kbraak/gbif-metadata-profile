@@ -24,9 +24,6 @@ import java.util.StringJoiner;
  */
 public class GeospatialCoverage implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -7639582552916192696L;
 
   /**

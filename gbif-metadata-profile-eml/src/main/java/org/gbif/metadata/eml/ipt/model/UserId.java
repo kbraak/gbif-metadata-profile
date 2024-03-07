@@ -22,9 +22,7 @@ import java.util.StringJoiner;
  * the personnel directory the identifier is linked to (e.g. http://orcid.org/).
  */
 public class UserId implements Serializable {
-  /**
-   * Generated
-   */
+
   private static final long serialVersionUID = 8600344167438888243L;
 
   private String directory;

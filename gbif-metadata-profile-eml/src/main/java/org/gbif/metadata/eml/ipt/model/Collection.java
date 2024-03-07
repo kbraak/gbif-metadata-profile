@@ -22,9 +22,6 @@ import java.util.StringJoiner;
  */
 public class Collection implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 7028536657811651816L;
 
   /**

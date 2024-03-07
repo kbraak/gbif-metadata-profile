@@ -24,18 +24,8 @@ import java.util.StringJoiner;
  */
 public class BibliographicCitationSet implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -406468584517868175L;
 
-  /**
-   * A keyword or key phrase that concisely describes the resource or is related to the resource. Each keyword field
-   * should contain one and only one keyword (i.e., keywords should not be separated by commas or other delimiters).
-   *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keyword">EML Resource keyword
-   *      element</a>
-   */
   protected List<Citation> bibliographicCitations = new ArrayList<>();
 
   /**

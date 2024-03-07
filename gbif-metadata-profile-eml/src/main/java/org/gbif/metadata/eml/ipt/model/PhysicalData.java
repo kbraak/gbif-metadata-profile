@@ -22,25 +22,21 @@ import java.util.StringJoiner;
  */
 public class PhysicalData implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 1209461796079665955L;
 
   /**
    * This element contains the name of the character encoding. This is typically ASCII or UTF-8, or one of the other
    * common encodings.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#characterEncoding">EML
-   *      Physical
-   *      characterEncoding keyword</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-physical_xsd.html">EML
+   *      Physical characterEncoding keyword</a>
    */
   private String charset;
 
   /**
    * The URL of the resource that is available online.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#url">EML Physical url
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-physical_xsd.html">EML Physical url
    *      keyword</a>
    */
   private String distributionUrl;
@@ -48,7 +44,7 @@ public class PhysicalData implements Serializable {
   /**
    * Name of the format of the data object.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#formatName">EML Physical
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-physical_xsd.html">EML Physical
    *      formatName keyword</a>
    */
   private String format;
@@ -56,7 +52,7 @@ public class PhysicalData implements Serializable {
   /**
    * Version of the format of the data object.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#formatVersion">">EML Physical
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-physical_xsd.html">">EML Physical
    *      formatVersion keyword</a>
    */
   private String formatVersion;
@@ -64,7 +60,7 @@ public class PhysicalData implements Serializable {
   /**
    * The name of the data object, usually a file in a file system or that is accessible on the network.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-physical.html#objectName">EML Physical
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-physical_xsd.html">EML Physical
    *      objectName keyword</a>
    */
   private String name;

@@ -71,9 +71,6 @@ public class Eml implements Serializable {
   private static final String CC_BY_NC_DEFAULT =
       "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by-nc/4.0/legalcode\"><citetitle>Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License</citetitle></ulink>.";
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 770733523572837495L;
 
   /**
@@ -100,7 +97,7 @@ public class Eml implements Serializable {
 
   /**
    * A resource that describes a literature citation for the resource, one that might be found in a bibliography. We
-   * cannot use http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml.html#citation because the IPT deals with
+   * cannot use <a href="https://eml.ecoinformatics.org/schema/eml_xsd.html#eml_citation">Citation</a> because the IPT deals with
    * /eml/dataset and not /eml/citation therefore these are found in the additionalMetadata section of the EML.
    */
   private Citation citation;
@@ -138,7 +135,7 @@ public class Eml implements Serializable {
    * a data set, rights might include requirements for use, requirements for attribution, or other requirements the
    * owner would like to impose.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#intellectualRights">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_intellectualRights">EML
    *      Resource intellectualRights</a>
    */
   private String intellectualRights;
@@ -152,7 +149,7 @@ public class Eml implements Serializable {
   private List<JGTICuratorialUnit> jgtiCuratorialUnits = new ArrayList<>();
 
   // Note that while Sets would be fine, to ease testing, Lists are
-  // used to preserve ordering. A Set implementation that respects ordering
+  // used to preserve ordering. A Set implementation that respect ordering
   // would also suffice
   // please refer to typed classes for descriptions of the properties and how
   // they map to EML
@@ -163,7 +160,7 @@ public class Eml implements Serializable {
    * codes to be more precise.
    * The IPT will always use ISO language codes.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#language">EML Resource
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_language">EML Resource
    *      language keyword</a>
    */
   private String language = "en";
@@ -198,8 +195,8 @@ public class Eml implements Serializable {
   /**
    * The date that the resource was published. The format should be represented as: CCYY, which represents a 4 digit
    * year, or as CCYY-MM-DD, which denotes the full year, month, and day. Note that month and day are optional
-   * components. Formats must conform to ISO 8601. http://knb.ecoinformatics.org/
-   * software/eml/eml-2.1.0/eml-resource.html#pubDate
+   * components. Formats must conform to ISO 8601.
+   * <a href="https://eml.ecoinformatics.org/schema/eml_xsd.html#eml_citation">pubDate</a>
    */
   private Date pubDate;
 
@@ -212,7 +209,7 @@ public class Eml implements Serializable {
   /**
    * A text description of the maintenance of this data resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#description">MaintenanceUpdateFrequency description</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_description">MaintenanceUpdateFrequency description</a>
    */
   private String updateFrequencyDescription;
 
@@ -220,7 +217,7 @@ public class Eml implements Serializable {
    * The maintenance update frequency is the frequency with which changes and additions are made to the dataset after
    * the initial dataset is completed.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#MaintUpFreqType">MaintUpFreqType EML ENUM</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_maintenanceUpdateFrequency">MaintUpFreqType EML ENUM</a>
    */
   private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKNOWN;
 
@@ -228,7 +225,7 @@ public class Eml implements Serializable {
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.
    * The list of creators for a resource represent the people and organizations who should be cited for the resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#creator">EML Resource creator</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_creator">EML Resource creator</a>
    */
   private List<Agent> creators = new ArrayList<>();
 
@@ -236,7 +233,7 @@ public class Eml implements Serializable {
    * The 'metadataProvider' element provides the full name of the person, organization, or position who created
    * documentation for the resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#metadataProvider">EML Resource metadataProvider</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_metadataProvider">EML Resource metadataProvider</a>
    */
   private List<Agent> metadataProviders = new ArrayList<>();
 
@@ -244,7 +241,7 @@ public class Eml implements Serializable {
    * The 'contact' field contains contact information for this dataset. This is the person or institution to contact
    * with questions about the use, interpretation of a data set.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#contact">EML Dataset contact</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_contact">EML Dataset contact</a>
    */
   private List<Agent> contacts = new ArrayList<>();
 
@@ -275,7 +272,7 @@ public class Eml implements Serializable {
    * (temporal boundaries, frequency of occurrence), and groups of living organisms sampled (taxonomic coverage). This
    * implementation allows only the declaration of the extent description
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#studyExtent">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_MethodsType_sampling_studyExtent">EML Methods
    *      studyExtent keyword</a>
    */
   private String studyExtent;
@@ -285,7 +282,7 @@ public class Eml implements Serializable {
    * in the research project. The content of this element would be similar to a description of sampling procedures found
    * in the methods section of a journal article.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#samplingDescription">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_MethodsType_sampling_samplingDescription">EML
    *      Methods samplingDescription keyword</a>
    */
   private String sampleDescription;
@@ -294,7 +291,7 @@ public class Eml implements Serializable {
    * The qualityControl field provides a location for the description of actions taken to either control or assess the
    * quality of data resulting from the associated method step.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#qualityControl">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_qualityControl">EML Methods
    *      qualityControl keyword</a>
    */
   private String qualityControl;
@@ -305,7 +302,7 @@ public class Eml implements Serializable {
    * instrumentation, source data and any quality control measures taken." This implementation allows only the
    * declaration of the step description
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#methodStep">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_methodStep">EML Methods
    *      methodStep keyword</a>
    */
   private List<String> methodSteps = new ArrayList<>();

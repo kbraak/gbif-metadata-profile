@@ -24,15 +24,12 @@ import java.util.StringJoiner;
  */
 public class Project implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 2224956553560612242L;
 
   /**
    * A descriptive title for the research project.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#title">EML Project title
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_title">EML Project title
    *      keyword</a>
    */
   private String title;
@@ -54,7 +51,7 @@ public class Project implements Serializable {
    * The Personnel field extends ResponsibleParty with role information and is used to document people involved in a
    * research project by providing contact information and their role in the project.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#personnel">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_personnel">EML Project
    *      personnel
    *      keyword</a>
    */
@@ -64,7 +61,7 @@ public class Project implements Serializable {
    * The funding field is used to provide information about funding sources for the project such as: grant and contract
    * numbers; names and addresses of funding sources.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#funding">EML Project funding
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_funding">EML Project funding
    *      keyword</a>
    */
   private String funding;
@@ -73,7 +70,7 @@ public class Project implements Serializable {
    * The studyAreaDescription field documents the physical area associated with the research project. It can include
    * descriptions of the geographic, temporal, and taxonomic coverage of the research location.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#descriptor">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_ResearchProjectType_studyAreaDescription_descriptor">EML Project
    *      descriptor keyword</a>
    */
   private StudyAreaDescription studyAreaDescription = new StudyAreaDescription();
@@ -82,7 +79,7 @@ public class Project implements Serializable {
    * A general textual description of research design. It can include detailed accounts of goals, motivations, theory,
    * hypotheses, strategy, statistical design, and actual work.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#designDescription">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_designDescription">EML Project
    *      designDescription keyword</a>
    */
   private String designDescription;

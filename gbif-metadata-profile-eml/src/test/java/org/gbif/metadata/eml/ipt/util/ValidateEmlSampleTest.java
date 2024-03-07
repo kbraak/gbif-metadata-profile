@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * For validation of EML files see also http://knb.ecoinformatics.org/emlparser/.
+ * For validation of EML files see also <a href="http://knb.ecoinformatics.org/emlparser/">EML Parser</a>.
  */
 public class ValidateEmlSampleTest {
 

@@ -22,15 +22,12 @@ import java.util.StringJoiner;
  */
 public class TaxonKeyword implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -7870655444855755937L;
 
   /**
    * The name representing the taxonomic rank of the taxon being described , e.g., Orca
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#taxonRankValue">EML Coverage
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TaxonomicClassificationType_taxonRankValue">EML Coverage
    *      taxonRankValue keyword</a>
    */
   private String scientificName;
@@ -38,14 +35,16 @@ public class TaxonKeyword implements Serializable {
   /**
    * the name of the taxonomic rank for which the Taxon rank value is provided, e.g., Genus
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#taxonRankName">EML Coverage
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TaxonomicClassificationType_taxonRankName">EML Coverage
    *      taxonRankName keyword</a>
    */
   private String rank;
 
   /**
-   * The common/vernacular name(s) for the organisms in the dataset/collection @ http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#
-   * commonName
+   * The common/vernacular name(s) for the organisms in the dataset/collection.
+   *
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TaxonomicClassificationType_commonName">EML Coverage
+   *      commonName keyword</a>
    */
   private String commonName;
 
