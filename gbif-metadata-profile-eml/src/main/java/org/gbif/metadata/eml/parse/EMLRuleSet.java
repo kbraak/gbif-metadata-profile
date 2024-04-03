@@ -52,25 +52,25 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.util.Date;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
-import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.digester3.AbstractObjectCreationFactory;
 import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.NodeCreateRule;
 import org.apache.commons.digester3.RuleSetBase;
 import org.apache.commons.digester3.SetNextRule;
 import org.apache.commons.digester3.SetRootRule;
-import org.apache.commons.digester3.NodeCreateRule;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -83,30 +83,30 @@ public class EMLRuleSet extends RuleSetBase {
 
   // Define pairs of DocBook tags. MUST MATCH HTML tags!
   private static final String[] DOCBOOK_TAGS = {
-      "<section>", "</section>",
-      "<title>", "</title>",
-      "<para>", "</para>",
-      "<itemizedlist>", "</itemizedlist>",
-      "<listitem>", "</listitem>",
-      "<orderedlist>", "</orderedlist>",
-      "<emphasis>", "</emphasis>",
-      "<subscript>", "</subscript>",
-      "<superscript>", "</superscript>",
-      "<literalLayout>", "</literalLayout>"
+    "<section>", "</section>",
+    "<title>", "</title>",
+    "<para>", "</para>",
+    "<itemizedlist>", "</itemizedlist>",
+    "<listitem>", "</listitem>",
+    "<orderedlist>", "</orderedlist>",
+    "<emphasis>", "</emphasis>",
+    "<subscript>", "</subscript>",
+    "<superscript>", "</superscript>",
+    "<literalLayout>", "</literalLayout>"
   };
 
   // Define pairs of HTML tags. MUST MATCH DocBook tags!
   private static final String[] HTML_TAGS = {
-      "<div>", "</div>",
-      "<h1>", "</h1>",
-      "<p>", "</p>",
-      "<ul>", "</ul>",
-      "<li>", "</li>",
-      "<ol>", "</ol>",
-      "<em>", "</em>",
-      "<sub>", "</sub>",
-      "<sup>", "</sup>",
-      "<code>", "</code>"
+    "<div>", "</div>",
+    "<h1>", "</h1>",
+    "<p>", "</p>",
+    "<ul>", "</ul>",
+    "<li>", "</li>",
+    "<ol>", "</ol>",
+    "<em>", "</em>",
+    "<sub>", "</sub>",
+    "<sup>", "</sup>",
+    "<code>", "</code>"
   };
 
   private void setupTypeConverters() {
@@ -577,15 +577,16 @@ public class EMLRuleSet extends RuleSetBase {
     }
 
     private String unwrapParentTag(String str) {
-      return StringUtils.replaceEach(str,
-          new String[]{"<abstract>", "</abstract>"},
-          new String[]{"", ""});
+      return StringUtils.replaceEach(
+          str, new String[] {"<abstract>", "</abstract>"}, new String[] {"", ""});
     }
 
     private String convertDocBookToHtml(String docbookXmlString) {
       // Replace links
       String docBookXmlStringWithLinksReplaces =
-          docbookXmlString.replaceAll("<ulink\\s+url=\"(.*?)\">\\s*<citetitle>(.*?)</citetitle>\\s*</ulink>", "<a href=\"$1\">$2</a>");
+          docbookXmlString.replaceAll(
+              "<ulink\\s+url=\"(.*?)\">\\s*<citetitle>(.*?)</citetitle>\\s*</ulink>",
+              "<a href=\"$1\">$2</a>");
 
       // Perform replacements
       return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS);
