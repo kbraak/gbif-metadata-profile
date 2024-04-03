@@ -45,8 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT 1.1 In addition to standard Bean
- * encapsulation, additional methods exist to simplify the implementation of an EML XML parser.
+ * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT.
+ * In addition to standard Bean encapsulation,
+ * additional methods exist to simplify the implementation of an EML XML parser.
  *
  * @see EmlFactory
  */
