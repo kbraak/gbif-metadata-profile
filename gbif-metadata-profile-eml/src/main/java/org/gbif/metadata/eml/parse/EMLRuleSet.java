@@ -48,24 +48,66 @@ import org.gbif.metadata.eml.parse.converter.IdentifierTypeConverter;
 import org.gbif.metadata.eml.parse.converter.MaintenanceUpdateFrequencyConverter;
 import org.gbif.metadata.eml.parse.converter.PreservationMethodTypeConverter;
 
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Date;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.IntegerConverter;
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.digester3.AbstractObjectCreationFactory;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.digester3.RuleSetBase;
 import org.apache.commons.digester3.SetNextRule;
 import org.apache.commons.digester3.SetRootRule;
+import org.apache.commons.digester3.NodeCreateRule;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Digester rules to parse EML dataset metadata documents together with a DatasetDelegator digester
  * model. The rules here ignore any namespace to be able to work with any eml versions after 2.0.
  */
 public class EMLRuleSet extends RuleSetBase {
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para>", "</para>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<listitem>", "</listitem>",
+      "<orderedlist>", "</orderedlist>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<p>", "</p>",
+      "<ul>", "</ul>",
+      "<li>", "</li>",
+      "<ol>", "</ol>",
+      "<em>", "</em>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<code>", "</code>"
+  };
 
   private void setupTypeConverters() {
 
@@ -137,11 +179,8 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addBeanPropertySetter(
         "eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoURL");
 
-    // multi paragraph description
-    digester.addObjectCreate("eml/dataset/abstract", ParagraphContainer.class);
-    digester.addCallMethod("eml/dataset/abstract/para", "appendParagraph", 0);
-    digester.addRule(
-        "eml/dataset/abstract", new SetRootRule("addDescription", ParagraphContainer.class));
+    // DocBook description
+    addDescriptionRule(digester);
 
     // Citation
     addCitationRules(digester, "eml/additionalMetadata/metadata/gbif/citation", "setCitation");
@@ -487,5 +526,73 @@ public class EMLRuleSet extends RuleSetBase {
         VerbatimTimePeriodType.FORMATION_PERIOD);
     digester.addSetNext(
         "eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage");
+  }
+
+  private void addDescriptionRule(Digester digester) {
+    try {
+      digester.addRule("eml/dataset/abstract", new SetSerializedNodeRule("setDescription"));
+    } catch (ParserConfigurationException e) {
+      // TODO log error, do something
+    }
+  }
+
+  // Converter to literal XML (DocBook) ant then to HTML
+  public static class SetSerializedNodeRule extends NodeCreateRule {
+
+    private String method;
+
+    public SetSerializedNodeRule() throws ParserConfigurationException {
+      super(Node.ELEMENT_NODE);
+    }
+
+    public SetSerializedNodeRule(String method) throws ParserConfigurationException {
+      this.method = method;
+    }
+
+    public void end(String namespace, String name) throws Exception {
+      Element nodeToSerialize = super.getDigester().pop();
+      String serializedNode = serializeNode(nodeToSerialize);
+      invokeMethodOnTopOfStack(method, serializedNode);
+    }
+
+    protected String serializeNode(Element nodeToSerialize) throws Exception {
+      String htmlOutput;
+
+      try (StringWriter writer = new StringWriter()) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+        OutputFormat format = new OutputFormat(doc);
+        format.setOmitXMLDeclaration(true);
+        XMLSerializer serializer = new XMLSerializer(writer, format);
+        serializer.serialize(nodeToSerialize);
+
+        String serializedDocBookXml = writer.getBuffer().toString();
+        String unwrappedDocBookXml = unwrapParentTag(serializedDocBookXml);
+        htmlOutput = convertDocBookToHtml(unwrappedDocBookXml);
+      }
+
+      return htmlOutput;
+    }
+
+    private String unwrapParentTag(String str) {
+      return StringUtils.replaceEach(str,
+          new String[]{"<abstract>", "</abstract>"},
+          new String[]{"", ""});
+    }
+
+    private String convertDocBookToHtml(String docbookXmlString) {
+      // Replace links
+      String docBookXmlStringWithLinksReplaces =
+          docbookXmlString.replaceAll("<ulink\\s+url=\"(.*?)\">\\s*<citetitle>(.*?)</citetitle>\\s*</ulink>", "<a href=\"$1\">$2</a>");
+
+      // Perform replacements
+      return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS);
+    }
+
+    protected void invokeMethodOnTopOfStack(String methodName, String param) throws Exception {
+      Object objOnTopOfStack = getDigester().peek();
+      MethodUtils.invokeExactMethod(objOnTopOfStack, methodName, param);
+    }
   }
 }

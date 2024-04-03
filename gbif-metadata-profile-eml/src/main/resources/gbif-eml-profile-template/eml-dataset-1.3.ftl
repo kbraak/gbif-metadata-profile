@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="dataset" type="org.gbif.api.model.registry.Dataset" -->
+<#-- @ftlvariable name="eml" type="org.gbif.metadata.eml.EMLWriter.EmlDatasetWrapper" -->
 <#escape x as x?xml>
     <#macro elem name value><#if value?has_content><${name}>${value}</${name}></#if></#macro>
     <#macro interpretedEnum enum><#if enum??><#if enum.interpreted?has_content>${enum.interpreted.name()?lower_case?replace("_", " ")?capitalize}<#else>${enum.verbatim!}</#if></#if></#macro>
@@ -169,9 +170,9 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
         <#-- A brief description of the resource. -->
         <#if eml.description?has_content>
             <abstract>
-                <#list eml.description![] as d>
-                    <para>${d!}</para>
-                </#list>
+                <#noescape>
+                ${eml.docBookDescription}
+                </#noescape>
             </abstract>
         </#if>
         <#-- Zero or more sets of keywords and an associated thesaurus for each. -->

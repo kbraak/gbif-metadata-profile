@@ -94,13 +94,30 @@
     </pubDate>
     <language>eng</language>
     <abstract>
-      <para>This dataset contains records of bony fishes and elasmobranchs collected by Reef Life Survey (RLS) divers
-        along 50 m transects on shallow rocky and coral reefs, worldwide.
-      </para>
-      <para>Abundance information is available for all records found within quantitative survey limits (50 x 5 m swathes
-        during a single swim either side of the transect line, each distinguished as a Block), and out-of-survey records
-        are identified as presence-only (Method 0).
-      </para>
+      <section>
+        <title>A separate section</title>
+        <para>More text</para>
+        <para>And more text, with
+          <itemizedlist>
+            <listitem><para>First item</para></listitem>
+          </itemizedlist>
+          <orderedlist>
+            <listitem><para>First item</para></listitem>
+          </orderedlist>
+          <ulink url="https://example.org"><citetitle>Example link</citetitle></ulink>
+        </para>
+        <section>
+          <title>A sub-section</title>
+          <para><emphasis>Emphasis</emphasis>
+            CO<subscript>2</subscript> (or just CO₂)
+            m<superscript>3</superscript> (or just m³)
+            <literalLayout>
+              x = fn(y, z)
+            </literalLayout>
+          </para>
+        </section>
+      </section>
+      <para>some stuff</para>
     </abstract>
     <keywordSet>
       <keyword>Occurrence</keyword>
@@ -158,6 +175,48 @@
     <purpose>
       <para>The purpose of this dataset.</para>
     </purpose>
+    <introduction>
+      <para>An introduction goes here.</para>
+      <para>It can include multiple paragraphs. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought.</para>
+      <para>Text can also cite other works, such as [@jones_2001], in which case the associated key must be present
+      as either the citation identifier in a `bibtex` element in the EML document, or as the `id` attribute on
+      one of the `citation` elements in the EML document.  These identifiers must be unique across the document.  Tools
+      such as Pandoc will readily convert these citations and citation entries into various formats, including HTML, PDF,
+        and others.</para>
+      <para>
+        And bulleted lists are also supported:
+        <itemizedlist>
+          <listitem><para>Science</para></listitem>
+          <listitem><para>Engineering</para></listitem>
+          <listitem><para>Math</para></listitem>
+        </itemizedlist>
+      </para>
+      <para>
+        It can also include equations:
+        <literalLayout>
+        $$\left( x + a \right)^{n} = \sum_{k = 0}^{n}{\left( \frac{n}{k} \right)x^{k}a^{n - k}}$$
+        </literalLayout>
+      </para>
+      <para>
+        Plus, it can include all of the other features of [Github Flavored Markdown (GFM)](https://github.github.com/gfm/).
+      </para>
+    </introduction>
+    <gettingStarted>
+      <section>
+        <para>Some intro text in the getting started, then break into subsections.</para>
+        <section>
+          <title>Level 2 heading</title>
+          <para>We use level 2 heading because Level 1 would be at the same level as the main sections of the paper.</para>
+        </section>
+        <section>
+          <title>Another level 2 heading</title>
+          <para>With some information</para>
+        </section>
+      </section>
+    </gettingStarted>
+    <acknowledgements>
+      Many thanks to the field staff and volunteers involved in collecting and compiling data on swallow breeding phenology and performance (in alphabetical order): E. Beaton, T. Bryant, L. Burke, M, Courtenay, B. Crosby, D. Farrar, S. Lau, A. MacDonald, H. Mann, A. McKeen, D. Nickerson, N. Sobhani, and staff from Environment and Climate Change Canada. In addition, we would like to thank all the volunteers who contributed to the Maritime Nest Records Scheme. We also thank all the private landowners, Acadia University, Ducks Unlimited Canada, Environment and Climate Change Canada, and Parks Canada for permitting access to their properties for field research. Special thanks to P. Thomas and B. Whittam at Environment and Climate Change Canada for supporting this work, A. Smith at Environment and Climate Change Canada for helpful discussions on BBS trends, and to A. Horn, A. Smith, J. Sauer, and two anonymous reviewers for providing helpful comments on earlier drafts. Funding was provided by (in alphabetical order) the Canadian Wildlife Federation, Environment and Climate Change Canada, the Natural Science and Engineering Research Council of Canada, New Brunswick Wildlife Trust Fund, Nova Scotia Habitat Conservation Fund, and Wildlife Preservation Canada. This represents Bowdoin Scientific Station contribution no. 2589.
+    </acknowledgements>
     <maintenance>
       <description>
         <para>Data are updated in uneven intervals.</para>

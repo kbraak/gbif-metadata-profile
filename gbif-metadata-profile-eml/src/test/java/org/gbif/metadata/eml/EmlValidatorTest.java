@@ -47,6 +47,12 @@ public class EmlValidatorTest {
   }
 
   @Test
+  public void testValidateEmlMetadataProfileSamplesV13() throws Exception {
+    EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_3);
+    validator.validate(getEMLMetadataAsStreamSource("eml-metadata-profile/sample10-v1.3.xml"));
+  }
+
+  @Test
   public void testValidateEmlMetadataProfileSampleV11Fails() throws Exception {
     EmlValidator validator = EmlValidator.newValidator(EMLProfileVersion.GBIF_1_1);
     assertThrows(

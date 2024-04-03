@@ -35,6 +35,8 @@ import java.util.Objects;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.commons.lang3.StringUtils;
+
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
@@ -44,6 +46,34 @@ import freemarker.template.TemplateException;
  */
 @ThreadSafe
 public class EMLWriter {
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para>", "</para>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<listitem>", "</listitem>",
+      "<orderedlist>", "</orderedlist>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<p>", "</p>",
+      "<ul>", "</ul>",
+      "<li>", "</li>",
+      "<ol>", "</ol>",
+      "<em>", "</em>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<code>", "</code>"
+  };
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
   private final Configuration freemarkerConfig;
@@ -184,6 +214,20 @@ public class EMLWriter {
 
     public List<String> getDescription() {
       return new ParagraphContainer(dataset.getDescription()).getParagraphs();
+    }
+
+    // Description with all HTML tags replaced by DocBook analogues
+    public String getDocBookDescription() {
+      if (dataset.getDescription() == null) {
+        return null;
+      }
+
+      // Replace links
+      String htmlStringWithLinksReplaces =
+          dataset.getDescription().replaceAll("<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>", "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
+
+      // Perform replacements
+      return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);
     }
 
     public Contact getMetadataProvider() {

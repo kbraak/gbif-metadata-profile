@@ -54,6 +54,7 @@ import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.ReaderInputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -827,12 +828,15 @@ public class DatasetEmlParserTest {
 
     // Multiple paragraphs in description
     assertNotNull(dataset.getDescription());
-    assertTrue(dataset.getDescription().startsWith("<p>This dataset contains"));
-    assertTrue(
-        dataset
-            .getDescription()
-            .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
-    assertTrue(dataset.getDescription().endsWith("(Method 0).</p>"));
+    String expectedDescription = "<p>This dataset contains records of bony fishes and elasmobranchs collected by Reef Life Survey (RLS) divers\n" +
+        "  along 50 m transects on shallow rocky and coral reefs, worldwide.\n" +
+        "</p>\n" +
+        "<p>Abundance information is available for all records found within quantitative survey limits (50 x 5 m swathes\n" +
+        "  during a single swim either side of the transect line, each distinguished as a Block), and out-of-survey records\n" +
+        "  are identified as presence-only (Method 0).\n" +
+        "</p>";
+    // remove whitespaces - doesn't matter for HTML
+    assertEquals(StringUtils.deleteWhitespace(expectedDescription), StringUtils.deleteWhitespace(dataset.getDescription()));
 
     // Citation
     assertNotNull(dataset.getCitation());
@@ -1022,12 +1026,15 @@ public class DatasetEmlParserTest {
 
     // Multiple paragraphs in description
     assertNotNull(dataset.getDescription());
-    assertTrue(dataset.getDescription().startsWith("<p>This dataset contains"));
-    assertTrue(
-        dataset
-            .getDescription()
-            .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
-    assertTrue(dataset.getDescription().endsWith("(Method 0).</p>"));
+    String expectedDescription = "<p>This dataset contains records of bony fishes and elasmobranchs collected by Reef Life Survey (RLS) divers\n" +
+        "  along 50 m transects on shallow rocky and coral reefs, worldwide.\n" +
+        "</p>\n" +
+        "<p>Abundance information is available for all records found within quantitative survey limits (50 x 5 m swathes\n" +
+        "  during a single swim either side of the transect line, each distinguished as a Block), and out-of-survey records\n" +
+        "  are identified as presence-only (Method 0).\n" +
+        "</p>";
+    // remove whitespaces - doesn't matter for HTML
+    assertEquals(StringUtils.deleteWhitespace(expectedDescription), StringUtils.deleteWhitespace(dataset.getDescription()));
 
     // Citation
     assertNotNull(dataset.getCitation());
@@ -1263,14 +1270,34 @@ public class DatasetEmlParserTest {
     assertEquals(5, unit2.getDeviation());
     assertEquals(50, unit2.getCount());
 
-    // Multiple paragraphs in description
+    // HTML description
     assertNotNull(dataset.getDescription());
-    assertTrue(dataset.getDescription().startsWith("<p>This dataset contains"));
-    assertTrue(
-        dataset
-            .getDescription()
-            .contains("worldwide.</p>\n<p>Abundance")); // HTML break tag concatenates para
-    assertTrue(dataset.getDescription().endsWith("(Method 0).</p>"));
+    String expectedDescription = "<div>\n" +
+        "  <h1>A separate section</h1>\n" +
+        "  <p>More text</p>\n" +
+        "  <p>And more text, with\n" +
+        "    <ul>\n" +
+        "      <li><p>First item</p></li>\n" +
+        "    </ul>\n" +
+        "    <ol>\n" +
+        "      <li><p>First item</p></li>\n" +
+        "    </ol>\n" +
+        "    <a href=\"https://example.org\">Example link</a>\n" +
+        "  </p>\n" +
+        "  <div>\n" +
+        "    <h1>A sub-section</h1>\n" +
+        "    <p><em>Emphasis</em>\n" +
+        "      CO<sub>2</sub> (or just CO₂)\n" +
+        "      m<sup>3</sup> (or just m³)\n" +
+        "      <code>\n" +
+        "        x = fn(y, z)\n" +
+        "      </code>\n" +
+        "    </p>\n" +
+        "  </div>\n" +
+        "</div>\n" +
+        "<p>some stuff</p>";
+    // remove whitespaces - doesn't matter for HTML
+    assertEquals(StringUtils.deleteWhitespace(expectedDescription), StringUtils.deleteWhitespace(dataset.getDescription()));
 
     // Citation
     assertNotNull(dataset.getCitation());
@@ -1301,7 +1328,7 @@ public class DatasetEmlParserTest {
       assertTrue(
           dataset
               .getDescription()
-              .startsWith("BoBO aims at providing biodiversity observation data to GBIF"));
+              .startsWith("<p>BoBO aims at providing biodiversity observation data to GBIF"));
 
       // License
       assertEquals(License.CC0_1_0, dataset.getLicense());
