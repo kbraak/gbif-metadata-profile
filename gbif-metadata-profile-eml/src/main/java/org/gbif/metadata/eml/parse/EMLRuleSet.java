@@ -549,6 +549,7 @@ public class EMLRuleSet extends RuleSetBase {
       this.method = method;
     }
 
+    @Override
     public void end(String namespace, String name) throws Exception {
       Element nodeToSerialize = super.getDigester().pop();
       String serializedNode = serializeNode(nodeToSerialize);
