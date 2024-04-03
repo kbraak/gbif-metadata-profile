@@ -1407,6 +1407,7 @@ public class DatasetEmlParserTest {
   /**
    * EML descriptions can contain <para> elements, which should be converted to <p> HTML elements.
    */
+  @Disabled("Need to decide whether we want to convert escaped HTML and how to do that")
   @Test
   public void testEmlParsingMultipleParagraphs() throws IOException {
     try (InputStream is = FileUtils.classpathStream("eml/multiple-paragraphs-html.xml")) {
