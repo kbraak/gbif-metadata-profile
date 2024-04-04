@@ -334,6 +334,21 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <funding>
                     <para>${dataset.project.funding!}</para>
                 </funding>
+                <#list dataset.project.awards! as award>
+                    <award>
+                        <funderName>${award.funderName}</funderName>
+                        <#list award.funderIdentifiers! as fi>
+                            <funderIdentifier>${fi}</funderIdentifier>
+                        </#list>
+                        <#if award.awardNumber?has_content>
+                            <awardNumber>${award.awardNumber}</awardNumber>
+                        </#if>
+                        <title>${award.title}</title>
+                        <#if award.awardUrl?has_content>
+                            <awardUrl>${award.awardUrl}</awardUrl>
+                        </#if>
+                    </award>
+                </#list>
                 <#if dataset.project.studyAreaDescription?has_content>
                     <studyAreaDescription>
                         <descriptor name="generic" citableClassificationSystem="false">

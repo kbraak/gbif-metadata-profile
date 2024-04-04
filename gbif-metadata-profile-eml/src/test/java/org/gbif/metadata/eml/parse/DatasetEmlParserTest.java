@@ -19,6 +19,7 @@ import org.gbif.api.model.registry.Dataset;
 import org.gbif.api.model.registry.Identifier;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.KeywordCollection;
+import org.gbif.api.model.registry.eml.ProjectAward;
 import org.gbif.api.model.registry.eml.curatorial.CuratorialUnitComposite;
 import org.gbif.api.model.registry.eml.temporal.DateRange;
 import org.gbif.api.model.registry.eml.temporal.SingleDate;
@@ -1241,6 +1242,21 @@ public class DatasetEmlParserTest {
             .getProject()
             .getDesignDescription()
             .startsWith("As of December 2015, the majority of global data"));
+
+    // Project awards
+    assertEquals(2, dataset.getProject().getAwards().size());
+    ProjectAward award1 = dataset.getProject().getAwards().get(0);
+    assertEquals("University 1", award1.getFunderName());
+    assertEquals("777", award1.getAwardNumber());
+    assertEquals("Funding title 1", award1.getTitle());
+    assertEquals("www.example.org", award1.getAwardUrl());
+    assertEquals(2, award1.getFunderIdentifiers().size());
+    assertEquals("UN1", award1.getFunderIdentifiers().get(0));
+    assertEquals("ABC123", award1.getFunderIdentifiers().get(1));
+    ProjectAward award2 = dataset.getProject().getAwards().get(1);
+    assertEquals("University 2", award2.getFunderName());
+    assertEquals("Funding title 2", award2.getTitle());
+    assertTrue(award2.getFunderIdentifiers().isEmpty());
 
     // Multiple collections
     List<Collection> collections = dataset.getCollections();

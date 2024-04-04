@@ -386,6 +386,18 @@
           of RLS data collection at larger scales.
         </para>
       </funding>
+      <award>
+        <funderName>University 1</funderName>
+        <funderIdentifier>UN1</funderIdentifier>
+        <funderIdentifier>ABC123</funderIdentifier>
+        <awardNumber>777</awardNumber>
+        <title>Funding title 1</title>
+        <awardUrl>www.example.org</awardUrl>
+      </award>
+      <award>
+        <funderName>University 2</funderName>
+        <title>Funding title 2</title>
+      </award>
       <studyAreaDescription>
         <descriptor name="generic"
                     citableClassificationSystem="false">
