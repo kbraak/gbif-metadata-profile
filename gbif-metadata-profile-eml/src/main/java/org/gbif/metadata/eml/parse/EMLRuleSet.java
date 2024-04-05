@@ -22,6 +22,7 @@ import org.gbif.api.model.registry.eml.DataDescription;
 import org.gbif.api.model.registry.eml.KeywordCollection;
 import org.gbif.api.model.registry.eml.Project;
 import org.gbif.api.model.registry.eml.ProjectAward;
+import org.gbif.api.model.registry.eml.RelatedProject;
 import org.gbif.api.model.registry.eml.SamplingDescription;
 import org.gbif.api.model.registry.eml.TaxonomicCoverage;
 import org.gbif.api.model.registry.eml.TaxonomicCoverages;
@@ -438,7 +439,8 @@ public class EMLRuleSet extends RuleSetBase {
     addContactRules(digester, prefix + "/personnel", "addContact");
     digester.addBeanPropertySetter(prefix + "/abstract/para", "abstract");
     digester.addBeanPropertySetter(prefix + "/funding/para", "funding");
-    addProjectAwardRules(digester, prefix + "/award", "addAward");
+    addProjectAwardsRules(digester, prefix + "/award", "addAward");
+    addRelatedProjectsRules(digester, prefix + "/relatedProject", "addRelatedProject");
     digester.addBeanPropertySetter(
         prefix + "/studyAreaDescription/descriptor/descriptorValue", "studyAreaDescription");
     digester.addBeanPropertySetter(
@@ -446,13 +448,23 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addSetNext(prefix, parentMethod);
   }
 
-  private void addProjectAwardRules(Digester digester, String prefix, String parentMethod) {
+  private void addProjectAwardsRules(Digester digester, String prefix, String parentMethod) {
     digester.addObjectCreate(prefix, ProjectAward.class);
     digester.addBeanPropertySetter(prefix + "/funderName", "funderName");
     digester.addBeanPropertySetter(prefix + "/awardNumber", "awardNumber");
     digester.addBeanPropertySetter(prefix + "/title", "title");
     digester.addBeanPropertySetter(prefix + "/awardUrl", "awardUrl");
     digester.addCallMethod(prefix + "/funderIdentifier", "addFunderIdentifier", 0);
+
+    digester.addSetNext(prefix, parentMethod);
+  }
+
+  private void addRelatedProjectsRules(Digester digester, String prefix, String parentMethod) {
+    digester.addObjectCreate(prefix, RelatedProject.class);
+    digester.addCallMethod(prefix, "setIdentifier", 1);
+    digester.addCallParam(prefix, 0, "id");
+    digester.addBeanPropertySetter(prefix + "/title", "title");
+    digester.addBeanPropertySetter(prefix + "/abstract", "abstract");
 
     digester.addSetNext(prefix, parentMethod);
   }

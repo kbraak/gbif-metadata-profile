@@ -20,6 +20,7 @@ import org.gbif.api.model.registry.Identifier;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.KeywordCollection;
 import org.gbif.api.model.registry.eml.ProjectAward;
+import org.gbif.api.model.registry.eml.RelatedProject;
 import org.gbif.api.model.registry.eml.curatorial.CuratorialUnitComposite;
 import org.gbif.api.model.registry.eml.temporal.DateRange;
 import org.gbif.api.model.registry.eml.temporal.SingleDate;
@@ -1257,6 +1258,17 @@ public class DatasetEmlParserTest {
     assertEquals("University 2", award2.getFunderName());
     assertEquals("Funding title 2", award2.getTitle());
     assertTrue(award2.getFunderIdentifiers().isEmpty());
+
+    // Related projects
+    assertEquals(2, dataset.getProject().getRelatedProjects().size());
+    RelatedProject relatedProject1 = dataset.getProject().getRelatedProjects().get(0);
+    assertNull(relatedProject1.getIdentifier());
+    assertEquals("Related project 1", relatedProject1.getTitle());
+    assertEquals("Description of the first related project", relatedProject1.getAbstract());
+    RelatedProject relatedProject2 = dataset.getProject().getRelatedProjects().get(1);
+    assertEquals("RP-2", relatedProject2.getIdentifier());
+    assertEquals("Related project 2", relatedProject2.getTitle());
+    assertNull(relatedProject2.getAbstract());
 
     // Multiple collections
     List<Collection> collections = dataset.getCollections();

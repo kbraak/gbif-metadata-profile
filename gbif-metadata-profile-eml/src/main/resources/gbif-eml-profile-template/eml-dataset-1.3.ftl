@@ -363,6 +363,14 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                         </description>
                     </designDescription>
                 </#if>
+                <#list dataset.project.relatedProjects as relatedProject>
+                    <relatedProject <#if relatedProject.identifier?has_content>id="${relatedProject.identifier}"</#if>>
+                        <title>${relatedProject.title}</title>
+                        <#if relatedProject.abstract?has_content>
+                            <abstract>${relatedProject.abstract}</abstract>
+                        </#if>
+                    </relatedProject>
+                </#list>
             </project>
         </#if>
     </dataset>

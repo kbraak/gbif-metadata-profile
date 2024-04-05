@@ -416,6 +416,13 @@
           </para>
         </description>
       </designDescription>
+      <relatedProject>
+        <title>Related project 1</title>
+        <abstract>Description of the first related project</abstract>
+      </relatedProject>
+      <relatedProject id="RP-2">
+        <title>Related project 2</title>
+      </relatedProject>
     </project>
   </dataset>
   <additionalMetadata>
