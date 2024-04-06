@@ -211,9 +211,7 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/maintenanceUpdateFrequency", "maintenanceUpdateFrequency");
     addMaintenanceChangeHistoryRules(
-        digester,
-        "eml/dataset/maintenance/changeHistory",
-        "addMaintenanceChange");
+        digester, "eml/dataset/maintenance/changeHistory", "addMaintenanceChange");
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
 
     // License
@@ -348,7 +346,8 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addSetNext(prefix, parentMethod);
   }
 
-  private void addMaintenanceChangeHistoryRules(Digester digester, String prefix, String parentMethod) {
+  private void addMaintenanceChangeHistoryRules(
+      Digester digester, String prefix, String parentMethod) {
     digester.addObjectCreate(prefix, MaintenanceChange.class);
 
     digester.addBeanPropertySetter(prefix + "/changeScope", "changeScope");
