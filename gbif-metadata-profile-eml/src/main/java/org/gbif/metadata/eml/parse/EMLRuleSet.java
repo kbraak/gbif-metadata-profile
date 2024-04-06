@@ -17,6 +17,7 @@ import org.gbif.api.model.common.InterpretedEnum;
 import org.gbif.api.model.registry.Citation;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Identifier;
+import org.gbif.api.model.registry.MaintenanceChange;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.DataDescription;
 import org.gbif.api.model.registry.eml.KeywordCollection;
@@ -209,6 +210,10 @@ public class EMLRuleSet extends RuleSetBase {
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/maintenanceUpdateFrequency", "maintenanceUpdateFrequency");
+    addMaintenanceChangeHistoryRules(
+        digester,
+        "eml/dataset/maintenance/changeHistory",
+        "addMaintenanceChange");
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
 
     // License
@@ -340,6 +345,17 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addBeanPropertySetter(prefix + "/address/postalCode", "postalCode");
     digester.addBeanPropertySetter(prefix + "/address/country", "country");
     digester.addCallMethod(prefix + "/address/deliveryPoint", "addAddress", 0);
+    digester.addSetNext(prefix, parentMethod);
+  }
+
+  private void addMaintenanceChangeHistoryRules(Digester digester, String prefix, String parentMethod) {
+    digester.addObjectCreate(prefix, MaintenanceChange.class);
+
+    digester.addBeanPropertySetter(prefix + "/changeScope", "changeScope");
+    digester.addBeanPropertySetter(prefix + "/oldValue", "oldValue");
+    digester.addBeanPropertySetter(prefix + "/changeDate", "changeDate");
+    digester.addBeanPropertySetter(prefix + "/comment", "comment");
+
     digester.addSetNext(prefix, parentMethod);
   }
 

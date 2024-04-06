@@ -17,6 +17,7 @@ import org.gbif.api.model.common.DOI;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Dataset;
 import org.gbif.api.model.registry.Identifier;
+import org.gbif.api.model.registry.MaintenanceChange;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.KeywordCollection;
 import org.gbif.api.model.registry.eml.ProjectAward;
@@ -48,6 +49,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -1095,6 +1098,20 @@ public class DatasetEmlParserTest {
 
     assertEquals(MaintenanceUpdateFrequency.UNKNOWN, dataset.getMaintenanceUpdateFrequency());
     assertEquals("Data are updated in uneven intervals.", dataset.getMaintenanceDescription());
+    List<MaintenanceChange> maintenanceChangeHistory = dataset.getMaintenanceChangeHistory();
+    assertEquals(2, maintenanceChangeHistory.size());
+    MaintenanceChange maintenanceChange1 = maintenanceChangeHistory.get(0);
+    assertEquals("Exact scope change", maintenanceChange1.getChangeScope());
+    assertEquals(MaintenanceUpdateFrequency.ANNUALLY, maintenanceChange1.getOldValue());
+    assertNotNull(maintenanceChange1.getChangeDate());
+    assertEquals("Fri Apr 05 02:00:00 CEST 2024", maintenanceChange1.getChangeDate().toString());
+    assertEquals("Maintenance update frequency update comment 1", maintenanceChange1.getComment());
+    MaintenanceChange maintenanceChange2 = maintenanceChangeHistory.get(1);
+    assertEquals("Scope", maintenanceChange2.getChangeScope());
+    assertEquals(MaintenanceUpdateFrequency.BIANNUALLY, maintenanceChange2.getOldValue());
+    assertNotNull(maintenanceChange2.getChangeDate());
+    assertEquals("Wed Jun 25 02:00:00 CEST 2014", maintenanceChange2.getChangeDate().toString());
+    assertNull(maintenanceChange2.getComment());
 
     List<Contact> contactList = dataset.getContacts();
     assertEquals(6, contactList.size());

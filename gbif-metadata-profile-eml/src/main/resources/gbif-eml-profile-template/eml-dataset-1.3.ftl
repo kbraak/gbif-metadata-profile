@@ -141,6 +141,9 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <alternateIdentifier>${altid.identifier}</alternateIdentifier>
             </#if>
         </#list>
+        <#if dataset.shortName?has_content>
+            <shortName>${dataset.shortName}</shortName>
+        </#if>
         <title>${dataset.title!}</title>
         <#-- The creators are the persons who created the resource (not necessarily the author of this metadata about the resource). -->
         <#list eml.getCreators() as creator>
@@ -280,6 +283,16 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                     <para><#if dataset.maintenanceDescription?has_content>${dataset.maintenanceDescription}</#if></para>
                 </description>
                 <maintenanceUpdateFrequency>${maintenanceUpdateFrequencyEmlValue}</maintenanceUpdateFrequency>
+                <#list dataset.maintenanceChangeHistory! as change>
+                    <changeHistory>
+                        <changeScope>${change.changeScope!}</changeScope>
+                        <oldValue>${change.oldValue!}</oldValue>
+                        <changeDate>${change.changeDate!?date?string["yyyy-MM-dd"]}</changeDate>
+                        <#if change.comment?has_content>
+                            <comment>${change.comment}</comment>
+                        </#if>
+                    </changeHistory>
+                </#list>
             </maintenance>
         </#if>
         <#-- Current primary contacts for the dataset. The creator of the resource might be dead, left the organisation or doesnt want to be bothered. -->
