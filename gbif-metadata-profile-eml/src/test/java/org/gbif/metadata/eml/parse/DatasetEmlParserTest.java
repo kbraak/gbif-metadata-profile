@@ -1374,62 +1374,65 @@ public class DatasetEmlParserTest {
     assertEquals("The purpose of this dataset.", dataset.getPurpose());
 
     // introduction, gettingStarted, acknowledgements
-    String expectedIntroduction = "<p>An introduction goes here.</p>\n" +
-        "      <p>It can include multiple paragraphs. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought.</p>\n" +
-        "      <p>Text can also cite other works, such as [@jones_2001], in which case the associated key must be present\n" +
-        "      as either the citation identifier in a `bibtex` element in the EML document, or as the `id` attribute on\n" +
-        "      one of the `citation` elements in the EML document.  These identifiers must be unique across the document.  Tools\n" +
-        "      such as Pandoc will readily convert these citations and citation entries into various formats, including HTML, PDF,\n" +
-        "        and others.</p>\n" +
-        "      <p>\n" +
-        "        And bulleted lists are also supported:\n" +
-        "        <ul>\n" +
-        "          <li><p>Science</p></li>\n" +
-        "          <li><p>Engineering</p></li>\n" +
-        "          <li><p>Math</p></li>\n" +
-        "        </ul>\n" +
-        "      </p>\n" +
-        "      <p>\n" +
-        "        It can also include equations:\n" +
-        "        <code>\n" +
-        "        $$\\left( x + a \\right)^{n} = \\sum_{k = 0}^{n}{\\left( \\frac{n}{k} \\right)x^{k}a^{n - k}}$$\n" +
-        "        </code>\n" +
-        "      </p>\n" +
-        "      <p>\n" +
-        "        Plus, it can include all of the other features of [Github Flavored Markdown (GFM)](https://github.github.com/gfm/).\n" +
-        "      </p>";
+    String expectedIntroduction =
+        "<p>An introduction goes here.</p>\n"
+            + "      <p>It can include multiple paragraphs. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought.</p>\n"
+            + "      <p>Text can also cite other works, such as [@jones_2001], in which case the associated key must be present\n"
+            + "      as either the citation identifier in a `bibtex` element in the EML document, or as the `id` attribute on\n"
+            + "      one of the `citation` elements in the EML document.  These identifiers must be unique across the document.  Tools\n"
+            + "      such as Pandoc will readily convert these citations and citation entries into various formats, including HTML, PDF,\n"
+            + "        and others.</p>\n"
+            + "      <p>\n"
+            + "        And bulleted lists are also supported:\n"
+            + "        <ul>\n"
+            + "          <li><p>Science</p></li>\n"
+            + "          <li><p>Engineering</p></li>\n"
+            + "          <li><p>Math</p></li>\n"
+            + "        </ul>\n"
+            + "      </p>\n"
+            + "      <p>\n"
+            + "        It can also include equations:\n"
+            + "        <code>\n"
+            + "        $$\\left( x + a \\right)^{n} = \\sum_{k = 0}^{n}{\\left( \\frac{n}{k} \\right)x^{k}a^{n - k}}$$\n"
+            + "        </code>\n"
+            + "      </p>\n"
+            + "      <p>\n"
+            + "        Plus, it can include all of the other features of [Github Flavored Markdown (GFM)](https://github.github.com/gfm/).\n"
+            + "      </p>";
     assertEquals(
         StringUtils.deleteWhitespace(expectedIntroduction),
         StringUtils.deleteWhitespace(dataset.getIntroduction()));
 
-    String expectedGettingStarted = "<div>\n" +
-        "        <p>Some intro text in the getting started, then break into subsections.</p>\n" +
-        "        <div>\n" +
-        "          <h1>Level 2 heading</h1>\n" +
-        "          <p>We use level 2 heading because Level 1 would be at the same level as the main sections of the paper.</p>\n" +
-        "        </div>\n" +
-        "        <div>\n" +
-        "          <h1>Another level 2 heading</h1>\n" +
-        "          <p>With some information</p>\n" +
-        "        </div>\n" +
-        "      </div>";
+    String expectedGettingStarted =
+        "<div>\n"
+            + "        <p>Some intro text in the getting started, then break into subsections.</p>\n"
+            + "        <div>\n"
+            + "          <h1>Level 2 heading</h1>\n"
+            + "          <p>We use level 2 heading because Level 1 would be at the same level as the main sections of the paper.</p>\n"
+            + "        </div>\n"
+            + "        <div>\n"
+            + "          <h1>Another level 2 heading</h1>\n"
+            + "          <p>With some information</p>\n"
+            + "        </div>\n"
+            + "      </div>";
     assertEquals(
         StringUtils.deleteWhitespace(expectedGettingStarted),
         StringUtils.deleteWhitespace(dataset.getGettingStarted()));
 
-    String expectedAcknowledgements = "<p>Many thanks to the field staff and volunteers involved in collecting and " +
-        "compiling data on swallow breeding phenology and performance (in alphabetical order): E. Beaton, T. Bryant, " +
-        "L. Burke, M, Courtenay, B. Crosby, D. Farrar, S. Lau, A. MacDonald, H. Mann, A. McKeen, D. Nickerson, " +
-        "N. Sobhani, and staff from Environment and Climate Change Canada. In addition, we would like to thank all " +
-        "the volunteers who contributed to the Maritime Nest Records Scheme. We also thank all the private landowners, " +
-        "Acadia University, Ducks Unlimited Canada, Environment and Climate Change Canada, and Parks Canada for " +
-        "permitting access to their properties for field research. Special thanks to P. Thomas and B. Whittam at " +
-        "Environment and Climate Change Canada for supporting this work, A. Smith at Environment and Climate Change " +
-        "Canada for helpful discussions on BBS trends, and to A. Horn, A. Smith, J. Sauer, and two anonymous reviewers " +
-        "for providing helpful comments on earlier drafts. Funding was provided by (in alphabetical order) the Canadian " +
-        "Wildlife Federation, Environment and Climate Change Canada, the Natural Science and Engineering Research " +
-        "Council of Canada, New Brunswick Wildlife Trust Fund, Nova Scotia Habitat Conservation Fund, and Wildlife " +
-        "Preservation Canada. This represents Bowdoin Scientific Station contribution no. 2589.</p>";
+    String expectedAcknowledgements =
+        "<p>Many thanks to the field staff and volunteers involved in collecting and "
+            + "compiling data on swallow breeding phenology and performance (in alphabetical order): E. Beaton, T. Bryant, "
+            + "L. Burke, M, Courtenay, B. Crosby, D. Farrar, S. Lau, A. MacDonald, H. Mann, A. McKeen, D. Nickerson, "
+            + "N. Sobhani, and staff from Environment and Climate Change Canada. In addition, we would like to thank all "
+            + "the volunteers who contributed to the Maritime Nest Records Scheme. We also thank all the private landowners, "
+            + "Acadia University, Ducks Unlimited Canada, Environment and Climate Change Canada, and Parks Canada for "
+            + "permitting access to their properties for field research. Special thanks to P. Thomas and B. Whittam at "
+            + "Environment and Climate Change Canada for supporting this work, A. Smith at Environment and Climate Change "
+            + "Canada for helpful discussions on BBS trends, and to A. Horn, A. Smith, J. Sauer, and two anonymous reviewers "
+            + "for providing helpful comments on earlier drafts. Funding was provided by (in alphabetical order) the Canadian "
+            + "Wildlife Federation, Environment and Climate Change Canada, the Natural Science and Engineering Research "
+            + "Council of Canada, New Brunswick Wildlife Trust Fund, Nova Scotia Habitat Conservation Fund, and Wildlife "
+            + "Preservation Canada. This represents Bowdoin Scientific Station contribution no. 2589.</p>";
     assertEquals(
         StringUtils.deleteWhitespace(expectedAcknowledgements),
         StringUtils.deleteWhitespace(dataset.getAcknowledgements()));

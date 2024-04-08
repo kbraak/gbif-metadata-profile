@@ -208,7 +208,8 @@ public class EMLRuleSet extends RuleSetBase {
 
     addDocBookRule(digester, "eml/dataset/introduction", "setIntroduction", "introduction");
     addDocBookRule(digester, "eml/dataset/gettingStarted", "setGettingStarted", "gettingStarted");
-    addDocBookRule(digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
+    addDocBookRule(
+        digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
 
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
@@ -573,7 +574,8 @@ public class EMLRuleSet extends RuleSetBase {
         "eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage");
   }
 
-  private void addDocBookRule(Digester digester, String pattern, String method, String wrapperElement) {
+  private void addDocBookRule(
+      Digester digester, String pattern, String method, String wrapperElement) {
     try {
       digester.addRule(pattern, new SetSerializedNodeRule(method, wrapperElement));
     } catch (ParserConfigurationException e) {
@@ -591,7 +593,8 @@ public class EMLRuleSet extends RuleSetBase {
       super(Node.ELEMENT_NODE);
     }
 
-    public SetSerializedNodeRule(String method, String wrapperElement) throws ParserConfigurationException {
+    public SetSerializedNodeRule(String method, String wrapperElement)
+        throws ParserConfigurationException {
       this.method = method;
       this.wrapperElement = wrapperElement;
     }
@@ -625,7 +628,9 @@ public class EMLRuleSet extends RuleSetBase {
 
     private String unwrapParentTag(String str) {
       return StringUtils.replaceEach(
-          str, new String[] {"<" + wrapperElement + ">", "</" + wrapperElement + ">"}, new String[] {"", ""});
+          str,
+          new String[] {"<" + wrapperElement + ">", "</" + wrapperElement + ">"},
+          new String[] {"", ""});
     }
 
     private String convertDocBookToHtml(String docbookXmlString) {
