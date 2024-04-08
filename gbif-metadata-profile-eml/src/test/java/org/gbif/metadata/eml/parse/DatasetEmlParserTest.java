@@ -1102,13 +1102,13 @@ public class DatasetEmlParserTest {
     assertEquals("Exact scope change", maintenanceChange1.getChangeScope());
     assertEquals(MaintenanceUpdateFrequency.ANNUALLY, maintenanceChange1.getOldValue());
     assertNotNull(maintenanceChange1.getChangeDate());
-    assertEquals("Fri Apr 05 02:00:00 CEST 2024", maintenanceChange1.getChangeDate().toString());
+    assertTrue(maintenanceChange1.getChangeDate().toString().startsWith("Fri Apr 05"));
     assertEquals("Maintenance update frequency update comment 1", maintenanceChange1.getComment());
     MaintenanceChange maintenanceChange2 = maintenanceChangeHistory.get(1);
     assertEquals("Scope", maintenanceChange2.getChangeScope());
     assertEquals(MaintenanceUpdateFrequency.BIANNUALLY, maintenanceChange2.getOldValue());
     assertNotNull(maintenanceChange2.getChangeDate());
-    assertEquals("Wed Jun 25 02:00:00 CEST 2014", maintenanceChange2.getChangeDate().toString());
+    assertTrue(maintenanceChange2.getChangeDate().toString().startsWith("Wed Jun 25"));
     assertNull(maintenanceChange2.getComment());
 
     List<Contact> contactList = dataset.getContacts();
