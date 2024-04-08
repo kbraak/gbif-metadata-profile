@@ -1280,10 +1280,19 @@ public class DatasetEmlParserTest {
     assertNull(relatedProject1.getIdentifier());
     assertEquals("Related project 1", relatedProject1.getTitle());
     assertEquals("Description of the first related project", relatedProject1.getAbstract());
+    assertFalse(relatedProject1.getContacts().isEmpty());
+    Contact relatedProjectContact1_1 = relatedProject1.getContacts().get(0);
+    assertEquals(ContactType.PRINCIPAL_INVESTIGATOR, relatedProjectContact1_1.getType());
+    assertEquals("Org 1", relatedProjectContact1_1.getOrganization());
+
     RelatedProject relatedProject2 = dataset.getProject().getRelatedProjects().get(1);
     assertEquals("RP-2", relatedProject2.getIdentifier());
     assertEquals("Related project 2", relatedProject2.getTitle());
     assertNull(relatedProject2.getAbstract());
+    Contact relatedProjectContact2_1 = relatedProject2.getContacts().get(0);
+    assertEquals(ContactType.ORIGINATOR, relatedProjectContact2_1.getType());
+    assertEquals("Personnel 1", relatedProjectContact2_1.getFirstName());
+    assertEquals("Edgar", relatedProjectContact2_1.getLastName());
 
     // Multiple collections
     List<Collection> collections = dataset.getCollections();

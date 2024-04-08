@@ -429,10 +429,21 @@
       </designDescription>
       <relatedProject>
         <title>Related project 1</title>
+        <personnel>
+          <organizationName>Org 1</organizationName>
+          <role>principalInvestigator</role>
+        </personnel>
         <abstract>Description of the first related project</abstract>
       </relatedProject>
       <relatedProject id="RP-2">
         <title>Related project 2</title>
+        <personnel>
+          <individualName>
+            <givenName>Personnel 1</givenName>
+            <surName>Edgar</surName>
+          </individualName>
+          <role>originator</role>
+        </personnel>
       </relatedProject>
     </project>
   </dataset>
