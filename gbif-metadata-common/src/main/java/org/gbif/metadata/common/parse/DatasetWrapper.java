@@ -370,6 +370,18 @@ public class DatasetWrapper {
     target.setDescription(description);
   }
 
+  public void setIntroduction(String introduction) {
+    target.setIntroduction(introduction);
+  }
+
+  public void setGettingStarted(String gettingStarted) {
+    target.setGettingStarted(gettingStarted);
+  }
+
+  public void setAcknowledgements(String acknowledgements) {
+    target.setAcknowledgements(acknowledgements);
+  }
+
   public void setGeographicCoverageDescription(String geographicCoverageDescription) {
     target.setGeographicCoverageDescription(geographicCoverageDescription);
   }

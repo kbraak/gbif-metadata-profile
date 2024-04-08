@@ -35,6 +35,7 @@ import java.util.Objects;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import freemarker.template.Configuration;
@@ -216,19 +217,28 @@ public class EMLWriter {
       return new ParagraphContainer(dataset.getDescription()).getParagraphs();
     }
 
-    // Description with all HTML tags replaced by DocBook analogues
-    public String getDocBookDescription() {
-      if (dataset.getDescription() == null) {
-        return null;
+    // Value with all HTML tags replaced by DocBook analogues
+    public String getDocBookField(String fieldName) {
+      String result = null;
+
+      try {
+        String value = BeanUtils.getProperty(dataset, fieldName);
+
+        if (value != null) {
+          result = replaceDocBookElements(value);
+        }
+      } catch (Exception e) {
+        // TODO log exception
       }
 
-      // Replace links
+      return result;
+    }
+
+    private String replaceDocBookElements(String value) {
       String htmlStringWithLinksReplaces =
-          dataset
-              .getDescription()
-              .replaceAll(
-                  "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
-                  "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
+          value.replaceAll(
+              "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
+              "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
 
       // Perform replacements
       return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);

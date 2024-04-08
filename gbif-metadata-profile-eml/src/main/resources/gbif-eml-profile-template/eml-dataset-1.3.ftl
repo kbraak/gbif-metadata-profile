@@ -174,7 +174,7 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
         <#if eml.description?has_content>
             <abstract>
                 <#noescape>
-                ${eml.docBookDescription}
+                ${eml.getDocBookField("description")}
                 </#noescape>
             </abstract>
         </#if>
@@ -275,6 +275,21 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
             <purpose>
                 <para>${dataset.purpose}</para>
             </purpose>
+        </#if>
+        <#if dataset.introduction?has_content>
+            <#noescape>
+            <introduction>${eml.getDocBookField("introduction")}</introduction>
+            </#noescape>
+        </#if>
+        <#if dataset.gettingStarted?has_content>
+            <#noescape>
+            <gettingStarted>${eml.getDocBookField("gettingStarted")}</gettingStarted>
+            </#noescape>
+        </#if>
+        <#if dataset.acknowledgements?has_content>
+            <#noescape>
+            <acknowledgements>${eml.getDocBookField("acknowledgements")}</acknowledgements>
+            </#noescape>
         </#if>
         <#assign maintenanceUpdateFrequencyEmlValue = maintenanceUpdateFrequencyToEmlValue(dataset.maintenanceUpdateFrequency!)/>
         <#if maintenanceUpdateFrequencyEmlValue?has_content>

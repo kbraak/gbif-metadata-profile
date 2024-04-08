@@ -183,7 +183,7 @@ public class EMLRuleSet extends RuleSetBase {
         "eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoURL");
 
     // DocBook description
-    addDescriptionRule(digester);
+    addDocBookRule(digester, "eml/dataset/abstract", "setDescription", "abstract");
 
     // Citation
     addCitationRules(digester, "eml/additionalMetadata/metadata/gbif/citation", "setCitation");
@@ -205,6 +205,10 @@ public class EMLRuleSet extends RuleSetBase {
     addContactRules(digester, "eml/dataset/contact", "addPreferredAdministrativeContact");
 
     digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
+
+    addDocBookRule(digester, "eml/dataset/introduction", "setIntroduction", "introduction");
+    addDocBookRule(digester, "eml/dataset/gettingStarted", "setGettingStarted", "gettingStarted");
+    addDocBookRule(digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
 
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
@@ -569,9 +573,9 @@ public class EMLRuleSet extends RuleSetBase {
         "eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage");
   }
 
-  private void addDescriptionRule(Digester digester) {
+  private void addDocBookRule(Digester digester, String pattern, String method, String wrapperElement) {
     try {
-      digester.addRule("eml/dataset/abstract", new SetSerializedNodeRule("setDescription"));
+      digester.addRule(pattern, new SetSerializedNodeRule(method, wrapperElement));
     } catch (ParserConfigurationException e) {
       // TODO log error, do something
     }
@@ -581,13 +585,15 @@ public class EMLRuleSet extends RuleSetBase {
   public static class SetSerializedNodeRule extends NodeCreateRule {
 
     private String method;
+    private String wrapperElement;
 
     public SetSerializedNodeRule() throws ParserConfigurationException {
       super(Node.ELEMENT_NODE);
     }
 
-    public SetSerializedNodeRule(String method) throws ParserConfigurationException {
+    public SetSerializedNodeRule(String method, String wrapperElement) throws ParserConfigurationException {
       this.method = method;
+      this.wrapperElement = wrapperElement;
     }
 
     @Override
@@ -619,7 +625,7 @@ public class EMLRuleSet extends RuleSetBase {
 
     private String unwrapParentTag(String str) {
       return StringUtils.replaceEach(
-          str, new String[] {"<abstract>", "</abstract>"}, new String[] {"", ""});
+          str, new String[] {"<" + wrapperElement + ">", "</" + wrapperElement + ">"}, new String[] {"", ""});
     }
 
     private String convertDocBookToHtml(String docbookXmlString) {
