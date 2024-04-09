@@ -215,6 +215,15 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </online>
             </distribution>
         </#if>
+        <#list dataset.endpoints as endpoint>
+            <#if endpoint.type?? && endpoint.type == "DWC_ARCHIVE" && endpoint.url??>
+                <distribution scope="document">
+                    <online>
+                        <url function="download">${endpoint.url}</url>
+                    </online>
+                </distribution>
+            </#if>
+        </#list>
         <#if dataset.geographicCoverages?has_content || dataset.taxonomicCoverages?has_content || eml.singleDateAndDateRangeCoverages?has_content>
             <coverage>
                 <#list dataset.geographicCoverages![] as geocoverage>

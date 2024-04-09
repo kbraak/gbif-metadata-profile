@@ -86,6 +86,7 @@ public class DatasetWrapper {
   private static final Pattern PACKAGE_ID_VERSION_PATTERN =
       Pattern.compile(
           "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/v(\\d+.\\d+)");
+  private static final String DISTRIBUTION_INFORMATION = "information";
   private final Dataset target = new Dataset();
   private final ParagraphContainer description = new ParagraphContainer();
 
@@ -392,6 +393,12 @@ public class DatasetWrapper {
 
   public void setHomepage(URI homepage) throws URISyntaxException {
     target.setHomepage(homepage);
+  }
+
+  public void setDistribution(URI uri, String function) {
+    if (DISTRIBUTION_INFORMATION.equals(function)) {
+      target.setHomepage(uri);
+    }
   }
 
   public void setIdentifiers(List<Identifier> identifiers) {

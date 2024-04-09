@@ -16,6 +16,7 @@ package org.gbif.metadata.eml.parse;
 import org.gbif.api.model.common.DOI;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Dataset;
+import org.gbif.api.model.registry.Endpoint;
 import org.gbif.api.model.registry.Identifier;
 import org.gbif.api.model.registry.MaintenanceChange;
 import org.gbif.api.model.registry.eml.Collection;
@@ -29,6 +30,7 @@ import org.gbif.api.model.registry.eml.temporal.VerbatimTimePeriod;
 import org.gbif.api.model.registry.eml.temporal.VerbatimTimePeriodType;
 import org.gbif.api.vocabulary.ContactType;
 import org.gbif.api.vocabulary.Country;
+import org.gbif.api.vocabulary.EndpointType;
 import org.gbif.api.vocabulary.IdentifierType;
 import org.gbif.api.vocabulary.Language;
 import org.gbif.api.vocabulary.License;
@@ -1057,6 +1059,39 @@ public class DatasetEmlParserTest {
   }
 
   /**
+   * New element /eml/dataset/distribution/online/url@download
+   * Ignored when parsing EML XML, populated from dataset endpoint
+   */
+  @Test
+  public void testDownloadDistribution() {
+    try (InputStream is = FileUtils.classpathStream("eml-metadata-profile/sample10-v1.3.xml")) {
+      Dataset dataset = DatasetEmlParser.parse(is);
+
+      // add endpoint manually, needed for distribution@download
+      Endpoint dwcaEndpoint = new Endpoint();
+      dwcaEndpoint.setType(EndpointType.DWC_ARCHIVE);
+      dwcaEndpoint.setUrl(URI.create("https://ipt.gbif.org/archive.do?r=res"));
+      dataset.addEndpoint(dwcaEndpoint);
+
+      // write again to eml file and read again
+      StringWriter writer = new StringWriter();
+      EMLWriter emlWriter = EMLWriter.newInstance(true, true);
+      emlWriter.writeTo(dataset, writer);
+
+      final String eml = writer.toString();
+      String expectedDistribution = "<distribution scope=\"document\">\n" +
+          "      <online>\n" +
+          "        <url function=\"download\">https://ipt.gbif.org/archive.do?r=res</url>\n" +
+          "      </online>\n" +
+          "    </distribution>";
+
+      assertTrue(StringUtils.deleteWhitespace(eml).contains(StringUtils.deleteWhitespace(expectedDistribution)));
+    } catch (Exception e) {
+      fail();
+    }
+  }
+
+  /**
    * Roundtripping test for GBIF Metadata Profile version 1.3
    */
   @Test
@@ -1096,6 +1131,9 @@ public class DatasetEmlParserTest {
 
     assertEquals("Sample Metadata RLS", dataset.getTitle());
     assertEquals("test-1_3", dataset.getShortName());
+
+    assertNotNull(dataset.getHomepage());
+    assertEquals("http://reeflifesurvey.com/", dataset.getHomepage().toString());
 
     assertEquals(MaintenanceUpdateFrequency.UNKNOWN, dataset.getMaintenanceUpdateFrequency());
     assertEquals("Data are updated in uneven intervals.", dataset.getMaintenanceDescription());

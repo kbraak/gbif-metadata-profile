@@ -147,6 +147,11 @@
         <url function="information">http://reeflifesurvey.com/</url>
       </online>
     </distribution>
+    <distribution scope="document">
+      <online>
+        <url function="download">https://ipt.gbif.org/archive.do?r=res</url>
+      </online>
+    </distribution>
     <coverage>
       <geographicCoverage>
         <geographicDescription>The Reef Life Survey reef fish dataset covers more than 2,500 sites in coral and rocky
