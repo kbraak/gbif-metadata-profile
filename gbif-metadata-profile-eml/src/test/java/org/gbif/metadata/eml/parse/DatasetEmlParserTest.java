@@ -1079,13 +1079,16 @@ public class DatasetEmlParserTest {
       emlWriter.writeTo(dataset, writer);
 
       final String eml = writer.toString();
-      String expectedDistribution = "<distribution scope=\"document\">\n" +
-          "      <online>\n" +
-          "        <url function=\"download\">https://ipt.gbif.org/archive.do?r=res</url>\n" +
-          "      </online>\n" +
-          "    </distribution>";
+      String expectedDistribution =
+          "<distribution scope=\"document\">\n"
+              + "      <online>\n"
+              + "        <url function=\"download\">https://ipt.gbif.org/archive.do?r=res</url>\n"
+              + "      </online>\n"
+              + "    </distribution>";
 
-      assertTrue(StringUtils.deleteWhitespace(eml).contains(StringUtils.deleteWhitespace(expectedDistribution)));
+      assertTrue(
+          StringUtils.deleteWhitespace(eml)
+              .contains(StringUtils.deleteWhitespace(expectedDistribution)));
     } catch (Exception e) {
       fail();
     }

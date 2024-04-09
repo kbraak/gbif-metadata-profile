@@ -184,7 +184,8 @@ public class EMLRuleSet extends RuleSetBase {
 
     // Distribution
     Class<?>[] setDistributionParamTypes = {URI.class, String.class};
-    digester.addCallMethod("eml/dataset/distribution/online/url", "setDistribution", 2, setDistributionParamTypes);
+    digester.addCallMethod(
+        "eml/dataset/distribution/online/url", "setDistribution", 2, setDistributionParamTypes);
     digester.addCallParam("eml/dataset/distribution/online/url", 0);
     digester.addCallParam("eml/dataset/distribution/online/url", 1, "function");
 
