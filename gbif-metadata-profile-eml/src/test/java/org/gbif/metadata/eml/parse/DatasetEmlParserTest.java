@@ -1118,6 +1118,7 @@ public class DatasetEmlParserTest {
     Contact creator1 = contactList.get(0);
     assertTrue(creator1.isPrimary());
     assertEquals(ContactType.ORIGINATOR, creator1.getType());
+    assertEquals("Mr.", creator1.getSalutation());
     assertEquals("Creator 1", creator1.getFirstName());
     assertEquals("Edgar", creator1.getLastName());
     assertNotNull(creator1.getUserId());
@@ -1136,6 +1137,7 @@ public class DatasetEmlParserTest {
     Contact party1 = contactList.get(2);
     assertFalse(party1.isPrimary());
     assertEquals(ContactType.PRINCIPAL_INVESTIGATOR, party1.getType());
+    assertEquals("Dr.", party1.getSalutation());
     assertEquals("Party 1", party1.getFirstName());
     assertEquals("Edgar", party1.getLastName());
     assertNotNull(party1.getUserId());

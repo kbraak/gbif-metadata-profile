@@ -15,6 +15,7 @@
     <#macro contact ct withRole=false>
         <#if ct.computeCompleteName()?has_content>
             <individualName>
+                <@elem "salutation" ct.salutation! />
                 <#if ct.lastName?has_content>
                     <@elem "givenName", ct.firstName! />
                     <surName>${ct.lastName!}</surName>

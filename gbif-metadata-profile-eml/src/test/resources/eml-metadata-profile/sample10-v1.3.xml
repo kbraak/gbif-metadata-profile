@@ -12,6 +12,7 @@
     <title xml:lang="eng">Sample Metadata RLS</title>
     <creator>
       <individualName>
+        <salutation>Mr.</salutation>
         <givenName>Creator 1</givenName>
         <surName>Edgar</surName>
       </individualName>
@@ -50,6 +51,7 @@
     </creator>
     <associatedParty>
       <individualName>
+        <salutation>Dr.</salutation>
         <givenName>Party 1</givenName>
         <surName>Edgar</surName>
       </individualName>
