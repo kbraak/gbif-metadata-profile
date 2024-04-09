@@ -1094,6 +1094,9 @@ public class DatasetEmlParserTest {
     assertEquals(License.CC_BY_4_0, dataset.getLicense());
     assertNull(dataset.getRights());
 
+    assertEquals("Sample Metadata RLS", dataset.getTitle());
+    assertEquals("test-1_3", dataset.getShortName());
+
     assertEquals(MaintenanceUpdateFrequency.UNKNOWN, dataset.getMaintenanceUpdateFrequency());
     assertEquals("Data are updated in uneven intervals.", dataset.getMaintenanceDescription());
     List<MaintenanceChange> maintenanceChangeHistory = dataset.getMaintenanceChangeHistory();

@@ -170,6 +170,9 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addBeanPropertySetter("eml/dataset/alternateIdentifier", "type");
     digester.addSetNext("eml/dataset/alternateIdentifier", "addIdentifier");
 
+    // short name
+    digester.addBeanPropertySetter("eml/dataset/shortName", "shortName");
+
     // title (no language support in Dataset)
     digester.addBeanPropertySetter("eml/dataset/title", "title");
 

@@ -593,6 +593,10 @@ public class DatasetWrapper {
     target.setTitle(target.getTitle() != null ? target.getTitle() : Objects.requireNonNull(title));
   }
 
+  public void setShortName(String shortName) {
+    target.setShortName(shortName);
+  }
+
   public void setType(DatasetType type) {
     target.setType(type);
   }
