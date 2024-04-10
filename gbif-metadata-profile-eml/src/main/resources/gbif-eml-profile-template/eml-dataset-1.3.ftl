@@ -207,6 +207,21 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                     <para>This work is licensed under a <ulink url="${dataset.license.getLicenseUrl()}"><citetitle>${dataset.license.getLicenseTitle()} License</citetitle></ulink>.</para>
                 </#if>
             </intellectualRights>
+            <licensed>
+                <#if dataset.license.name() == "CC0_1_0">
+                    <licenseName>Creative Commons Zero v1.0 Universal</licenseName>
+                    <url>https://spdx.org/licenses/CC0-1.0.html</url>
+                    <identifier>CC0-1.0</identifier>
+                <#elseif dataset.license.name() == "CC_BY_4_0">
+                    <licenseName>Creative Commons Attribution 4.0 International</licenseName>
+                    <url>https://spdx.org/licenses/CC-BY-4.0.html</url>
+                    <identifier>CC-BY-4.0</identifier>
+                <#elseif dataset.license.name() == "CC_BY_NC_4_0">
+                    <licenseName>Creative Commons Attribution Non Commercial 4.0 International</licenseName>
+                    <url>https://spdx.org/licenses/CC-BY-NC-4.0.html</url>
+                    <identifier>CC-BY-NC-4.0</identifier>
+                </#if>
+            </licensed>
         </#if>
         <#if dataset.homepage?has_content>
             <distribution scope="document">
