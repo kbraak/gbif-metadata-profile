@@ -508,7 +508,7 @@ public class DatasetWrapper {
 
   /** Adds an empty methodStep to MethodStep List. */
   public void addMethodStep(ParagraphContainer para) {
-    if (para != null) {
+    if (para != null && !para.getParagraphs().isEmpty()) {
       target.getSamplingDescription().getMethodSteps().add(para.toString());
     }
   }
