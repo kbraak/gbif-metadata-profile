@@ -1,72 +1,4 @@
 <#escape x as x?xml>
-    <#macro agentBlock agent withRole=false>
-        <#if (agent.getLastName())?? || ((!(agent.getOrganisation())??) && (!(agent.getPosition())??))>
-            <individualName>
-                <#if (agent.getFirstName())??>
-                    <givenName>${agent.firstName}</givenName>
-                </#if>
-                <surName>${agent.lastName!}</surName>
-            </individualName>
-        </#if>
-        <#if (agent.getOrganisation())??>
-            <organizationName>${agent.organisation}</organizationName>
-        </#if>
-        <#if (agent.getPosition())??>
-            <positionName>${agent.position}</positionName>
-        </#if>
-        <#assign adr=agent.getAddress()/>
-        <#if (adr.getAddress())?has_content
-        || (adr.getCity())??
-        || (adr.getProvince())??
-        || (adr.getProvince())??
-        || (adr.getPostalCode())??
-        || (adr.getCountry())?? >
-            <address>
-                <#list adr.getAddress() as ad>
-                <#if ad?has_content >
-                    <deliveryPoint>${ad}</deliveryPoint>
-                </#if>
-                </#list>
-                <#if (adr.getCity())?? >
-                    <city>${adr.city}</city>
-                </#if>
-                <#if (adr.getProvince())?? >
-                    <administrativeArea>${adr.province}</administrativeArea>
-                </#if>
-                <#if (adr.getPostalCode())?? >
-                    <postalCode>${adr.postalCode}</postalCode>
-                </#if>
-                <#if (adr.getCountry())?? >
-                    <country>${adr.country}</country>
-                </#if>
-            </address>
-        </#if>
-        <#list agent.getPhone() as phone>
-            <#if phone??>
-                <phone>${phone}</phone>
-            </#if>
-        </#list>
-        <#list agent.getEmail() as email>
-            <#if email??>
-                <electronicMailAddress>${email}</electronicMailAddress>
-            </#if>
-        </#list>
-        <#list agent.getHomepage() as homepage>
-            <#if homepage??>
-                <onlineUrl>${homepage}</onlineUrl>
-            </#if>
-        </#list>
-        <#if (agent.userIds?size>0)>
-            <#list agent.userIds as userId>
-                <#if userId.identifier?has_content && userId.directory?has_content>
-                    <userId directory="${userId.directory}">${userId.identifier}</userId>
-                </#if>
-            </#list>
-        </#if>
-        <#if withRole && (agent.getRole())??>
-            <role>${agent.role!}</role>
-        </#if>
-    </#macro>
     <#macro xmlSchemaDateTime dt><#assign dt2=dt?datetime?string("yyyy-MM-dd'T'HH:mm:ss.SSSZ")/>${dt2?substring(0, dt2?length-2)}:${dt2?substring(dt2?length-2, dt2?length)}</#macro>
     <#assign DATEIsoFormat="yyyy-MM-dd"/>
 <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
@@ -74,7 +6,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif-uat.org/schema/eml-gbif-profile/1.3/eml.xsd"
          packageId="${eml.packageId}" system="http://gbif.org" scope="system"<#if (eml.metadataLanguage)??>
-xml:lang="${eml.metadataLanguage!}"</#if>>
+         xml:lang="${eml.metadataLanguage!}"</#if>>
     <dataset>
         <#list eml.getAlternateIdentifiers() as altid>
         <alternateIdentifier>${altid!}</alternateIdentifier>
@@ -85,16 +17,138 @@ xml:lang="${eml.metadataLanguage!}"</#if>>
         <#-- The creator is the person, organization, or position who created the resource (not necessarily the author of this metadata about the resource). -->
         <#if (eml.creators?size>0) >
         <#list eml.creators as creator>
-            <creator>
-                <@agentBlock agent=creator />
-            </creator>
+        <creator>
+            <#if (creator.getLastName())?? || ((!(creator.getOrganisation())??) && (!(creator.getPosition())??))>
+            <individualName>
+                <#if (creator.getFirstName())??>
+                <givenName>${creator.firstName}</givenName>
+                </#if>
+                <surName>${creator.lastName!}</surName>
+            </individualName>
+            </#if>
+            <#if (creator.getOrganisation())??>
+            <organizationName>${creator.organisation}</organizationName>
+            </#if>
+            <#if (creator.getPosition())??>
+            <positionName>${creator.position}</positionName>
+            </#if>
+            <#assign adr=creator.getAddress()/>
+            <#if (adr.getAddress())?has_content
+            || (adr.getCity())??
+            || (adr.getProvince())??
+            || (adr.getPostalCode())??
+            || (adr.getCountry())?? >
+            <address>
+                <#list adr.getAddress() as ad>
+                <#if ad?has_content >
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
+                </#list>
+                <#if (adr.getCity())?? >
+                <city>${adr.city}</city>
+                </#if>
+                <#if (adr.getProvince())?? >
+                <administrativeArea>${adr.province}</administrativeArea>
+                </#if>
+                <#if (adr.getPostalCode())?? >
+                <postalCode>${adr.postalCode}</postalCode>
+                </#if>
+                <#if (adr.getCountry())?? >
+                <country>${adr.country}</country>
+                </#if>
+            </address>
+            </#if>
+            <#list creator.getPhone() as phone>
+            <#if phone??>
+            <phone>${phone}</phone>
+            </#if>
+            </#list>
+            <#list creator.getEmail() as email>
+            <#if email??>
+            <electronicMailAddress>${email}</electronicMailAddress>
+            </#if>
+            </#list>
+            <#list creator.getHomepage() as homepage>
+            <#if homepage??>
+            <onlineUrl>${homepage}</onlineUrl>
+            </#if>
+            </#list>
+            <#if (creator.userIds?size>0)>
+            <#list creator.userIds as userId>
+            <#if userId.identifier?has_content && userId.directory?has_content>
+            <userId directory="${userId.directory}">${userId.identifier}</userId>
+            </#if>
+            </#list>
+            </#if>
+        </creator>
         </#list>
         </#if>
         <#-- The metadataProvider created documentation for the resource. -->
         <#if (eml.metadataProviders?size>0)>
         <#list eml.metadataProviders as metadataProvider>
         <metadataProvider>
-            <@agentBlock agent=metadataProvider />
+            <#if (metadataProvider.getLastName())?? || ((!(metadataProvider.getOrganisation())??) && (!(metadataProvider.getPosition())??))>
+            <individualName>
+                <#if (metadataProvider.getFirstName())??>
+                <givenName>${metadataProvider.firstName}</givenName>
+                </#if>
+                <surName>${metadataProvider.lastName!}</surName>
+            </individualName>
+            </#if>
+            <#if (metadataProvider.getOrganisation())??>
+            <organizationName>${metadataProvider.organisation}</organizationName>
+            </#if>
+            <#if (metadataProvider.getPosition())??>
+            <positionName>${metadataProvider.position}</positionName>
+            </#if>
+            <#assign adr=metadataProvider.getAddress()/>
+            <#if (adr.getAddress())?has_content
+            || (adr.getCity())??
+            || (adr.getProvince())??
+            || (adr.getPostalCode())??
+            || (adr.getCountry())?? >
+            <address>
+                <#list adr.getAddress() as ad>
+                <#if ad?has_content >
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
+                </#list>
+                <#if (adr.getCity())?? >
+                <city>${adr.city}</city>
+                </#if>
+                <#if (adr.getProvince())?? >
+                <administrativeArea>${adr.province}</administrativeArea>
+                </#if>
+                <#if (adr.getPostalCode())?? >
+                <postalCode>${adr.postalCode}</postalCode>
+                </#if>
+                <#if (adr.getCountry())?? >
+                <country>${adr.country}</country>
+                </#if>
+            </address>
+            </#if>
+            <#list metadataProvider.getPhone() as phone>
+            <#if phone??>
+            <phone>${phone}</phone>
+            </#if>
+            </#list>
+            <#list metadataProvider.getEmail() as email>
+            <#if email??>
+            <electronicMailAddress>${email}</electronicMailAddress>
+            </#if>
+            </#list>
+            <#list metadataProvider.getHomepage() as homepage>
+            <#if homepage??>
+            <onlineUrl>${homepage}</onlineUrl>
+            </#if>
+            </#list>
+            <#if (metadataProvider.userIds?size>0)>
+            <#list metadataProvider.userIds as userId>
+            <#if userId.identifier?has_content && userId.directory?has_content>
+            <userId directory="${userId.directory}">${userId.identifier}</userId>
+            </#if>
+            </#list>
+            </#if>
         </metadataProvider>
         </#list>
         </#if>
@@ -102,7 +156,71 @@ xml:lang="${eml.metadataLanguage!}"</#if>>
         <#if (eml.associatedParties?size > 0)>
         <#list eml.associatedParties as associatedParty>
         <associatedParty>
-            <@agentBlock agent=associatedParty withRole=true />
+            <#if (associatedParty.getLastName())?? || ((!(associatedParty.getOrganisation())??) && (!(associatedParty.getPosition())??))>
+            <individualName>
+                <#if (associatedParty.getFirstName())??>
+                <givenName>${associatedParty.firstName}</givenName>
+                </#if>
+                <surName>${associatedParty.lastName!}</surName>
+            </individualName>
+            </#if>
+            <#if (associatedParty.getOrganisation())??>
+            <organizationName>${associatedParty.organisation}</organizationName>
+            </#if>
+            <#if (associatedParty.getPosition())??>
+            <positionName>${associatedParty.position}</positionName>
+            </#if>
+            <#assign adr=associatedParty.getAddress()/>
+            <#if (adr.getAddress())?has_content
+            || (adr.getCity())??
+            || (adr.getProvince())??
+            || (adr.getPostalCode())??
+            || (adr.getCountry())?? >
+            <address>
+                <#list adr.getAddress() as ad>
+                <#if ad?has_content >
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
+                </#list>
+                <#if (adr.getCity())?? >
+                <city>${adr.city}</city>
+                </#if>
+                <#if (adr.getProvince())?? >
+                <administrativeArea>${adr.province}</administrativeArea>
+                </#if>
+                <#if (adr.getPostalCode())?? >
+                <postalCode>${adr.postalCode}</postalCode>
+                </#if>
+                <#if (adr.getCountry())?? >
+                <country>${adr.country}</country>
+                </#if>
+            </address>
+            </#if>
+            <#list associatedParty.getPhone() as phone>
+            <#if phone??>
+            <phone>${phone}</phone>
+            </#if>
+            </#list>
+            <#list associatedParty.getEmail() as email>
+            <#if email??>
+            <electronicMailAddress>${email}</electronicMailAddress>
+            </#if>
+            </#list>
+            <#list associatedParty.getHomepage() as homepage>
+            <#if homepage??>
+            <onlineUrl>${homepage}</onlineUrl>
+            </#if>
+            </#list>
+            <#if (associatedParty.userIds?size>0)>
+            <#list associatedParty.userIds as userId>
+            <#if userId.identifier?has_content && userId.directory?has_content>
+            <userId directory="${userId.directory}">${userId.identifier}</userId>
+            </#if>
+            </#list>
+            </#if>
+            <#if (associatedParty.getRole())??>
+            <role>${associatedParty.role!}</role>
+            </#if>
         </associatedParty>
         </#list>
         </#if>
@@ -117,9 +235,9 @@ xml:lang="${eml.metadataLanguage!}"</#if>>
         <#if (eml.abstract?size>0)>
         <abstract>
             <#list eml.abstract as p>
-                <#if p?has_content>
-                    <para>${p}</para>
-                </#if>
+            <#if p?has_content>
+            <para>${p}</para>
+            </#if>
             </#list>
         </abstract>
         </#if>
@@ -237,12 +355,72 @@ xml:lang="${eml.metadataLanguage!}"</#if>>
             <maintenanceUpdateFrequency>${eml.updateFrequency.identifier}</maintenanceUpdateFrequency>
         </maintenance>
         </#if>
-
         <#-- The contact is the person or institution to contact with questions about the use, interpretation of a data set. -->
         <#if (eml.contacts?size>0)>
         <#list eml.contacts as contact>
         <contact>
-            <@agentBlock agent=contact />
+            <#if (contact.getLastName())?? || ((!(contact.getOrganisation())??) && (!(contact.getPosition())??))>
+            <individualName>
+                <#if (contact.getFirstName())??>
+                <givenName>${contact.firstName}</givenName>
+                </#if>
+                <surName>${contact.lastName!}</surName>
+            </individualName>
+            </#if>
+            <#if (contact.getOrganisation())??>
+            <organizationName>${contact.organisation}</organizationName>
+            </#if>
+            <#if (contact.getPosition())??>
+            <positionName>${contact.position}</positionName>
+            </#if>
+            <#assign adr=contact.getAddress()/>
+            <#if (adr.getAddress())?has_content
+            || (adr.getCity())??
+            || (adr.getProvince())??
+            || (adr.getPostalCode())??
+            || (adr.getCountry())?? >
+            <address>
+                <#list adr.getAddress() as ad>
+                <#if ad?has_content >
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
+                </#list>
+                <#if (adr.getCity())?? >
+                <city>${adr.city}</city>
+                </#if>
+                <#if (adr.getProvince())?? >
+                <administrativeArea>${adr.province}</administrativeArea>
+                </#if>
+                <#if (adr.getPostalCode())?? >
+                <postalCode>${adr.postalCode}</postalCode>
+                </#if>
+                <#if (adr.getCountry())?? >
+                <country>${adr.country}</country>
+                </#if>
+            </address>
+            </#if>
+            <#list contact.getPhone() as phone>
+            <#if phone??>
+            <phone>${phone}</phone>
+            </#if>
+            </#list>
+            <#list contact.getEmail() as email>
+            <#if email??>
+            <electronicMailAddress>${email}</electronicMailAddress>
+            </#if>
+            </#list>
+            <#list contact.getHomepage() as homepage>
+            <#if homepage??>
+            <onlineUrl>${homepage}</onlineUrl>
+            </#if>
+            </#list>
+            <#if (contact.userIds?size>0)>
+            <#list contact.userIds as userId>
+            <#if userId.identifier?has_content && userId.directory?has_content>
+            <userId directory="${userId.directory}">${userId.identifier}</userId>
+            </#if>
+            </#list>
+            </#if>
         </contact>
         </#list>
         </#if>
@@ -285,16 +463,16 @@ xml:lang="${eml.metadataLanguage!}"</#if>>
             <personnel>
                 <individualName>
                     <#if (personnel.getFirstName())??>
-                        <givenName>${personnel.firstName}</givenName>
+                    <givenName>${personnel.firstName}</givenName>
                     </#if>
                     <surName>${personnel.lastName!}</surName>
                 </individualName>
                 <#if (personnel.userIds?size>0)>
-                    <#list personnel.userIds as userId>
-                        <#if userId.identifier?has_content && userId.directory?has_content>
-                            <userId directory="${userId.directory}">${userId.identifier}</userId>
-                        </#if>
-                    </#list>
+                <#list personnel.userIds as userId>
+                <#if userId.identifier?has_content && userId.directory?has_content>
+                <userId directory="${userId.directory}">${userId.identifier}</userId>
+                </#if>
+                </#list>
                 </#if>
                 <role>${personnel.role!}</role>
             </personnel>
