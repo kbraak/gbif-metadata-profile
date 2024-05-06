@@ -168,7 +168,8 @@ public class EmlFactory {
     digester.addBeanPropertySetter(prefix + "/individualName/givenName", "firstName");
     digester.addBeanPropertySetter(prefix + "/individualName/surName", "lastName");
     digester.addBeanPropertySetter(prefix + "/organizationName", "organisation");
-    digester.addBeanPropertySetter(prefix + "/positionName", "position");
+    digester.addCallMethod(prefix + "/positionName", "addPosition", 1);
+    digester.addCallParam(prefix + "/positionName", 0);
     digester.addCallMethod(prefix + "/phone", "addPhone", 1);
     digester.addCallParam(prefix + "/phone", 0);
     digester.addCallMethod(prefix + "/electronicMailAddress", "addEmail", 1);

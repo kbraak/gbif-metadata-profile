@@ -38,13 +38,17 @@ public class Agent implements Serializable {
   private String firstName;
   private String lastName;
   private String organisation;
-  private String position;
+  @Getter private List<String> position = new ArrayList<>();
   @Getter private Address address = new Address();
   @Getter private List<String> phone = new ArrayList<>();
   @Getter private List<String> email = new ArrayList<>();
   @Getter private String role;
   @Getter private List<String> homepage = new ArrayList<>();
   @Getter private List<UserId> userIds = new ArrayList<>();
+
+  public void addPosition(String position) {
+    this.position.add(position);
+  }
 
   public void addEmail(String email) {
     this.email.add(email);
@@ -79,13 +83,6 @@ public class Agent implements Serializable {
     this.phone.add(phone);
   }
 
-  public String getPosition() {
-    if (position == null || position.isEmpty()) {
-      return null;
-    }
-    return position;
-  }
-
   public String getFullName() {
     String name = "";
     if (firstName != null && !firstName.isEmpty()) {
@@ -107,7 +104,8 @@ public class Agent implements Serializable {
   }
 
   public boolean isEmpty() {
-    return StringUtils.isAllBlank(firstName, lastName, organisation, position, role)
+    return StringUtils.isAllBlank(firstName, lastName, organisation, role)
+        && position.isEmpty()
         && phone.isEmpty()
         && email.isEmpty()
         && homepage.isEmpty()

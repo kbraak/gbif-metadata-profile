@@ -29,8 +29,12 @@
             <#if (creator.getOrganisation())??>
             <organizationName>${creator.organisation}</organizationName>
             </#if>
-            <#if (creator.getPosition())??>
-            <positionName>${creator.position}</positionName>
+            <#if (creator.getPosition())?has_content>
+            <#list creator.position as p>
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
+            </#list>
             </#if>
             <#assign adr=creator.getAddress()/>
             <#if (adr.getAddress())?has_content
@@ -98,8 +102,12 @@
             <#if (metadataProvider.getOrganisation())??>
             <organizationName>${metadataProvider.organisation}</organizationName>
             </#if>
-            <#if (metadataProvider.getPosition())??>
-            <positionName>${metadataProvider.position}</positionName>
+            <#if (metadataProvider.getPosition())?has_content>
+            <#list metadataProvider.position as p>
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
+            </#list>
             </#if>
             <#assign adr=metadataProvider.getAddress()/>
             <#if (adr.getAddress())?has_content
@@ -167,8 +175,12 @@
             <#if (associatedParty.getOrganisation())??>
             <organizationName>${associatedParty.organisation}</organizationName>
             </#if>
-            <#if (associatedParty.getPosition())??>
-            <positionName>${associatedParty.position}</positionName>
+            <#if (associatedParty.getPosition())?has_content>
+            <#list associatedParty.position as p>
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
+            </#list>
             </#if>
             <#assign adr=associatedParty.getAddress()/>
             <#if (adr.getAddress())?has_content
@@ -370,8 +382,12 @@
             <#if (contact.getOrganisation())??>
             <organizationName>${contact.organisation}</organizationName>
             </#if>
-            <#if (contact.getPosition())??>
-            <positionName>${contact.position}</positionName>
+            <#if (contact.getPosition())?has_content>
+            <#list contact.position as p>
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
+            </#list>
             </#if>
             <#assign adr=contact.getAddress()/>
             <#if (adr.getAddress())?has_content

@@ -551,7 +551,7 @@ public class EmlWriterTest {
     a.addHomepage("http://www.ny-nhm.org");
     a.setOrganisation("Natural History Museum");
     a.addPhone("+19779779797");
-    a.setPosition("Head of Entomology");
+    a.addPosition("Head of Entomology");
 
     UserId userId = new UserId("http://orcid.org/", "0000-0002-8442-9000");
     a.addUserId(userId);
