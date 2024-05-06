@@ -85,7 +85,8 @@ public class EmlFactoryTest {
       assertEquals("Remsen", firstCreator.getLastName());
       assertNull(firstCreator.getRole());
       assertNotNull(firstCreator.getPosition());
-      assertEquals("ECAT Programme Officer", firstCreator.getPosition());
+      assertEquals(1, firstCreator.getPosition().size());
+      assertEquals("ECAT Programme Officer", firstCreator.getPosition().get(0));
       assertNotNull(firstCreator.getOrganisation());
       assertEquals("GBIF", firstCreator.getOrganisation());
 
@@ -162,7 +163,8 @@ public class EmlFactoryTest {
       assertEquals("Remsen", firstContact.getLastName());
       assertNull(firstContact.getRole());
       assertNotNull(firstContact.getPosition());
-      assertEquals("ECAT Programme Officer", firstContact.getPosition());
+      assertEquals(1, firstContact.getPosition().size());
+      assertEquals("ECAT Programme Officer", firstContact.getPosition().get(0));
       assertNotNull(firstContact.getOrganisation());
       assertEquals("GBIF", firstContact.getOrganisation());
       assertNotNull(firstContact.getAddress());
