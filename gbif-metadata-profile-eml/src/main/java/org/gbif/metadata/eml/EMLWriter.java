@@ -70,10 +70,10 @@ public class EMLWriter {
     "<ul>", "</ul>",
     "<li>", "</li>",
     "<ol>", "</ol>",
-    "<em>", "</em>",
+    "<b>", "</b>",
     "<sub>", "</sub>",
     "<sup>", "</sup>",
-    "<code>", "</code>"
+    "<pre>", "</pre>"
   };
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";

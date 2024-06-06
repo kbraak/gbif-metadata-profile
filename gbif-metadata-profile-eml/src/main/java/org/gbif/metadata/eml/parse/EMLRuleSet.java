@@ -106,10 +106,10 @@ public class EMLRuleSet extends RuleSetBase {
     "<ul>", "</ul>",
     "<li>", "</li>",
     "<ol>", "</ol>",
-    "<em>", "</em>",
+    "<b>", "</b>",
     "<sub>", "</sub>",
     "<sup>", "</sup>",
-    "<code>", "</code>"
+    "<pre>", "</pre>"
   };
 
   private void setupTypeConverters() {
