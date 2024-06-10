@@ -359,6 +359,21 @@
             <para>${eml.purpose}</para>
         </purpose>
         </#if>
+        <#if eml.introduction?has_content>
+        <#noescape>
+        <introduction>${eml.introduction}</introduction>
+        </#noescape>
+        </#if>
+        <#if eml.gettingStarted?has_content>
+        <#noescape>
+        <gettingStarted>${eml.gettingStarted}</gettingStarted>
+        </#noescape>
+        </#if>
+        <#if eml.acknowledgements?has_content>
+        <#noescape>
+        <acknowledgements>${eml.acknowledgements}</acknowledgements>
+        </#noescape>
+        </#if>
         <#if eml.updateFrequency??>
         <maintenance>
             <description>

@@ -208,6 +208,21 @@ public class Eml implements Serializable {
   private String purpose;
 
   /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_introduction">Introduction</a>
+   */
+  private String introduction;
+
+  /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_gettingStarted">Getting started</a>
+   */
+  private String gettingStarted;
+
+  /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_acknowledgements">Acknowledgements</a>
+   */
+  private String acknowledgements;
+
+  /**
    * A text description of the maintenance of this data resource.
    *
    * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_description">MaintenanceUpdateFrequency description</a>
@@ -654,6 +669,30 @@ public class Eml implements Serializable {
 
   public void setPurpose(String purpose) {
     this.purpose = purpose;
+  }
+
+  public String getIntroduction() {
+    return introduction;
+  }
+
+  public void setIntroduction(String introduction) {
+    this.introduction = introduction;
+  }
+
+  public String getGettingStarted() {
+    return gettingStarted;
+  }
+
+  public void setGettingStarted(String gettingStarted) {
+    this.gettingStarted = gettingStarted;
+  }
+
+  public String getAcknowledgements() {
+    return acknowledgements;
+  }
+
+  public void setAcknowledgements(String acknowledgements) {
+    this.acknowledgements = acknowledgements;
   }
 
   public String getUpdateFrequencyDescription() {
