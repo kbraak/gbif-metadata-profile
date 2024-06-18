@@ -79,7 +79,7 @@ public class Project implements Serializable {
    * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_award">
    *       EML Project Award</a>
    */
-  private ProjectAward award;
+  private List<ProjectAward> awards = new ArrayList<>();
 
   /**
    * The funding field is used to provide information about funding sources for the project such as: grant and contract
