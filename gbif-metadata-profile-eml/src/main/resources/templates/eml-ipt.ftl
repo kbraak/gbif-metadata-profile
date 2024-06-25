@@ -14,6 +14,9 @@
         <#if eml.title??>
         <title xml:lang="${eml.metadataLanguage!"en"}"><#if eml.title?has_content>${eml.title}<#else><@s.text name='eml.title'/></#if></title>
         </#if>
+        <#if eml.shortName??>
+        <shortName>${eml.shortName}</shortName>
+        </#if>
         <#-- The creator is the person, organization, or position who created the resource (not necessarily the author of this metadata about the resource). -->
         <#if (eml.creators?size>0) >
         <#list eml.creators as creator>

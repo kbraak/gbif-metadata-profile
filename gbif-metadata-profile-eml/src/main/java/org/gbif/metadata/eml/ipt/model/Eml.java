@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see EmlFactory
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "LombokGetterMayBeUsed", "LombokSetterMayBeUsed"})
 public class Eml implements Serializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
@@ -289,6 +289,8 @@ public class Eml implements Serializable {
   private String guid;
 
   private String title;
+
+  private String shortName;
 
   /**
    * The coverage field allows for a textual description of the specific sampling area, the sampling frequency
@@ -816,6 +818,14 @@ public class Eml implements Serializable {
     this.title = title;
   }
 
+  public String getShortName() {
+    return shortName;
+  }
+
+  public void setShortName(String shortName) {
+    this.shortName = shortName;
+  }
+
   public String getCitationString() {
     if (citation != null) {
       return citation.getCitation();
@@ -1222,6 +1232,7 @@ public class Eml implements Serializable {
         && Objects.equals(link, eml.link)
         && Objects.equals(guid, eml.guid)
         && Objects.equals(title, eml.title)
+        && Objects.equals(shortName, eml.shortName)
         && Objects.equals(studyExtent, eml.studyExtent)
         && Objects.equals(sampleDescription, eml.sampleDescription)
         && Objects.equals(qualityControl, eml.qualityControl)
@@ -1268,6 +1279,7 @@ public class Eml implements Serializable {
         link,
         guid,
         title,
+        shortName,
         studyExtent,
         sampleDescription,
         qualityControl,
@@ -1314,6 +1326,7 @@ public class Eml implements Serializable {
         .add("link='" + link + "'")
         .add("guid='" + guid + "'")
         .add("title='" + title + "'")
+        .add("shortName='" + shortName + "'")
         .add("studyExtent='" + studyExtent + "'")
         .add("sampleDescription='" + sampleDescription + "'")
         .add("qualityControl='" + qualityControl + "'")
