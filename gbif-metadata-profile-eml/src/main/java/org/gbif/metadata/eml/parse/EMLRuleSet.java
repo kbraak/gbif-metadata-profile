@@ -17,7 +17,6 @@ import org.gbif.api.model.common.InterpretedEnum;
 import org.gbif.api.model.registry.Citation;
 import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Identifier;
-import org.gbif.api.model.registry.MaintenanceChange;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.DataDescription;
 import org.gbif.api.model.registry.eml.KeywordCollection;

@@ -18,7 +18,6 @@ import org.gbif.api.model.registry.Contact;
 import org.gbif.api.model.registry.Dataset;
 import org.gbif.api.model.registry.Endpoint;
 import org.gbif.api.model.registry.Identifier;
-import org.gbif.api.model.registry.MaintenanceChange;
 import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.KeywordCollection;
 import org.gbif.api.model.registry.eml.ProjectAward;
