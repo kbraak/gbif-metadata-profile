@@ -235,17 +235,6 @@
         <para>Data are updated in uneven intervals.</para>
       </description>
       <maintenanceUpdateFrequency>unknown</maintenanceUpdateFrequency>
-      <changeHistory>
-        <changeScope>Exact scope change</changeScope>
-        <oldValue>annually</oldValue>
-        <changeDate>2024-04-05</changeDate>
-        <comment>Maintenance update frequency update comment 1</comment>
-      </changeHistory>
-      <changeHistory>
-        <changeScope>Scope</changeScope>
-        <oldValue>biannually</oldValue>
-        <changeDate>2014-06-25</changeDate>
-      </changeHistory>
     </maintenance>
 
     <contact>

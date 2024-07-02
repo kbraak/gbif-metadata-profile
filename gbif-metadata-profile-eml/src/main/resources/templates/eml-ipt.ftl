@@ -381,16 +381,6 @@
                 <para>${eml.updateFrequencyDescription!}</para>
             </description>
             <maintenanceUpdateFrequency>${eml.updateFrequency.identifier}</maintenanceUpdateFrequency>
-            <#list eml.maintenanceChangeHistory! as change>
-            <changeHistory>
-                <changeScope>${change.changeScope!}</changeScope>
-                <oldValue>${change.oldValue!}</oldValue>
-                <changeDate>${change.changeDate!?date?string["yyyy-MM-dd"]}</changeDate>
-                <#if change.comment?has_content>
-                <comment>${change.comment}</comment>
-                </#if>
-            </changeHistory>
-            </#list>
         </maintenance>
         </#if>
         <#-- The contact is the person or institution to contact with questions about the use, interpretation of a data set. -->

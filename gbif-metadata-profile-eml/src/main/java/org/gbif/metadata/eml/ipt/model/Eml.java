@@ -267,18 +267,6 @@ public class Eml implements Serializable {
   private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKNOWN;
 
   /**
-   * A description of changes made to the data since its release.
-   *
-   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_changeHistory">ChangeHistory</a>
-   */
-  private List<MaintenanceChange> maintenanceChangeHistory = new ArrayList<>();
-
-  /**
-   * Current change of maintenance update frequency.
-   */
-  private MaintenanceChange currentMaintenanceChange;
-
-  /**
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.
    * The list of creators for a resource represent the people and organizations who should be cited for the resource.
    *
@@ -761,23 +749,6 @@ public class Eml implements Serializable {
    */
   public void setUpdateFrequency(String updateFrequency) {
     this.updateFrequency = MaintenanceUpdateFrequency.findByIdentifier(updateFrequency);
-  }
-
-
-  public List<MaintenanceChange> getMaintenanceChangeHistory() {
-    return maintenanceChangeHistory;
-  }
-
-  public void setMaintenanceChangeHistory(List<MaintenanceChange> maintenanceChangeHistory) {
-    this.maintenanceChangeHistory = maintenanceChangeHistory;
-  }
-
-  public MaintenanceChange getCurrentMaintenanceChange() {
-    return currentMaintenanceChange;
-  }
-
-  public void setCurrentMaintenanceChange(MaintenanceChange currentMaintenanceChange) {
-    this.currentMaintenanceChange = currentMaintenanceChange;
   }
 
   public List<Agent> getCreators() {
