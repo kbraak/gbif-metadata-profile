@@ -37,6 +37,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,6 +56,34 @@ import org.slf4j.LoggerFactory;
 public class Eml implements Serializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para>", "</para>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<listitem>", "</listitem>",
+      "<orderedlist>", "</orderedlist>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<p>", "</p>",
+      "<ul>", "</ul>",
+      "<li>", "</li>",
+      "<ol>", "</ol>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
+  };
 
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
   private static final char SEMICOLON = ';';
@@ -77,7 +106,7 @@ public class Eml implements Serializable {
   /**
    * Description, composed of one or more paragraphs.
    */
-  private List<String> description = new ArrayList<>();
+  private String description;
 
   /**
    * This is not in the GBIF extended metadata document, but seems like a sensible placeholder that can be used to
@@ -243,6 +272,11 @@ public class Eml implements Serializable {
    * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_changeHistory">ChangeHistory</a>
    */
   private List<MaintenanceChange> maintenanceChangeHistory = new ArrayList<>();
+
+  /**
+   * Current change of maintenance update frequency.
+   */
+  private MaintenanceChange currentMaintenanceChange;
 
   /**
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.
@@ -738,6 +772,14 @@ public class Eml implements Serializable {
     this.maintenanceChangeHistory = maintenanceChangeHistory;
   }
 
+  public MaintenanceChange getCurrentMaintenanceChange() {
+    return currentMaintenanceChange;
+  }
+
+  public void setCurrentMaintenanceChange(MaintenanceChange currentMaintenanceChange) {
+    this.currentMaintenanceChange = currentMaintenanceChange;
+  }
+
   public List<Agent> getCreators() {
     return creators;
   }
@@ -849,7 +891,7 @@ public class Eml implements Serializable {
     return null;
   }
 
-  public List<String> getDescription() {
+  public String getDescription() {
     return getAbstract();
   }
 
@@ -899,15 +941,6 @@ public class Eml implements Serializable {
 
   public void addAlternateIdentifier(String alternateIdentifier) {
     alternateIdentifiers.add(alternateIdentifier);
-  }
-
-  /**
-   * Adds another paragraph to description.
-   *
-   * @param para paragraph
-   */
-  public void addDescriptionPara(String para) {
-    description.add(para);
   }
 
   /**
@@ -1064,7 +1097,7 @@ public class Eml implements Serializable {
     this.intellectualRights = paraXmlToHtml(xmlStr);
   }
 
-  public List<String> getAbstract() {
+  public String getAbstract() {
     return description;
   }
 
@@ -1076,7 +1109,7 @@ public class Eml implements Serializable {
     return guid + "/v" + emlVersion.toPlainString();
   }
 
-  public void setAbstract(List<String> description) {
+  public void setAbstract(String description) {
     this.description = description;
   }
 
@@ -1088,7 +1121,7 @@ public class Eml implements Serializable {
     this.citation = new Citation(citation, identifier);
   }
 
-  public void setDescription(List<String> description) {
+  public void setDescription(String description) {
     this.description = description;
   }
 
@@ -1444,5 +1477,32 @@ public class Eml implements Serializable {
       }
     }
     return licenseUrl;
+  }
+
+  // Value with all HTML tags replaced by DocBook analogues
+  public String getDocBookField(String fieldName) {
+    String result = null;
+
+    try {
+      String value = BeanUtils.getProperty(this, fieldName);
+
+      if (value != null) {
+        result = replaceDocBookElements(value);
+      }
+    } catch (Exception e) {
+      // TODO log exception
+    }
+
+    return result;
+  }
+
+  private String replaceDocBookElements(String value) {
+    String htmlStringWithLinksReplaces =
+        value.replaceAll(
+            "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
+            "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
+
+    // Perform replacements
+    return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);
   }
 }

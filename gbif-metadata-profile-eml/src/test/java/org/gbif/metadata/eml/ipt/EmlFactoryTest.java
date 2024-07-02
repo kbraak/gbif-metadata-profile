@@ -204,7 +204,7 @@ public class EmlFactoryTest {
       assertEquals(cal.getTime(), eml.getPubDate());
 
       assertEquals("en_US", eml.getLanguage());
-      assertEquals("Specimens in jars.", eml.getAbstract().get(0));
+      assertEquals("<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>", eml.getAbstract());
 
       // multiple KeywordSets tests
       assertNotNull(eml.getKeywords());

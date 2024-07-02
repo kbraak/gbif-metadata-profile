@@ -81,9 +81,7 @@ public class EmlWriterTest {
 
       assertFalse(eml.getDescription().isEmpty());
       assertFalse(eml2.getDescription().isEmpty());
-      assertEquals(eml2.getDescription().get(0), eml.getDescription().get(0));
-      assertEquals(eml2.getDescription().get(1), eml.getDescription().get(1));
-      assertEquals(eml2.getDescription().get(2), eml.getDescription().get(2));
+      assertEquals(eml2.getDescription(), eml.getDescription());
 
       assertNotNull(eml.getPubDate());
       assertEquals(eml2.getPubDate(), eml.getPubDate());

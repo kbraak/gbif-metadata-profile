@@ -32,19 +32,57 @@ import org.gbif.metadata.eml.ipt.model.UserId;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.digester3.Digester;
 import org.apache.commons.digester3.NodeCreateRule;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * This class is considered a utility for testing but should be migrated to the source when stable, as this is an EML
  * Model Factory based on the Apache Commons Digester and will be used when importing DwC-A.
  */
 public class EmlFactory {
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para>", "</para>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<listitem>", "</listitem>",
+      "<orderedlist>", "</orderedlist>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<p>", "</p>",
+      "<ul>", "</ul>",
+      "<li>", "</li>",
+      "<ol>", "</ol>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
+  };
 
   /**
    * Uses rule based parsing to read the EML XML and build the EML model.
@@ -89,9 +127,11 @@ public class EmlFactory {
 
     digester.addBeanPropertySetter("eml/dataset/language", "language");
 
-    // descriptions, broken into multiple paragraphs
-    digester.addCallMethod("eml/dataset/abstract/para", "addDescriptionPara", 1);
-    digester.addCallParam("eml/dataset/abstract/para", 0);
+    // DocBook description, gettingStarted, introduction, acknowledgements
+    digester.addRule("eml/dataset/abstract", new SetSerializedNodeRule("setDescription", "abstract"));
+    digester.addRule("eml/dataset/gettingStarted", new SetSerializedNodeRule("setGettingStarted", "gettingStarted"));
+    digester.addRule("eml/dataset/introduction", new SetSerializedNodeRule("setIntroduction", "introduction"));
+    digester.addRule("eml/dataset/acknowledgements", new SetSerializedNodeRule("setAcknowledgements", "acknowledgements"));
 
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
     digester.addRule("eml/dataset/intellectualRights/para", new NodeCreateRule(Node.ELEMENT_NODE));
@@ -467,5 +507,72 @@ public class EmlFactory {
         "addJgtiCuratorialUnit"); // add the
     // JGTICuratorialIUnit to the list in
     // EML
+  }
+
+  // Converter to literal XML (DocBook) ant then to HTML
+  public static class SetSerializedNodeRule extends NodeCreateRule {
+
+    private String method;
+    private String wrapperElement;
+
+    public SetSerializedNodeRule() throws ParserConfigurationException {
+      super(Node.ELEMENT_NODE);
+    }
+
+    public SetSerializedNodeRule(String method, String wrapperElement)
+        throws ParserConfigurationException {
+      this.method = method;
+      this.wrapperElement = wrapperElement;
+    }
+
+    @Override
+    public void end(String namespace, String name) throws Exception {
+      Element nodeToSerialize = super.getDigester().pop();
+      String serializedNode = serializeNode(nodeToSerialize);
+      invokeMethodOnTopOfStack(method, serializedNode);
+    }
+
+    protected String serializeNode(Element nodeToSerialize) throws Exception {
+      String htmlOutput;
+
+      try (StringWriter writer = new StringWriter()) {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+        OutputFormat format = new OutputFormat(doc);
+        format.setOmitXMLDeclaration(true);
+        XMLSerializer serializer = new XMLSerializer(writer, format);
+        serializer.serialize(nodeToSerialize);
+
+        String serializedDocBookXml = writer.getBuffer().toString();
+        String unwrappedDocBookXml = unwrapParentTag(serializedDocBookXml);
+        htmlOutput = convertDocBookToHtml(unwrappedDocBookXml);
+      }
+
+      return htmlOutput;
+    }
+
+    private String unwrapParentTag(String str) {
+      return StringUtils.replaceEach(
+          str,
+          new String[] {"<" + wrapperElement + ">", "</" + wrapperElement + ">"},
+          new String[] {"", ""});
+    }
+
+    private String convertDocBookToHtml(String docbookXmlString) {
+      // Replace links
+      String docBookXmlStringWithLinksReplaces =
+          docbookXmlString.replaceAll(
+              "<ulink\\s+url=\"(.*?)\">\\s*<citetitle>(.*?)</citetitle>\\s*</ulink>",
+              "<a href=\"$1\">$2</a>");
+
+      // Perform replacements
+      return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS);
+    }
+
+    protected void invokeMethodOnTopOfStack(String methodName, String param) throws Exception {
+      Object objOnTopOfStack = getDigester().peek();
+      MethodUtils.invokeExactMethod(objOnTopOfStack, methodName, param);
+    }
   }
 }

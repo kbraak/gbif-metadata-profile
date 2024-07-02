@@ -247,13 +247,11 @@
         </pubDate>
         <language>${eml.language!"en"}</language>
         <#-- A description of the resource -->
-        <#if (eml.abstract?size>0)>
+        <#if eml.abstract?has_content>
         <abstract>
-            <#list eml.abstract as p>
-            <#if p?has_content>
-            <para>${p}</para>
-            </#if>
-            </#list>
+            <#noescape>
+            ${eml.getDocBookField("description")}
+            </#noescape>
         </abstract>
         </#if>
         <#-- Zero or more sets of keywords and an associated thesaurus for each. -->
@@ -364,17 +362,17 @@
         </#if>
         <#if eml.introduction?has_content>
         <#noescape>
-        <introduction>${eml.introduction}</introduction>
+        <introduction>${eml.getDocBookField("introduction")}</introduction>
         </#noescape>
         </#if>
         <#if eml.gettingStarted?has_content>
         <#noescape>
-        <gettingStarted>${eml.gettingStarted}</gettingStarted>
+        <gettingStarted>${eml.getDocBookField("gettingStarted")}</gettingStarted>
         </#noescape>
         </#if>
         <#if eml.acknowledgements?has_content>
         <#noescape>
-        <acknowledgements>${eml.acknowledgements}</acknowledgements>
+        <acknowledgements>${eml.getDocBookField("acknowledgements")}</acknowledgements>
         </#noescape>
         </#if>
         <#if eml.updateFrequency??>
