@@ -24,6 +24,7 @@ import org.gbif.metadata.eml.ipt.model.JGTICuratorialUnit;
 import org.gbif.metadata.eml.ipt.model.KeywordSet;
 import org.gbif.metadata.eml.ipt.model.PhysicalData;
 import org.gbif.metadata.eml.ipt.model.Project;
+import org.gbif.metadata.eml.ipt.model.ProjectAward;
 import org.gbif.metadata.eml.ipt.model.StudyAreaDescription;
 import org.gbif.metadata.eml.ipt.model.TaxonKeyword;
 import org.gbif.metadata.eml.ipt.model.TaxonomicCoverage;
@@ -408,10 +409,34 @@ public class EmlFactory {
     addAgentRules(digester, "eml/dataset/project/personnel", "addProjectPersonnel");
     digester.addBeanPropertySetter("eml/dataset/project/abstract/para", "description");
     digester.addBeanPropertySetter("eml/dataset/project/funding/para", "funding");
+    addProjectAwardsRules(digester, "addAward");
+    addRelatedProjectsRules(digester, "addRelatedProject");
     addStudyAreaDescriptionRules(digester);
     digester.addBeanPropertySetter(
         "eml/dataset/project/designDescription/description/para", "designDescription");
     digester.addSetNext("eml/dataset/project", "setProject");
+  }
+
+  private static void addProjectAwardsRules(Digester digester, String parentMethod) {
+    digester.addObjectCreate("eml/dataset/project/award", ProjectAward.class);
+    digester.addBeanPropertySetter("eml/dataset/project/award/funderName", "funderName");
+    digester.addBeanPropertySetter("eml/dataset/project/award/awardNumber", "awardNumber");
+    digester.addBeanPropertySetter("eml/dataset/project/award/title", "title");
+    digester.addBeanPropertySetter("eml/dataset/project/award/awardUrl", "awardUrl");
+    digester.addCallMethod("eml/dataset/project/award/funderIdentifier", "addFunderIdentifier", 0);
+
+    digester.addSetNext("eml/dataset/project/award", parentMethod);
+  }
+
+  private static void addRelatedProjectsRules(Digester digester, String parentMethod) {
+    digester.addObjectCreate("eml/dataset/project/relatedProject", Project.class);
+    digester.addCallMethod("eml/dataset/project/relatedProject", "setIdentifier", 1);
+    digester.addCallParam("eml/dataset/project/relatedProject", 0, "id");
+    digester.addBeanPropertySetter("eml/dataset/project/relatedProject/title", "title");
+    digester.addBeanPropertySetter("eml/dataset/project/relatedProject/abstract", "abstract");
+    addAgentRules(digester, "eml/dataset/project/relatedProject/personnel", "addProjectPersonnel");
+
+    digester.addSetNext("eml/dataset/project/relatedProject", parentMethod);
   }
 
   /**

@@ -129,4 +129,16 @@ public class Project implements Serializable {
     }
     getPersonnel().add(agent);
   }
+
+  public void addRelatedProject(Project relatedProject) {
+    if (relatedProject != null) {
+      getRelatedProjects().add(relatedProject);
+    }
+  }
+
+  public void addAward(ProjectAward projectAward) {
+    if (projectAward != null) {
+      getAwards().add(projectAward);
+    }
+  }
 }
