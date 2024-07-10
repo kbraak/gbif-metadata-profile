@@ -125,6 +125,10 @@ public class EmlFactory {
     digester.addCallParam("eml/dataset/title", 0);
     digester.addCallParam("eml/dataset/title", 1, "xml:lang");
 
+    // shortName
+    digester.addCallMethod("eml/dataset/shortName", "setShortName", 1);
+    digester.addCallParam("eml/dataset/shortName", 0);
+
     digester.addBeanPropertySetter("eml/dataset/language", "language");
 
     // DocBook description, gettingStarted, introduction, acknowledgements
