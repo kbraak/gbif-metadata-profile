@@ -509,29 +509,6 @@
                 <role>${personnel.role!}</role>
             </personnel>
             </#list>
-            <#list (eml.project.relatedProjects)! as relatedProject>
-            <relatedProject>
-                <title>${relatedProject.title}</title>
-                <#list (relatedProject.personnel)! as relatedProjectPersonnel>
-                <personnel>
-                    <individualName>
-                        <#if (relatedProjectPersonnel.getFirstName())??>
-                        <givenName>${relatedProjectPersonnel.firstName}</givenName>
-                        </#if>
-                        <surName>${relatedProjectPersonnel.lastName!}</surName>
-                    </individualName>
-                    <#if (relatedProjectPersonnel.userIds?size>0)>
-                    <#list relatedProjectPersonnel.userIds as userId>
-                    <#if userId.identifier?has_content && userId.directory?has_content>
-                    <userId directory="${userId.directory}">${userId.identifier}</userId>
-                    </#if>
-                    </#list>
-                    </#if>
-                    <role>${relatedProjectPersonnel.role!}</role>
-                </personnel>
-                </#list>
-            </relatedProject>
-            </#list>
             <#if eml.project.description?has_content>
             <abstract>
                 <para>${eml.project.description}</para>
@@ -572,6 +549,29 @@
                 </description>
             </designDescription>
             </#if>
+            <#list (eml.project.relatedProjects)! as relatedProject>
+            <relatedProject>
+                <title>${relatedProject.title}</title>
+                <#list (relatedProject.personnel)! as relatedProjectPersonnel>
+                <personnel>
+                    <individualName>
+                        <#if (relatedProjectPersonnel.getFirstName())??>
+                        <givenName>${relatedProjectPersonnel.firstName}</givenName>
+                        </#if>
+                        <surName>${relatedProjectPersonnel.lastName!}</surName>
+                    </individualName>
+                    <#if (relatedProjectPersonnel.userIds?size>0)>
+                    <#list relatedProjectPersonnel.userIds as userId>
+                    <#if userId.identifier?has_content && userId.directory?has_content>
+                    <userId directory="${userId.directory}">${userId.identifier}</userId>
+                    </#if>
+                    </#list>
+                    </#if>
+                    <role>${relatedProjectPersonnel.role!}</role>
+                </personnel>
+                </#list>
+            </relatedProject>
+            </#list>
         </project>
         </#if>
     </dataset>
