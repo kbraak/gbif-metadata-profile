@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * ProjectAward is used to enter information about a funding award associated with a project. The containing project
@@ -66,4 +67,10 @@ public class ProjectAward {
    * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#AwardType_awardUrl">AwardType/awardUrl</a>
    */
   private String awardUrl;
+
+  public void addFunderIdentifier(String funderIdentifier) {
+    if (StringUtils.isNotEmpty(funderIdentifier)) {
+      funderIdentifiers.add(funderIdentifier);
+    }
+  }
 }
