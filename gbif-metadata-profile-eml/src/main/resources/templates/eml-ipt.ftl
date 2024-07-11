@@ -542,6 +542,21 @@
                 <para>${eml.project.funding}</para>
             </funding>
             </#if>
+            <#list eml.project.awards! as award>
+            <award>
+                <funderName>${award.funderName}</funderName>
+                <#list award.funderIdentifiers! as fi>
+                <funderIdentifier>${fi}</funderIdentifier>
+                </#list>
+                <#if award.awardNumber?has_content>
+                <awardNumber>${award.awardNumber}</awardNumber>
+                </#if>
+                <title>${award.title}</title>
+                <#if award.awardUrl?has_content>
+                <awardUrl>${award.awardUrl}</awardUrl>
+                </#if>
+            </award>
+            </#list>
             <#if eml.project.studyAreaDescription?? && eml.project.studyAreaDescription.descriptorValue?has_content>
             <studyAreaDescription>
                 <descriptor name="${eml.project.studyAreaDescription.getName().getName()!}"
