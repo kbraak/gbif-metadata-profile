@@ -489,7 +489,7 @@
         </methods>
         </#if>
         <#if eml.project.title?has_content>
-        <project <#if eml.project.identifier?has_content>id="${eml.project.identifier}"</#if>>
+        <#if eml.project.identifier?has_content><project id="${eml.project.identifier}"><#else><project></#if>
             <title>${eml.project.title}</title>
             <#list (eml.project.getPersonnel())! as personnel>
             <personnel>
