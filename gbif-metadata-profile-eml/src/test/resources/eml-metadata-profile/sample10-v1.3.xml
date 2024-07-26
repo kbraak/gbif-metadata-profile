@@ -100,13 +100,16 @@
       <section>
         <title>A separate section</title>
         <para>More text</para>
-        <para>And more text, with
+        <para>And more text, with</para>
+        <para>
           <itemizedlist>
             <listitem><para>First item</para></listitem>
           </itemizedlist>
           <orderedlist>
             <listitem><para>First item</para></listitem>
           </orderedlist>
+        </para>
+        <para>
           <ulink url="https://example.org"><citetitle>Example link</citetitle></ulink>
         </para>
         <section>
@@ -192,12 +195,14 @@
       <para>An introduction goes here.</para>
       <para>It can include multiple paragraphs. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought. And these paragraphs should have enough text to wrap in a wide browser.  So, repeat that last thought.</para>
       <para>Text can also cite other works, such as [@jones_2001], in which case the associated key must be present
-      as either the citation identifier in a `bibtex` element in the EML document, or as the `id` attribute on
-      one of the `citation` elements in the EML document.  These identifiers must be unique across the document.  Tools
-      such as Pandoc will readily convert these citations and citation entries into various formats, including HTML, PDF,
+        as either the citation identifier in a `bibtex` element in the EML document, or as the `id` attribute on
+        one of the `citation` elements in the EML document.  These identifiers must be unique across the document.  Tools
+        such as Pandoc will readily convert these citations and citation entries into various formats, including HTML, PDF,
         and others.</para>
       <para>
         And bulleted lists are also supported:
+      </para>
+      <para>
         <itemizedlist>
           <listitem><para>Science</para></listitem>
           <listitem><para>Engineering</para></listitem>
@@ -207,7 +212,7 @@
       <para>
         It can also include equations:
         <literalLayout>
-        $$\left( x + a \right)^{n} = \sum_{k = 0}^{n}{\left( \frac{n}{k} \right)x^{k}a^{n - k}}$$
+          $$\left( x + a \right)^{n} = \sum_{k = 0}^{n}{\left( \frac{n}{k} \right)x^{k}a^{n - k}}$$
         </literalLayout>
       </para>
       <para>

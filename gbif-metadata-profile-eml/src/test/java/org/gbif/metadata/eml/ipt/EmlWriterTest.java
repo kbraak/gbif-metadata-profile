@@ -25,8 +25,8 @@ import org.gbif.metadata.eml.ipt.model.UserId;
 import org.gbif.utils.file.FileUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,7 +58,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // read EML
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       // compare
@@ -82,6 +82,18 @@ public class EmlWriterTest {
       assertFalse(eml.getDescription().isEmpty());
       assertFalse(eml2.getDescription().isEmpty());
       assertEquals(eml2.getDescription(), eml.getDescription());
+
+      assertFalse(eml.getIntroduction().isEmpty());
+      assertFalse(eml2.getIntroduction().isEmpty());
+      assertEquals(eml2.getIntroduction(), eml.getIntroduction());
+
+      assertFalse(eml.getGettingStarted().isEmpty());
+      assertFalse(eml2.getGettingStarted().isEmpty());
+      assertEquals(eml2.getGettingStarted(), eml.getGettingStarted());
+
+      assertFalse(eml.getAcknowledgements().isEmpty());
+      assertFalse(eml2.getAcknowledgements().isEmpty());
+      assertEquals(eml2.getAcknowledgements(), eml.getAcknowledgements());
 
       assertNotNull(eml.getPubDate());
       assertEquals(eml2.getPubDate(), eml.getPubDate());
@@ -177,7 +189,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // now read the EML in again and ensure pubDate is not null
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       System.out.println("New pub date: " + eml2.getPubDate());
@@ -240,7 +252,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // now read the EML in again and ensure personnel has been persisted correctly
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       assertEquals(2, eml2.getProject().getPersonnel().size());
@@ -282,7 +294,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // now read the EML in again and ensure collection has been persisted correctly
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       assertEquals(2, eml2.getCollections().size());
@@ -323,7 +335,7 @@ public class EmlWriterTest {
       // now read the EML in again and ensure another agent has been added to creators,
       // metadataProviders, and
       // contacts lists
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       assertEquals(2, eml2.getCreators().size());
@@ -367,7 +379,7 @@ public class EmlWriterTest {
       // now read the EML in again and ensure another agent has been added to creators,
       // metadataProviders, and
       // contacts lists
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       assertEquals(3, eml2.getCreators().get(0).getUserIds().size());
@@ -398,7 +410,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // now read the EML in again and ensure project has been persisted correctly
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
       assertEquals("T123:1", eml.getProject().getIdentifier());
       assertEquals("Part of a year-long series of events.", eml.getProject().getDescription());
@@ -423,7 +435,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // Verify the update frequency was persisted correctly
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
       assertNull(eml2.getUpdateFrequencyDescription());
       assertEquals(MaintenanceUpdateFrequency.UNKNOWN, eml2.getUpdateFrequency());
@@ -451,7 +463,7 @@ public class EmlWriterTest {
 
       // now read the EML in again and ensure specimen preservation methods has been persisted
       // correctly
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
 
       assertEquals(2, eml2.getSpecimenPreservationMethods().size());
@@ -482,7 +494,7 @@ public class EmlWriterTest {
       IptEmlWriter.writeEmlFile(temp, eml);
 
       // now read the EML in again and ensure pubDate is not null
-      Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+      Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
       assertEquals("GBIF & EOL", eml2.getContacts().get(1).getOrganisation());
       assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
@@ -523,7 +535,7 @@ public class EmlWriterTest {
 
     // now read the EML in again and ensure format version is null - remember it's the 3rd Physical
     // Data
-    Eml eml2 = EmlFactory.build(new FileInputStream(temp));
+    Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
     assertNotNull(eml2);
     assertNull(eml2.getPhysicalData().get(2).getFormatVersion());
     assertEquals("UTF-8", eml2.getPhysicalData().get(2).getCharset());

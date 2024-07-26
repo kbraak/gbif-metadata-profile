@@ -192,6 +192,43 @@
         <purpose>
             <para>Provide data to the whole world.</para>
         </purpose>
+
+        <introduction>
+            <section>
+                <title>Introduction</title>
+                <para>Actual introduction</para>
+            </section>
+        </introduction>
+        <gettingStarted>
+            <para>getting started stuff</para>
+        </gettingStarted>
+        <acknowledgements>
+            <para>Test acknowledgements</para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>First item</para>
+                    </listitem>
+                </itemizedlist>
+                <orderedlist>
+                    <listitem>
+                        <para>First item</para>
+                    </listitem>
+                </orderedlist>
+            </para>
+            <para>
+                <emphasis>Emphasis</emphasis>
+                CO<subscript>2</subscript> (or just CO₂)
+                m<superscript>3</superscript> (or just m³)
+                <literalLayout>
+                    x = fn(y, z)
+                </literalLayout>
+                <ulink url="https://example.org">
+                    <citetitle>Example link</citetitle>
+                </ulink>
+            </para>
+        </acknowledgements>
+
         <maintenance>
             <description>
                 <para>Changes done as needed.</para>

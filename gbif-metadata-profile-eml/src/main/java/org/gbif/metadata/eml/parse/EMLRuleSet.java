@@ -85,30 +85,34 @@ public class EMLRuleSet extends RuleSetBase {
 
   // Define pairs of DocBook tags. MUST MATCH HTML tags!
   private static final String[] DOCBOOK_TAGS = {
-    "<section>", "</section>",
-    "<title>", "</title>",
-    "<para>", "</para>",
-    "<itemizedlist>", "</itemizedlist>",
-    "<listitem>", "</listitem>",
-    "<orderedlist>", "</orderedlist>",
-    "<emphasis>", "</emphasis>",
-    "<subscript>", "</subscript>",
-    "<superscript>", "</superscript>",
-    "<literalLayout>", "</literalLayout>"
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para><itemizedlist>", "</itemizedlist></para>",
+      "<para><orderedlist>", "</orderedlist></para>",
+      "<listitem><para>", "</para></listitem>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<orderedlist>", "</orderedlist>",
+      "<para>", "</para>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
   };
 
   // Define pairs of HTML tags. MUST MATCH DocBook tags!
   private static final String[] HTML_TAGS = {
-    "<div>", "</div>",
-    "<h1>", "</h1>",
-    "<p>", "</p>",
-    "<ul>", "</ul>",
-    "<li>", "</li>",
-    "<ol>", "</ol>",
-    "<b>", "</b>",
-    "<sub>", "</sub>",
-    "<sup>", "</sup>",
-    "<pre>", "</pre>"
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<li>", "</li>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<p>", "</p>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
   };
 
   private void setupTypeConverters() {
