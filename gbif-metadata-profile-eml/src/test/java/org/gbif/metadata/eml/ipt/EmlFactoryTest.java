@@ -243,6 +243,10 @@ public class EmlFactoryTest {
       assertNotNull(eml.getDistributionUrl());
       assertEquals("http://www.any.org/fauna/coleoptera/beetleList.html", eml.getDistributionUrl());
 
+      // download URL
+      assertNotNull(eml.getDistributionDownloadUrl());
+      assertEquals("https://ipt.gbif.org/archive.do?r=res", eml.getDistributionDownloadUrl());
+
       // geospatial coverages tests
       assertNotNull(eml.getGeospatialCoverages());
       assertEquals(2, eml.getGeospatialCoverages().size());

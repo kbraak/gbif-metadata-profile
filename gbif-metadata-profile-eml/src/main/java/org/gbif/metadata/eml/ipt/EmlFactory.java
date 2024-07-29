@@ -153,7 +153,11 @@ public class EmlFactory {
         "eml/dataset/methods/sampling/samplingDescription/para", "sampleDescription");
     digester.addBeanPropertySetter(
         "eml/dataset/methods/qualityControl/description/para", "qualityControl");
-    digester.addBeanPropertySetter("eml/dataset/distribution/online/url", "distributionUrl");
+
+    digester.addCallMethod("eml/dataset/distribution/online/url", "setDistribution", 2);
+    digester.addCallParam("eml/dataset/distribution/online/url", 0);
+    digester.addCallParam("eml/dataset/distribution/online/url", 1, "function");
+
     digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "updateFrequencyDescription");

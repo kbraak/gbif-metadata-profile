@@ -130,6 +130,11 @@
                 </url>
             </online>
         </distribution>
+        <distribution scope="document">
+            <online>
+                <url function="download">https://ipt.gbif.org/archive.do?r=res</url>
+            </online>
+        </distribution>
 
         <!-- 3 types of coverage are supported with example repetition -->
         <coverage>

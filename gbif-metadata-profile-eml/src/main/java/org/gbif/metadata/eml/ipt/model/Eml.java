@@ -150,6 +150,10 @@ public class Eml implements Serializable {
    */
   private String distributionUrl;
   /**
+   * Download URL
+   */
+  private String distributionDownloadUrl;
+  /**
    * Serialised data
    */
   private BigDecimal emlVersion = new BigDecimal("1.0");
@@ -472,6 +476,25 @@ public class Eml implements Serializable {
 
   public void setDistributionUrl(String distributionUrl) {
     this.distributionUrl = distributionUrl;
+  }
+
+  public String getDistributionDownloadUrl() {
+    if (distributionDownloadUrl == null || distributionDownloadUrl.isEmpty()) {
+      return null;
+    }
+    return distributionDownloadUrl;
+  }
+
+  public void setDistributionDownloadUrl(String distributionDownloadUrl) {
+    this.distributionDownloadUrl = distributionDownloadUrl;
+  }
+
+  public void setDistribution(String distribution, String function) {
+    if ("information".equals(function)) {
+      setDistributionUrl(distribution);
+    } else if ("download".equals(function)) {
+      setDistributionDownloadUrl(distribution);
+    }
   }
 
   public BigDecimal getEmlVersion() {
@@ -1217,6 +1240,7 @@ public class Eml implements Serializable {
         && Objects.equals(citation, eml.citation)
         && Objects.equals(dateStamp, eml.dateStamp)
         && Objects.equals(distributionUrl, eml.distributionUrl)
+        && Objects.equals(distributionDownloadUrl, eml.distributionDownloadUrl)
         && Objects.equals(emlVersion, eml.emlVersion)
         && Objects.equals(previousEmlVersion, eml.previousEmlVersion)
         && Objects.equals(geospatialCoverages, eml.geospatialCoverages)
@@ -1262,6 +1286,7 @@ public class Eml implements Serializable {
         citation,
         dateStamp,
         distributionUrl,
+        distributionDownloadUrl,
         emlVersion,
         previousEmlVersion,
         majorVersion,
@@ -1309,6 +1334,7 @@ public class Eml implements Serializable {
         .add("citation=" + citation)
         .add("dateStamp=" + dateStamp)
         .add("distributionUrl='" + distributionUrl + "'")
+        .add("distributionDownloadUrl='" + distributionDownloadUrl + "'")
         .add("emlVersion=" + emlVersion)
         .add("previousEmlVersion=" + previousEmlVersion)
         .add("majorVersion=" + majorVersion)

@@ -288,6 +288,13 @@
             </online>
         </distribution>
         </#if>
+        <#if (eml.getDistributionDownloadUrl())??>
+        <distribution scope="document">
+            <online>
+                <url function="download">${eml.distributionDownloadUrl!}</url>
+            </online>
+        </distribution>
+        </#if>
         <#if ((eml.geospatialCoverages ? size > 0)
         ||  (eml.taxonomicCoverages ? size > 0)
         ||  (eml.temporalCoverages ? size > 0))>
