@@ -280,6 +280,27 @@
         <intellectualRights>
             <para><#noescape>${eml.getIntellectualRightsXml()!}</#noescape></para>
         </intellectualRights>
+        <#if eml.intellectualRights??>
+        <#if eml.intellectualRights?contains("CC0 1.0")>
+        <licensed>
+            <licenseName>Creative Commons Zero v1.0 Universal</licenseName>
+            <url>https://spdx.org/licenses/CC0-1.0.html</url>
+            <identifier>CC0-1.0</identifier>
+        </licensed>
+        <#elseif eml.intellectualRights?contains("CC-BY 4.0")>
+        <licensed>
+            <licenseName>Creative Commons Attribution 4.0 International</licenseName>
+            <url>https://spdx.org/licenses/CC-BY-4.0.html</url>
+            <identifier>CC-BY-4.0</identifier>
+        </licensed>
+        <#elseif eml.intellectualRights?contains("CC-BY-NC 4.0")>
+        <licensed>
+            <licenseName>Creative Commons Attribution Non Commercial 4.0 International</licenseName>
+            <url>https://spdx.org/licenses/CC-BY-NC-4.0.html</url>
+            <identifier>CC-BY-NC-4.0</identifier>
+        </licensed>
+        </#if>
+        </#if>
         </#if>
         <#if (eml.getDistributionUrl())??>
         <distribution scope="document">
