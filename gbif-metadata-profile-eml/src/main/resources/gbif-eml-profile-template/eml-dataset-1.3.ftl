@@ -331,6 +331,11 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <@contact ct=pointOfContact!/>
             </contact>
         </#list>
+        <#if dataset.publishingOrganizationKey?? && dataset.publishingOrganizationName??>
+            <publisher id="${dataset.publishingOrganizationKey}" scope="system" system="http://gbif.org">
+                <organizationName>${dataset.publishingOrganizationName}</organizationName>
+            </publisher>
+        </#if>
         <#if dataset.samplingDescription??>
             <methods>
                 <#list dataset.samplingDescription.methodSteps![] as methodStep>

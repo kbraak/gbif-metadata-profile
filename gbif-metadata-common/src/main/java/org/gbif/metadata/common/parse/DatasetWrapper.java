@@ -244,6 +244,10 @@ public class DatasetWrapper {
     }
   }
 
+  public void addPublisher(String publisherId, String publisherName) {
+    target.setPublishingOrganizationName(publisherName);
+  }
+
   /**
    * Similar to addContact() except that it sets type to ADMINISTRATIVE_POINT_OF_CONTACT, and sets
    * isPrimary flag to true only if this is the first contact of type

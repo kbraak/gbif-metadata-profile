@@ -484,6 +484,11 @@
         </contact>
         </#list>
         </#if>
+        <#if eml.publisherId?? && eml.publisherOrganizationName??>
+        <publisher id="${eml.publisherId}" scope="system" system="http://gbif.org">
+            <organizationName>${eml.publisherOrganizationName}</organizationName>
+        </publisher>
+        </#if>
         <#if (eml.getStudyExtent())?? || (eml.getSampleDescription())?? || (eml.getQualityControl())?? ||  ((eml.methodSteps)?? && ((eml.methodSteps) ? size > 0)) >
         <methods>
             <#if (eml.methodSteps)??>

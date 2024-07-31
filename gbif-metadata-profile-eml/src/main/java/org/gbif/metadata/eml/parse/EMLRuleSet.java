@@ -214,8 +214,12 @@ public class EMLRuleSet extends RuleSetBase {
     addContactRules(digester, "eml/dataset/creator", "addPreferredOriginatorContact");
     addContactRules(digester, "eml/dataset/metadataProvider", "addPreferredMetadataContact");
     addContactRules(digester, "eml/dataset/associatedParty", "addContact");
-
     addContactRules(digester, "eml/dataset/contact", "addPreferredAdministrativeContact");
+
+    // Publisher
+    digester.addCallMethod("eml/dataset/publisher", "setPublisher", 2);
+    digester.addCallParam("eml/dataset/publisher/", 0, "id");
+    digester.addCallParam("eml/dataset/publisher/organizationName", 1);
 
     digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
 

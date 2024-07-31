@@ -182,6 +182,10 @@ public class EmlFactory {
     digester.addCallMethod("eml/additionalMetadata/metadata/gbif/dateStamp", "setDateStamp", 1);
     digester.addCallParam("eml/additionalMetadata/metadata/gbif/dateStamp", 0);
 
+    digester.addCallMethod("eml/dataset/publisher", "setPublisher", 2);
+    digester.addCallParam("eml/dataset/publisher/", 0, "id");
+    digester.addCallParam("eml/dataset/publisher/organizationName", 1);
+
     addAgentRules(digester, "eml/dataset/creator", "addCreator");
     addAgentRules(digester, "eml/dataset/metadataProvider", "addMetadataProvider");
     addAgentRules(digester, "eml/dataset/contact", "addContact");

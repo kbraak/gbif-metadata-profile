@@ -247,6 +247,10 @@ public class EmlFactoryTest {
       assertNotNull(eml.getDistributionDownloadUrl());
       assertEquals("https://ipt.gbif.org/archive.do?r=res", eml.getDistributionDownloadUrl());
 
+      // publisher
+      assertNotNull(eml.getPublisherName());
+      assertEquals("Publishing Organization 1", eml.getPublisherOrganizationName());
+
       // geospatial coverages tests
       assertNotNull(eml.getGeospatialCoverages());
       assertEquals(2, eml.getGeospatialCoverages().size());

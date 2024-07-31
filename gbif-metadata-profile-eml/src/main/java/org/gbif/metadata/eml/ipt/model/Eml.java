@@ -303,6 +303,16 @@ public class Eml implements Serializable {
   private List<Agent> contacts = new ArrayList<>();
 
   /**
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_publisher">EML Dataset publisher</a>
+   */
+  private String publisherId;
+
+  /**
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_publisher">EML Dataset publisher</a>
+   */
+  private String publisherOrganizationName;
+
+  /**
    * Picklist keyword indicating the process or technique used to prevent physical deterioration of non-living
    * collections. Expected to contain an instance from the Specimen Preservation Method Type Term vocabulary.
    *
@@ -806,6 +816,22 @@ public class Eml implements Serializable {
     this.contacts = contacts;
   }
 
+  public String getPublisherId() {
+    return publisherId;
+  }
+
+  public void setPublisherId(String publisherId) {
+    this.publisherId = publisherId;
+  }
+
+  public String getPublisherOrganizationName() {
+    return publisherOrganizationName;
+  }
+
+  public void setPublisherOrganizationName(String publisherOrganizationName) {
+    this.publisherOrganizationName = publisherOrganizationName;
+  }
+
   public String getQualityControl() {
     return qualityControl;
   }
@@ -1156,6 +1182,11 @@ public class Eml implements Serializable {
     pubDate = published;
   }
 
+  public void setPublisher(String publisherId, String publisherName) {
+    setPublisherId(publisherId);
+    setPublisherOrganizationName(publisherName);
+  }
+
   public void setSubject(List<String> keywords) {
     KeywordSet ks = new KeywordSet(keywords);
     List<KeywordSet> list = new ArrayList<>();
@@ -1262,6 +1293,8 @@ public class Eml implements Serializable {
         && Objects.equals(creators, eml.creators)
         && Objects.equals(metadataProviders, eml.metadataProviders)
         && Objects.equals(contacts, eml.contacts)
+        && Objects.equals(publisherId, eml.publisherId)
+        && Objects.equals(publisherOrganizationName, eml.publisherOrganizationName)
         && Objects.equals(specimenPreservationMethods, eml.specimenPreservationMethods)
         && Objects.equals(taxonomicCoverages, eml.taxonomicCoverages)
         && Objects.equals(temporalCoverages, eml.temporalCoverages)
@@ -1310,6 +1343,8 @@ public class Eml implements Serializable {
         creators,
         metadataProviders,
         contacts,
+        publisherId,
+        publisherOrganizationName,
         specimenPreservationMethods,
         taxonomicCoverages,
         temporalCoverages,
@@ -1358,6 +1393,8 @@ public class Eml implements Serializable {
         .add("creators=" + creators)
         .add("metadataProviders=" + metadataProviders)
         .add("contacts=" + contacts)
+        .add("publisherId='" + publisherId + "'")
+        .add("publisherOrganizationName='" + publisherOrganizationName + "'")
         .add("specimenPreservationMethods=" + specimenPreservationMethods)
         .add("taxonomicCoverages=" + taxonomicCoverages)
         .add("temporalCoverages=" + temporalCoverages)
