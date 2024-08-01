@@ -1133,6 +1133,9 @@ public class DatasetEmlParserTest {
 
     assertEquals("Sample Metadata RLS", dataset.getTitle());
     assertEquals("test-1_3", dataset.getShortName());
+    assertEquals("Publishing Organization 1", dataset.getPublishingOrganizationName());
+    assertNotNull(dataset.getPublishingOrganizationKey());
+    assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5", dataset.getPublishingOrganizationKey().toString());
 
     assertNotNull(dataset.getHomepage());
     assertEquals("http://reeflifesurvey.com/", dataset.getHomepage().toString());
@@ -1252,6 +1255,7 @@ public class DatasetEmlParserTest {
     assertEquals("http://www.researcherid.com/rid/Z-1234-2014", contact2.getUserId().get(0));
 
     // Project personnel
+    assertNotNull(dataset.getProject());
     List<Contact> personnelList = dataset.getProject().getContacts();
     assertEquals(2, personnelList.size());
 

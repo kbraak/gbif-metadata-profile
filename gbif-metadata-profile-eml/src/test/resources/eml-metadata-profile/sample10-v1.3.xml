@@ -286,6 +286,11 @@
       <onlineUrl>http://reeflifesurvey.com/</onlineUrl>
       <userId directory="http://www.researcherid.com/rid/">Z-1234-2014</userId>
     </contact>
+
+    <publisher id="619a4b95-1a82-4006-be6a-7dbe3c9b33c5" scope="system" system="http://gbif.org">
+      <organizationName>Publishing Organization 1</organizationName>
+    </publisher>
+
     <methods>
       <methodStep>
         <description>
