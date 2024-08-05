@@ -129,7 +129,7 @@
     </#macro>
 <#if !omitXmlDeclaration><?xml version="1.0" encoding="utf-8"?></#if>
 <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif-uat.org/schema/eml-gbif-profile/1.3/eml.xsd"
+         xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif.org/schema/eml-gbif-profile/1.3/eml.xsd"
 packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiName}"<#else>"${dataset.key!}"</#if>  system="http://gbif.org" scope="system"
 <#if dataset.language??>xml:lang="${dataset.language.getIso2LetterCode()}"</#if>>
 
