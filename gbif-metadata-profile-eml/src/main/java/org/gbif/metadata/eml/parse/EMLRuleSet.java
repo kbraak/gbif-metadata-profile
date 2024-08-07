@@ -57,6 +57,11 @@ import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
@@ -73,9 +78,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 /**
  * Digester rules to parse EML dataset metadata documents together with a DatasetDelegator digester
@@ -614,20 +616,50 @@ public class EMLRuleSet extends RuleSetBase {
       String htmlOutput;
 
       try (StringWriter writer = new StringWriter()) {
+        // Create a new Document to serialize the node
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
-        OutputFormat format = new OutputFormat(doc);
-        format.setOmitXMLDeclaration(true);
-        XMLSerializer serializer = new XMLSerializer(writer, format);
-        serializer.serialize(nodeToSerialize);
 
-        String serializedDocBookXml = writer.getBuffer().toString();
+        // Import the node to serialize into the new Document
+        Element importedNode = (Element) doc.importNode(nodeToSerialize, true);
+        doc.appendChild(importedNode);
+
+        // Set up the Transformer to handle XML serialization
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        // Set Transformer output properties
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");  // Disable indentation
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+        // Serialize the node to a string
+        DOMSource source = new DOMSource(importedNode);
+        StreamResult result = new StreamResult(writer);
+        transformer.transform(source, result);
+
+        // Get the serialized XML string
+        String serializedDocBookXml = writer.toString();
+
+        // Handle specific whitespace formatting for <pre> tags
+        serializedDocBookXml = preservePreformattedWhitespace(serializedDocBookXml);
+
+        // Unwrap the parent tag
         String unwrappedDocBookXml = unwrapParentTag(serializedDocBookXml);
+
+        // Convert DocBook XML to HTML
         htmlOutput = convertDocBookToHtml(unwrappedDocBookXml);
       }
 
       return htmlOutput;
+    }
+
+    private String preservePreformattedWhitespace(String xmlString) {
+      // This method preserves whitespace in <pre> tags by restoring line breaks and indentations
+      xmlString = xmlString.replaceAll("(<pre>)(.*?)(</pre>)", "$1\n$2\n$3");
+      return xmlString;
     }
 
     private String unwrapParentTag(String str) {
