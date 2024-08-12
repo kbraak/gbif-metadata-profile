@@ -605,7 +605,7 @@
                 </#list>
             </relatedProject>
             </#list>
-        </relatedProject>
+        </project>
         </#if>
     </dataset>
     <#if ((eml.citation)??) ||
