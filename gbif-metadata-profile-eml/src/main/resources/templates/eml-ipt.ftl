@@ -583,7 +583,7 @@
             </designDescription>
             </#if>
             <#list (eml.project.relatedProjects)! as relatedProject>
-            <relatedProject>
+            <#if relatedProject.identifier?has_content><relatedProject id="${relatedProject.identifier}"><#else><relatedProject></#if>
                 <title>${relatedProject.title}</title>
                 <#list (relatedProject.personnel)! as relatedProjectPersonnel>
                 <personnel>
@@ -605,7 +605,7 @@
                 </#list>
             </relatedProject>
             </#list>
-        </project>
+        </relatedProject>
         </#if>
     </dataset>
     <#if ((eml.citation)??) ||
