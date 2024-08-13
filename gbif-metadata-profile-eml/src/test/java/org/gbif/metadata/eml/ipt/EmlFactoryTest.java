@@ -318,7 +318,7 @@ public class EmlFactoryTest {
       assertEquals(
           "Birds", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getCommonName());
 
-      assertEquals("Provide data to the whole world.", eml.getPurpose());
+      assertEquals("<p>Provide data to the whole world.</p>", eml.getPurpose());
 
       assertEquals("Changes done as needed.", eml.getUpdateFrequencyDescription());
       assertEquals(MaintenanceUpdateFrequency.AS_NEEDED, eml.getUpdateFrequency());

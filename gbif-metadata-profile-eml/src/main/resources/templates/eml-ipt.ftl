@@ -384,9 +384,9 @@
         </coverage>
         </#if>
         <#if eml.purpose?has_content>
-        <purpose>
-            <para>${eml.purpose}</para>
-        </purpose>
+        <#noescape>
+        <purpose>${eml.getDocBookField("purpose")}</purpose>
+        </#noescape>
         </#if>
         <#if eml.introduction?has_content>
         <#noescape>

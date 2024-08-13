@@ -297,9 +297,9 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
             </coverage>
         </#if>
         <#if dataset.purpose?has_content>
-            <purpose>
-                <para>${dataset.purpose}</para>
-            </purpose>
+            <#noescape>
+                <purpose>${eml.getDocBookField("purpose")}</purpose>
+            </#noescape>
         </#if>
         <#if dataset.introduction?has_content>
             <#noescape>

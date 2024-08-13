@@ -138,11 +138,12 @@ public class EmlFactory {
 
     digester.addBeanPropertySetter("eml/dataset/language", "language");
 
-    // DocBook description, gettingStarted, introduction, acknowledgements
-    digester.addRule("eml/dataset/abstract", new SetSerializedNodeRule("setDescription", "abstract"));
-    digester.addRule("eml/dataset/gettingStarted", new SetSerializedNodeRule("setGettingStarted", "gettingStarted"));
-    digester.addRule("eml/dataset/introduction", new SetSerializedNodeRule("setIntroduction", "introduction"));
-    digester.addRule("eml/dataset/acknowledgements", new SetSerializedNodeRule("setAcknowledgements", "acknowledgements"));
+    // DocBook description, gettingStarted, introduction, acknowledgements, purpose
+    digester.addRule("eml/dataset/abstract", new DocBookRule("setDescription", "abstract"));
+    digester.addRule("eml/dataset/gettingStarted", new DocBookRule("setGettingStarted", "gettingStarted"));
+    digester.addRule("eml/dataset/introduction", new DocBookRule("setIntroduction", "introduction"));
+    digester.addRule("eml/dataset/acknowledgements", new DocBookRule("setAcknowledgements", "acknowledgements"));
+    digester.addRule("eml/dataset/purpose", new DocBookRule("setPurpose", "purpose"));
 
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
     digester.addRule("eml/dataset/intellectualRights/para", new NodeCreateRule(Node.ELEMENT_NODE));
@@ -160,7 +161,6 @@ public class EmlFactory {
     digester.addCallParam("eml/dataset/distribution/online/url", 0);
     digester.addCallParam("eml/dataset/distribution/online/url", 1, "function");
 
-    digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "updateFrequencyDescription");
     digester.addCallMethod(
@@ -553,16 +553,16 @@ public class EmlFactory {
   }
 
   // Converter to literal XML (DocBook) ant then to HTML
-  public static class SetSerializedNodeRule extends NodeCreateRule {
+  public static class DocBookRule extends NodeCreateRule {
 
     private String method;
     private String wrapperElement;
 
-    public SetSerializedNodeRule() throws ParserConfigurationException {
+    public DocBookRule() throws ParserConfigurationException {
       super(Node.ELEMENT_NODE);
     }
 
-    public SetSerializedNodeRule(String method, String wrapperElement)
+    public DocBookRule(String method, String wrapperElement)
         throws ParserConfigurationException {
       this.method = method;
       this.wrapperElement = wrapperElement;

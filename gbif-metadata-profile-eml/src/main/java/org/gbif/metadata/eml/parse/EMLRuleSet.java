@@ -223,12 +223,12 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addCallParam("eml/dataset/publisher/", 0, "id");
     digester.addCallParam("eml/dataset/publisher/organizationName", 1);
 
-    digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
-
     addDocBookRule(digester, "eml/dataset/introduction", "setIntroduction", "introduction");
     addDocBookRule(digester, "eml/dataset/gettingStarted", "setGettingStarted", "gettingStarted");
     addDocBookRule(
         digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
+    addDocBookRule(
+        digester, "eml/dataset/purpose", "setPurpose", "purpose");
 
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
@@ -583,23 +583,23 @@ public class EMLRuleSet extends RuleSetBase {
   private void addDocBookRule(
       Digester digester, String pattern, String method, String wrapperElement) {
     try {
-      digester.addRule(pattern, new SetSerializedNodeRule(method, wrapperElement));
+      digester.addRule(pattern, new DocBookRule(method, wrapperElement));
     } catch (ParserConfigurationException e) {
       // TODO log error, do something
     }
   }
 
   // Converter to literal XML (DocBook) ant then to HTML
-  public static class SetSerializedNodeRule extends NodeCreateRule {
+  public static class DocBookRule extends NodeCreateRule {
 
     private String method;
     private String wrapperElement;
 
-    public SetSerializedNodeRule() throws ParserConfigurationException {
+    public DocBookRule() throws ParserConfigurationException {
       super(Node.ELEMENT_NODE);
     }
 
-    public SetSerializedNodeRule(String method, String wrapperElement)
+    public DocBookRule(String method, String wrapperElement)
         throws ParserConfigurationException {
       this.method = method;
       this.wrapperElement = wrapperElement;

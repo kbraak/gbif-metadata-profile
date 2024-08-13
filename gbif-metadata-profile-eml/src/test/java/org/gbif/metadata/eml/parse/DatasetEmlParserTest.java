@@ -1406,7 +1406,7 @@ public class DatasetEmlParserTest {
     assertEquals(7, dataset.getBibliographicCitations().size());
 
     // Purpose
-    assertEquals("The purpose of this dataset.", dataset.getPurpose());
+    assertEquals("<p>The purpose of this dataset.</p>", dataset.getPurpose());
 
     // introduction, gettingStarted, acknowledgements
     String expectedIntroduction =
