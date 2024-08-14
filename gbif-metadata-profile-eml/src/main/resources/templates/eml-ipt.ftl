@@ -11,10 +11,10 @@
         <#list eml.getAlternateIdentifiers() as altid>
         <alternateIdentifier>${altid!}</alternateIdentifier>
         </#list>
-        <#if eml.shortName??>
+        <#if eml.shortName?has_content>
         <shortName>${eml.shortName}</shortName>
         </#if>
-        <#if eml.title??>
+        <#if eml.title?has_content>
         <title xml:lang="${eml.metadataLanguage!"en"}"><#if eml.title?has_content>${eml.title}<#else><@s.text name='eml.title'/></#if></title>
         </#if>
         <#-- The creator is the person, organization, or position who created the resource (not necessarily the author of this metadata about the resource). -->
