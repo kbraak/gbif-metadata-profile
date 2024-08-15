@@ -469,8 +469,8 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <#if dataset.collections?has_content >
                     <#list dataset.collections as col>
                         <collection>
-                            <parentCollectionIdentifier>${col.parentIdentifier!}</parentCollectionIdentifier>
-                            <collectionIdentifier>${col.identifier!}</collectionIdentifier>
+                            <#if col.parentIdentifier?has_content><parentCollectionIdentifier>${col.parentIdentifier}</parentCollectionIdentifier></#if>
+                            <#if col.identifier?has_content><collectionIdentifier>${col.identifier}</collectionIdentifier></#if>
                             <collectionName>${col.name!}</collectionName>
                         </collection>
                     </#list>
