@@ -338,7 +338,7 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <organizationName>${dataset.publishingOrganizationName}</organizationName>
             </publisher>
         </#if>
-        <#if dataset.samplingDescription??>
+        <#if (dataset.samplingDescription.methodSteps)?has_content>
             <methods>
                 <#list dataset.samplingDescription.methodSteps![] as methodStep>
                     <methodStep>
@@ -347,16 +347,20 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                         </description>
                     </methodStep>
                 </#list>
-                <#if dataset.samplingDescription.studyExtent?has_content || dataset.samplingDescription.sampling?has_content >
+                <#if dataset.samplingDescription.studyExtent?has_content && dataset.samplingDescription.sampling?has_content >
                     <sampling>
+                        <#if dataset.samplingDescription.studyExtent?has_content>
                         <studyExtent>
                             <description>
-                                <para>${dataset.samplingDescription.studyExtent!}</para>
+                                <para>${dataset.samplingDescription.studyExtent}</para>
                             </description>
                         </studyExtent>
+                        </#if>
+                        <#if dataset.samplingDescription.sampling?has_content >
                         <samplingDescription>
-                            <para>${dataset.samplingDescription.sampling!}</para>
+                            <para>${dataset.samplingDescription.sampling}</para>
                         </samplingDescription>
+                        </#if>
                     </sampling>
                 </#if>
                 <#if dataset.samplingDescription.qualityControl?has_content>

@@ -491,9 +491,8 @@
             <organizationName>${eml.publisherOrganizationName}</organizationName>
         </publisher>
         </#if>
-        <#if (eml.getStudyExtent())?? || (eml.getSampleDescription())?? || (eml.getQualityControl())?? ||  ((eml.methodSteps)?? && ((eml.methodSteps) ? size > 0)) >
+        <#if (eml.getMethodSteps())?has_content>
         <methods>
-            <#if (eml.methodSteps)??>
             <#list eml.getMethodSteps() as methodStep>
             <methodStep>
                 <description>
@@ -501,23 +500,26 @@
                 </description>
             </methodStep>
             </#list>
-            </#if>
-            <#if (eml.getStudyExtent())?has_content || (eml.getSampleDescription())?has_content >
+            <#if (eml.getStudyExtent())?has_content && (eml.getSampleDescription())?has_content >
             <sampling>
+                <#if (eml.getStudyExtent())?has_content>
                 <studyExtent>
                     <description>
-                        <para>${eml.studyExtent!}</para>
+                        <para>${eml.studyExtent}</para>
                     </description>
                 </studyExtent>
+                </#if>
+                <#if (eml.getSampleDescription())?has_content>
                 <samplingDescription>
-                    <para>${eml.sampleDescription!}</para>
+                    <para>${eml.sampleDescription}</para>
                 </samplingDescription>
+                </#if>
             </sampling>
             </#if>
             <#if (eml.getQualityControl())?has_content>
             <qualityControl>
                 <description>
-                    <para>${eml.qualityControl!}</para>
+                    <para>${eml.qualityControl}</para>
                 </description>
             </qualityControl>
             </#if>
