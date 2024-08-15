@@ -324,6 +324,8 @@
             <geographicCoverage>
                 <#if (geocoverage.getDescription())?has_content>
                 <geographicDescription>${geocoverage.description}</geographicDescription>
+                <#else>
+                <geographicDescription>N/A</geographicDescription>
                 </#if>
                 <boundingCoordinates>
                     <westBoundingCoordinate>${geocoverage.boundingCoordinates.min.longitude!}</westBoundingCoordinate>

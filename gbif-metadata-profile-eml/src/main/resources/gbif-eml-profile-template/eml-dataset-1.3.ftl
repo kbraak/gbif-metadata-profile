@@ -245,6 +245,8 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                     <geographicCoverage>
                         <#if geocoverage.description?has_content>
                             <geographicDescription>${geocoverage.description}</geographicDescription>
+                        <#else>
+                            <geographicDescription>N/A</geographicDescription>
                         </#if>
                         <#if geocoverage.boundingBox?has_content>
                             <boundingCoordinates>
