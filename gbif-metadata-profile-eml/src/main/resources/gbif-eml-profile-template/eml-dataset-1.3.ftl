@@ -127,7 +127,9 @@
             <userId directory="${directory}">${id}</userId>
         </#if>
     </#macro>
-<#if !omitXmlDeclaration><?xml version="1.0" encoding="utf-8"?></#if>
+<#if !omitXmlDeclaration>
+<?xml version="1.0" encoding="utf-8"?>
+</#if>
 <eml:eml xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://rs.gbif.org/schema/eml-gbif-profile/1.3/eml.xsd"
 packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiName}"<#else>"${dataset.key!}"</#if>  system="http://gbif.org" scope="system"
@@ -164,29 +166,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </#if>
             </individualName>
             </#if>
-            <@elem "organizationName", ct.organization! />
+            <#if ct.organization?has_content>
+            <organizationName>${ct.organization!}</organizationName>
+            </#if>
             <#list ct.position![] as p>
-            <@elem "positionName", p! />
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
             </#list>
             <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
             <address>
                 <#list ct.address![] as ad>
-                <@elem "deliveryPoint", ad! />
+                <#if ad?has_content>
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
                 </#list>
-                <@elem "city", ct.city! />
-                <@elem "administrativeArea", ct.province! />
-                <@elem "postalCode", ct.postalCode! />
-                <@elem "country", ct.country! />
+                <#if ct.city?has_content>
+                <city>${ct.city!}</city>
+                </#if>
+                <#if ct.province?has_content>
+                <administrativeArea>${ct.province!}</administrativeArea>
+                </#if>
+                <#if ct.postalCode?has_content>
+                <postalCode>${ct.postalCode!}</postalCode>
+                </#if>
+                <#if ct.country?has_content>
+                <country>${ct.country!}</country>
+                </#if>
             </address>
             </#if>
             <#list ct.phone![] as p>
-            <@elem "phone", p! />
+            <#if p?has_content>
+            <phone>${p}</phone>
+            </#if>
             </#list>
             <#list ct.email![] as e>
-            <@elem "electronicMailAddress", e! />
+            <#if e?has_content>
+            <electronicMailAddress>${e}</electronicMailAddress>
+            </#if>
             </#list>
             <#list ct.homepage![] as h>
-            <@elem "onlineUrl", h! />
+            <#if h?has_content>
+            <onlineUrl>${h}</onlineUrl>
+            </#if>
             </#list>
             <#if ct.userId?has_content>
             <#list ct.userId as uid>
@@ -214,29 +236,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </#if>
             </individualName>
             </#if>
-            <@elem "organizationName", ct.organization! />
+            <#if ct.organization?has_content>
+            <organizationName>${ct.organization!}</organizationName>
+            </#if>
             <#list ct.position![] as p>
-            <@elem "positionName", p! />
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
             </#list>
             <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
             <address>
                 <#list ct.address![] as ad>
-                <@elem "deliveryPoint", ad! />
+                <#if ad?has_content>
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
                 </#list>
-                <@elem "city", ct.city! />
-                <@elem "administrativeArea", ct.province! />
-                <@elem "postalCode", ct.postalCode! />
-                <@elem "country", ct.country! />
+                <#if ct.city?has_content>
+                <city>${ct.city!}</city>
+                </#if>
+                <#if ct.province?has_content>
+                <administrativeArea>${ct.province!}</administrativeArea>
+                </#if>
+                <#if ct.postalCode?has_content>
+                <postalCode>${ct.postalCode!}</postalCode>
+                </#if>
+                <#if ct.country?has_content>
+                <country>${ct.country!}</country>
+                </#if>
             </address>
             </#if>
             <#list ct.phone![] as p>
-            <@elem "phone", p! />
+            <#if p?has_content>
+            <phone>${p}</phone>
+            </#if>
             </#list>
             <#list ct.email![] as e>
-            <@elem "electronicMailAddress", e! />
+            <#if e?has_content>
+            <electronicMailAddress>${e}</electronicMailAddress>
+            </#if>
             </#list>
             <#list ct.homepage![] as h>
-            <@elem "onlineUrl", h! />
+            <#if h?has_content>
+            <onlineUrl>${h}</onlineUrl>
+            </#if>
             </#list>
             <#if ct.userId?has_content>
             <#list ct.userId as uid>
@@ -264,29 +306,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </#if>
             </individualName>
             </#if>
-            <@elem "organizationName", ct.organization! />
+            <#if ct.organization?has_content>
+            <organizationName>${ct.organization!}</organizationName>
+            </#if>
             <#list ct.position![] as p>
-            <@elem "positionName", p! />
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
             </#list>
             <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
             <address>
                 <#list ct.address![] as ad>
-                <@elem "deliveryPoint", ad! />
+                <#if ad?has_content>
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
                 </#list>
-                <@elem "city", ct.city! />
-                <@elem "administrativeArea", ct.province! />
-                <@elem "postalCode", ct.postalCode! />
-                <@elem "country", ct.country! />
+                <#if ct.city?has_content>
+                <city>${ct.city!}</city>
+                </#if>
+                <#if ct.province?has_content>
+                <administrativeArea>${ct.province!}</administrativeArea>
+                </#if>
+                <#if ct.postalCode?has_content>
+                <postalCode>${ct.postalCode!}</postalCode>
+                </#if>
+                <#if ct.country?has_content>
+                <country>${ct.country!}</country>
+                </#if>
             </address>
             </#if>
             <#list ct.phone![] as p>
-            <@elem "phone", p! />
+            <#if p?has_content>
+            <phone>${p}</phone>
+            </#if>
             </#list>
             <#list ct.email![] as e>
-            <@elem "electronicMailAddress", e! />
+            <#if e?has_content>
+            <electronicMailAddress>${e}</electronicMailAddress>
+            </#if>
             </#list>
             <#list ct.homepage![] as h>
-            <@elem "onlineUrl", h! />
+            <#if h?has_content>
+            <onlineUrl>${h}</onlineUrl>
+            </#if>
             </#list>
             <#if ct.userId?has_content>
             <#list ct.userId as uid>
@@ -480,29 +542,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </#if>
             </individualName>
             </#if>
-            <@elem "organizationName", ct.organization! />
+            <#if ct.organization?has_content>
+            <organizationName>${ct.organization!}</organizationName>
+            </#if>
             <#list ct.position![] as p>
-            <@elem "positionName", p! />
+            <#if p?has_content>
+            <positionName>${p}</positionName>
+            </#if>
             </#list>
             <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
             <address>
                 <#list ct.address![] as ad>
-                <@elem "deliveryPoint", ad! />
+                <#if ad?has_content>
+                <deliveryPoint>${ad}</deliveryPoint>
+                </#if>
                 </#list>
-                <@elem "city", ct.city! />
-                <@elem "administrativeArea", ct.province! />
-                <@elem "postalCode", ct.postalCode! />
-                <@elem "country", ct.country! />
+                <#if ct.city?has_content>
+                <city>${ct.city!}</city>
+                </#if>
+                <#if ct.province?has_content>
+                <administrativeArea>${ct.province!}</administrativeArea>
+                </#if>
+                <#if ct.postalCode?has_content>
+                <postalCode>${ct.postalCode!}</postalCode>
+                </#if>
+                <#if ct.country?has_content>
+                <country>${ct.country!}</country>
+                </#if>
             </address>
             </#if>
             <#list ct.phone![] as p>
-            <@elem "phone", p! />
+            <#if p?has_content>
+            <phone>${p}</phone>
+            </#if>
             </#list>
             <#list ct.email![] as e>
-            <@elem "electronicMailAddress", e! />
+            <#if e?has_content>
+            <electronicMailAddress>${e}</electronicMailAddress>
+            </#if>
             </#list>
             <#list ct.homepage![] as h>
-            <@elem "onlineUrl", h! />
+            <#if h?has_content>
+            <onlineUrl>${h}</onlineUrl>
+            </#if>
             </#list>
             <#if ct.userId?has_content>
             <#list ct.userId as uid>
@@ -573,29 +655,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                     </#if>
                     </individualName>
                     </#if>
-                    <@elem "organizationName", ct.organization! />
+                    <#if ct.organization?has_content>
+                    <organizationName>${ct.organization!}</organizationName>
+                    </#if>
                     <#list ct.position![] as p>
-                    <@elem "positionName", p! />
+                    <#if p?has_content>
+                    <positionName>${p}</positionName>
+                    </#if>
                     </#list>
                     <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
                     <address>
                         <#list ct.address![] as ad>
-                        <@elem "deliveryPoint", ad! />
+                        <#if ad?has_content>
+                        <deliveryPoint>${ad}</deliveryPoint>
+                        </#if>
                         </#list>
-                        <@elem "city", ct.city! />
-                        <@elem "administrativeArea", ct.province! />
-                        <@elem "postalCode", ct.postalCode! />
-                        <@elem "country", ct.country! />
+                        <#if ct.city?has_content>
+                        <city>${ct.city!}</city>
+                        </#if>
+                        <#if ct.province?has_content>
+                        <administrativeArea>${ct.province!}</administrativeArea>
+                        </#if>
+                        <#if ct.postalCode?has_content>
+                        <postalCode>${ct.postalCode!}</postalCode>
+                        </#if>
+                        <#if ct.country?has_content>
+                        <country>${ct.country!}</country>
+                        </#if>
                     </address>
                     </#if>
                     <#list ct.phone![] as p>
-                    <@elem "phone", p! />
+                    <#if p?has_content>
+                    <phone>${p}</phone>
+                    </#if>
                     </#list>
                     <#list ct.email![] as e>
-                    <@elem "electronicMailAddress", e! />
+                    <#if e?has_content>
+                    <electronicMailAddress>${e}</electronicMailAddress>
+                    </#if>
                     </#list>
                     <#list ct.homepage![] as h>
-                    <@elem "onlineUrl", h! />
+                    <#if h?has_content>
+                    <onlineUrl>${h}</onlineUrl>
+                    </#if>
                     </#list>
                     <#if ct.userId?has_content>
                     <#list ct.userId as uid>
@@ -663,29 +765,49 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                             </#if>
                         </individualName>
                         </#if>
-                        <@elem "organizationName", ct.organization! />
+                        <#if ct.organization?has_content>
+                        <organizationName>${ct.organization!}</organizationName>
+                        </#if>
                         <#list ct.position![] as p>
-                        <@elem "positionName", p! />
+                        <#if p?has_content>
+                        <positionName>${p}</positionName>
+                        </#if>
                         </#list>
                         <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
                         <address>
                             <#list ct.address![] as ad>
-                            <@elem "deliveryPoint", ad! />
+                            <#if ad?has_content>
+                            <deliveryPoint>${ad}</deliveryPoint>
+                            </#if>
                             </#list>
-                            <@elem "city", ct.city! />
-                            <@elem "administrativeArea", ct.province! />
-                            <@elem "postalCode", ct.postalCode! />
-                            <@elem "country", ct.country! />
+                            <#if ct.city?has_content>
+                            <city>${ct.city!}</city>
+                            </#if>
+                            <#if ct.province?has_content>
+                            <administrativeArea>${ct.province!}</administrativeArea>
+                            </#if>
+                            <#if ct.postalCode?has_content>
+                            <postalCode>${ct.postalCode!}</postalCode>
+                            </#if>
+                            <#if ct.country?has_content>
+                            <country>${ct.country!}</country>
+                            </#if>
                         </address>
                         </#if>
                         <#list ct.phone![] as p>
-                        <@elem "phone", p! />
+                        <#if p?has_content>
+                        <phone>${p}</phone>
+                        </#if>
                         </#list>
                         <#list ct.email![] as e>
-                        <@elem "electronicMailAddress", e! />
+                        <#if e?has_content>
+                        <electronicMailAddress>${e}</electronicMailAddress>
+                        </#if>
                         </#list>
                         <#list ct.homepage![] as h>
-                        <@elem "onlineUrl", h! />
+                        <#if h?has_content>
+                        <onlineUrl>${h}</onlineUrl>
+                        </#if>
                         </#list>
                         <#if ct.userId?has_content>
                         <#list ct.userId as uid>
