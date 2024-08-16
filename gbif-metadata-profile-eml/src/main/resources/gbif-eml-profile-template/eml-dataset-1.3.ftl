@@ -1,7 +1,6 @@
 <#-- @ftlvariable name="dataset" type="org.gbif.api.model.registry.Dataset" -->
 <#-- @ftlvariable name="eml" type="org.gbif.metadata.eml.EMLWriter.EmlDatasetWrapper" -->
 <#escape x as x?xml>
-    <#macro elem name value><#if value?has_content><${name}>${value}</${name}></#if></#macro>
     <#macro interpretedEnum enum><#if enum??><#if enum.interpreted?has_content>${enum.interpreted.name()?lower_case?replace("_", " ")?capitalize}<#else>${enum.verbatim!}</#if></#if></#macro>
     <#macro citation cit>
         <#if cit??>
@@ -10,52 +9,6 @@
             <#else>
                 <citation>${cit.text!}</citation>
             </#if>
-        </#if>
-    </#macro>
-    <#macro contact ct withRole=false>
-        <#if ct.computeCompleteName()?has_content>
-            <individualName>
-                <@elem "salutation" ct.salutation! />
-                <#if ct.lastName?has_content>
-                    <@elem "givenName", ct.firstName! />
-                    <surName>${ct.lastName!}</surName>
-                <#else>
-                <#--surName is mandatory in EML so but all we have if no lastname is available-->
-                    <surName>${ct.computeCompleteName()}</surName>
-                </#if>
-            </individualName>
-        </#if>
-        <@elem "organizationName", ct.organization! />
-        <#list ct.position![] as p>
-            <@elem "positionName", p! />
-        </#list>
-        <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
-            <address>
-                <#list ct.address![] as ad>
-                    <@elem "deliveryPoint", ad! />
-                </#list>
-                <@elem "city", ct.city! />
-                <@elem "administrativeArea", ct.province! />
-                <@elem "postalCode", ct.postalCode! />
-                <@elem "country", ct.country! />
-            </address>
-        </#if>
-        <#list ct.phone![] as p>
-            <@elem "phone", p! />
-        </#list>
-        <#list ct.email![] as e>
-            <@elem "electronicMailAddress", e! />
-        </#list>
-        <#list ct.homepage![] as h>
-            <@elem "onlineUrl", h! />
-        </#list>
-        <#if ct.userId?has_content>
-            <#list ct.userId as uid>
-                <@constructUserID uid/>
-            </#list>
-        </#if>
-        <#if withRole && ct.type?has_content>
-            <role>${ct.type}</role>
         </#if>
     </#macro>
     <#assign DATEIsoFormat="yyyy-MM-dd"/>
