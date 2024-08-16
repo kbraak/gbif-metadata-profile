@@ -146,21 +146,156 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
         </#if>
         <title>${dataset.title!}</title>
         <#-- The creators are the persons who created the resource (not necessarily the author of this metadata about the resource). -->
-        <#list eml.getCreators() as creator>
+        <#list eml.getCreators() as ct>
         <creator>
-            <@contact ct=creator!/>
+            <#if ct.computeCompleteName()?has_content>
+            <individualName>
+                <#if ct.salutation?has_content>
+                <salutation>${ct.salutation}</salutation>
+                </#if>
+                <#if ct.lastName?has_content>
+                <#if ct.firstName?has_content>
+                <givenName>${ct.firstName}</givenName>
+                </#if>
+                <surName>${ct.lastName!}</surName>
+                <#else>
+                <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                <surName>${ct.computeCompleteName()}</surName>
+                </#if>
+            </individualName>
+            </#if>
+            <@elem "organizationName", ct.organization! />
+            <#list ct.position![] as p>
+            <@elem "positionName", p! />
+            </#list>
+            <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+            <address>
+                <#list ct.address![] as ad>
+                <@elem "deliveryPoint", ad! />
+                </#list>
+                <@elem "city", ct.city! />
+                <@elem "administrativeArea", ct.province! />
+                <@elem "postalCode", ct.postalCode! />
+                <@elem "country", ct.country! />
+            </address>
+            </#if>
+            <#list ct.phone![] as p>
+            <@elem "phone", p! />
+            </#list>
+            <#list ct.email![] as e>
+            <@elem "electronicMailAddress", e! />
+            </#list>
+            <#list ct.homepage![] as h>
+            <@elem "onlineUrl", h! />
+            </#list>
+            <#if ct.userId?has_content>
+            <#list ct.userId as uid>
+            <@constructUserID uid/>
+            </#list>
+            </#if>
         </creator>
         </#list>
         <#-- The contacts responsible for the creation of the metadata. -->
-        <#list eml.getMetadataProviders() as metadataProvider>
+        <#list eml.getMetadataProviders() as ct>
         <metadataProvider>
-            <@contact ct=metadataProvider!/>
+            <#if ct.computeCompleteName()?has_content>
+            <individualName>
+                <#if ct.salutation?has_content>
+                <salutation>${ct.salutation}</salutation>
+                </#if>
+                <#if ct.lastName?has_content>
+                <#if ct.firstName?has_content>
+                <givenName>${ct.firstName}</givenName>
+                </#if>
+                <surName>${ct.lastName!}</surName>
+                <#else>
+                <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                <surName>${ct.computeCompleteName()}</surName>
+                </#if>
+            </individualName>
+            </#if>
+            <@elem "organizationName", ct.organization! />
+            <#list ct.position![] as p>
+            <@elem "positionName", p! />
+            </#list>
+            <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+            <address>
+                <#list ct.address![] as ad>
+                <@elem "deliveryPoint", ad! />
+                </#list>
+                <@elem "city", ct.city! />
+                <@elem "administrativeArea", ct.province! />
+                <@elem "postalCode", ct.postalCode! />
+                <@elem "country", ct.country! />
+            </address>
+            </#if>
+            <#list ct.phone![] as p>
+            <@elem "phone", p! />
+            </#list>
+            <#list ct.email![] as e>
+            <@elem "electronicMailAddress", e! />
+            </#list>
+            <#list ct.homepage![] as h>
+            <@elem "onlineUrl", h! />
+            </#list>
+            <#if ct.userId?has_content>
+            <#list ct.userId as uid>
+            <@constructUserID uid/>
+            </#list>
+            </#if>
         </metadataProvider>
         </#list>
         <#-- The associated party is another contact associated with the resource with a defined role. -->
-        <#list eml.getAssociatedParties() as party>
+        <#list eml.getAssociatedParties() as ct>
         <associatedParty>
-            <@contact ct=party withRole=true/>
+            <#if ct.computeCompleteName()?has_content>
+            <individualName>
+                <#if ct.salutation?has_content>
+                <salutation>${ct.salutation}</salutation>
+                </#if>
+                <#if ct.lastName?has_content>
+                <#if ct.firstName?has_content>
+                <givenName>${ct.firstName}</givenName>
+                </#if>
+                <surName>${ct.lastName!}</surName>
+                <#else>
+                <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                <surName>${ct.computeCompleteName()}</surName>
+                </#if>
+            </individualName>
+            </#if>
+            <@elem "organizationName", ct.organization! />
+            <#list ct.position![] as p>
+            <@elem "positionName", p! />
+            </#list>
+            <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+            <address>
+                <#list ct.address![] as ad>
+                <@elem "deliveryPoint", ad! />
+                </#list>
+                <@elem "city", ct.city! />
+                <@elem "administrativeArea", ct.province! />
+                <@elem "postalCode", ct.postalCode! />
+                <@elem "country", ct.country! />
+            </address>
+            </#if>
+            <#list ct.phone![] as p>
+            <@elem "phone", p! />
+            </#list>
+            <#list ct.email![] as e>
+            <@elem "electronicMailAddress", e! />
+            </#list>
+            <#list ct.homepage![] as h>
+            <@elem "onlineUrl", h! />
+            </#list>
+            <#if ct.userId?has_content>
+            <#list ct.userId as uid>
+            <@constructUserID uid/>
+            </#list>
+            </#if>
+            <#if ct.type?has_content>
+            <role>${ct.type}</role>
+            </#if>
         </associatedParty>
         </#list>
         <#-- The date on which the resource was published. -->
@@ -327,9 +462,53 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
         </maintenance>
         </#if>
         <#-- Current primary contacts for the dataset. The creator of the resource might be dead, left the organisation or doesnt want to be bothered. -->
-        <#list eml.getContacts() as pointOfContact>
+        <#list eml.getContacts() as ct>
         <contact>
-            <@contact ct=pointOfContact!/>
+            <#if ct.computeCompleteName()?has_content>
+            <individualName>
+                <#if ct.salutation?has_content>
+                <salutation>${ct.salutation}</salutation>
+                </#if>
+                <#if ct.lastName?has_content>
+                <#if ct.firstName?has_content>
+                <givenName>${ct.firstName}</givenName>
+                </#if>
+                <surName>${ct.lastName!}</surName>
+                <#else>
+                <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                <surName>${ct.computeCompleteName()}</surName>
+                </#if>
+            </individualName>
+            </#if>
+            <@elem "organizationName", ct.organization! />
+            <#list ct.position![] as p>
+            <@elem "positionName", p! />
+            </#list>
+            <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+            <address>
+                <#list ct.address![] as ad>
+                <@elem "deliveryPoint", ad! />
+                </#list>
+                <@elem "city", ct.city! />
+                <@elem "administrativeArea", ct.province! />
+                <@elem "postalCode", ct.postalCode! />
+                <@elem "country", ct.country! />
+            </address>
+            </#if>
+            <#list ct.phone![] as p>
+            <@elem "phone", p! />
+            </#list>
+            <#list ct.email![] as e>
+            <@elem "electronicMailAddress", e! />
+            </#list>
+            <#list ct.homepage![] as h>
+            <@elem "onlineUrl", h! />
+            </#list>
+            <#if ct.userId?has_content>
+            <#list ct.userId as uid>
+            <@constructUserID uid/>
+            </#list>
+            </#if>
         </contact>
         </#list>
         <#if dataset.publishingOrganizationKey?? && dataset.publishingOrganizationName??>
@@ -376,9 +555,56 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
             <project <#if dataset.project.identifier?has_content>id="${dataset.project.identifier}"</#if>>
                 <title>${dataset.project.title!}</title>
                 <#-- The project personnel involved in a research project with a defined role. -->
-                <#list dataset.project.contacts! as personnel>
+                <#list dataset.project.contacts! as ct>
                 <personnel>
-                    <@contact ct=personnel withRole=true/>
+                    <#if ct.computeCompleteName()?has_content>
+                    <individualName>
+                    <#if ct.salutation?has_content>
+                    <salutation>${ct.salutation}</salutation>
+                    </#if>
+                    <#if ct.lastName?has_content>
+                    <#if ct.firstName?has_content>
+                    <givenName>${ct.firstName}</givenName>
+                    </#if>
+                    <surName>${ct.lastName!}</surName>
+                    <#else>
+                    <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                    <surName>${ct.computeCompleteName()}</surName>
+                    </#if>
+                    </individualName>
+                    </#if>
+                    <@elem "organizationName", ct.organization! />
+                    <#list ct.position![] as p>
+                    <@elem "positionName", p! />
+                    </#list>
+                    <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+                    <address>
+                        <#list ct.address![] as ad>
+                        <@elem "deliveryPoint", ad! />
+                        </#list>
+                        <@elem "city", ct.city! />
+                        <@elem "administrativeArea", ct.province! />
+                        <@elem "postalCode", ct.postalCode! />
+                        <@elem "country", ct.country! />
+                    </address>
+                    </#if>
+                    <#list ct.phone![] as p>
+                    <@elem "phone", p! />
+                    </#list>
+                    <#list ct.email![] as e>
+                    <@elem "electronicMailAddress", e! />
+                    </#list>
+                    <#list ct.homepage![] as h>
+                    <@elem "onlineUrl", h! />
+                    </#list>
+                    <#if ct.userId?has_content>
+                    <#list ct.userId as uid>
+                    <@constructUserID uid/>
+                    </#list>
+                    </#if>
+                    <#if ct.type?has_content>
+                    <role>${ct.type}</role>
+                    </#if>
                 </personnel>
                 </#list>
                 <abstract>
@@ -419,9 +645,56 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <#list dataset.project.relatedProjects as relatedProject>
                 <relatedProject <#if relatedProject.identifier?has_content>id="${relatedProject.identifier}"</#if>>
                     <title>${relatedProject.title}</title>
-                    <#list relatedProject.contacts! as personnel>
+                    <#list relatedProject.contacts! as ct>
                     <personnel>
-                        <@contact ct=personnel withRole=true/>
+                        <#if ct.computeCompleteName()?has_content>
+                        <individualName>
+                            <#if ct.salutation?has_content>
+                            <salutation>${ct.salutation}</salutation>
+                            </#if>
+                            <#if ct.lastName?has_content>
+                            <#if ct.firstName?has_content>
+                            <givenName>${ct.firstName}</givenName>
+                            </#if>
+                            <surName>${ct.lastName!}</surName>
+                            <#else>
+                            <#--surName is mandatory in EML so but all we have if no lastname is available-->
+                            <surName>${ct.computeCompleteName()}</surName>
+                            </#if>
+                        </individualName>
+                        </#if>
+                        <@elem "organizationName", ct.organization! />
+                        <#list ct.position![] as p>
+                        <@elem "positionName", p! />
+                        </#list>
+                        <#if ct.address?has_content || ct.city?has_content || ct.province?has_content || ct.postalCode?has_content || ct.country?has_content>
+                        <address>
+                            <#list ct.address![] as ad>
+                            <@elem "deliveryPoint", ad! />
+                            </#list>
+                            <@elem "city", ct.city! />
+                            <@elem "administrativeArea", ct.province! />
+                            <@elem "postalCode", ct.postalCode! />
+                            <@elem "country", ct.country! />
+                        </address>
+                        </#if>
+                        <#list ct.phone![] as p>
+                        <@elem "phone", p! />
+                        </#list>
+                        <#list ct.email![] as e>
+                        <@elem "electronicMailAddress", e! />
+                        </#list>
+                        <#list ct.homepage![] as h>
+                        <@elem "onlineUrl", h! />
+                        </#list>
+                        <#if ct.userId?has_content>
+                        <#list ct.userId as uid>
+                        <@constructUserID uid/>
+                        </#list>
+                        </#if>
+                        <#if ct.type?has_content>
+                        <role>${ct.type}</role>
+                        </#if>
                     </personnel>
                     </#list>
                     <#if relatedProject.abstract?has_content>
