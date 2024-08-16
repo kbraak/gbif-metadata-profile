@@ -23,6 +23,9 @@
         <creator>
             <#if (creator.getLastName())?? || ((!(creator.getOrganisation())??) && (!(creator.getPosition())??))>
             <individualName>
+                <#if (creator.salutation)?has_content>
+                <salutation>${creator.salutation}</salutation>
+                </#if>
                 <#if (creator.getFirstName())??>
                 <givenName>${creator.firstName}</givenName>
                 </#if>
@@ -96,6 +99,9 @@
         <metadataProvider>
             <#if (metadataProvider.getLastName())?? || ((!(metadataProvider.getOrganisation())??) && (!(metadataProvider.getPosition())??))>
             <individualName>
+                <#if (metadataProvider.salutation)?has_content>
+                <salutation>${metadataProvider.salutation}</salutation>
+                </#if>
                 <#if (metadataProvider.getFirstName())??>
                 <givenName>${metadataProvider.firstName}</givenName>
                 </#if>
@@ -169,6 +175,9 @@
         <associatedParty>
             <#if (associatedParty.getLastName())?? || ((!(associatedParty.getOrganisation())??) && (!(associatedParty.getPosition())??))>
             <individualName>
+                <#if (associatedParty.salutation)?has_content>
+                <salutation>${associatedParty.salutation}</salutation>
+                </#if>
                 <#if (associatedParty.getFirstName())??>
                 <givenName>${associatedParty.firstName}</givenName>
                 </#if>
@@ -419,6 +428,9 @@
         <contact>
             <#if (contact.getLastName())?? || ((!(contact.getOrganisation())??) && (!(contact.getPosition())??))>
             <individualName>
+                <#if (contact.salutation)?has_content>
+                <salutation>${contact.salutation}</salutation>
+                </#if>
                 <#if (contact.getFirstName())??>
                 <givenName>${contact.firstName}</givenName>
                 </#if>
@@ -531,6 +543,9 @@
             <#list (eml.project.getPersonnel())! as personnel>
             <personnel>
                 <individualName>
+                    <#if (personnel.salutation)?has_content>
+                    <salutation>${personnel.salutation}</salutation>
+                    </#if>
                     <#if (personnel.getFirstName())??>
                     <givenName>${personnel.firstName}</givenName>
                     </#if>
@@ -592,6 +607,9 @@
                 <#list (relatedProject.personnel)! as relatedProjectPersonnel>
                 <personnel>
                     <individualName>
+                        <#if (relatedProjectPersonnel.salutation)?has_content>
+                        <salutation>${relatedProjectPersonnel.salutation}</salutation>
+                        </#if>
                         <#if (relatedProjectPersonnel.getFirstName())??>
                         <givenName>${relatedProjectPersonnel.firstName}</givenName>
                         </#if>
