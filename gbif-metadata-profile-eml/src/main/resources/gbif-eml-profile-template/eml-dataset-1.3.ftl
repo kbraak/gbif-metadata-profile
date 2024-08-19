@@ -399,10 +399,10 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </#if>
                 <#if geocoverage.boundingBox?has_content>
                 <boundingCoordinates>
-                    <westBoundingCoordinate>${geocoverage.boundingBox.minLongitude}</westBoundingCoordinate>
-                    <eastBoundingCoordinate>${geocoverage.boundingBox.maxLongitude}</eastBoundingCoordinate>
-                    <northBoundingCoordinate>${geocoverage.boundingBox.maxLatitude}</northBoundingCoordinate>
-                    <southBoundingCoordinate>${geocoverage.boundingBox.minLatitude}</southBoundingCoordinate>
+                    <westBoundingCoordinate>${geocoverage.boundingBox.minLongitude!?string('0.######')?replace(',', '.')}</westBoundingCoordinate>
+                    <eastBoundingCoordinate>${geocoverage.boundingBox.maxLongitude!?string('0.######')?replace(',', '.')}</eastBoundingCoordinate>
+                    <northBoundingCoordinate>${geocoverage.boundingBox.maxLatitude!?string('0.######')?replace(',', '.')}</northBoundingCoordinate>
+                    <southBoundingCoordinate>${geocoverage.boundingBox.minLatitude!?string('0.######')?replace(',', '.')}</southBoundingCoordinate>
                 </boundingCoordinates>
                 </#if>
             </geographicCoverage>

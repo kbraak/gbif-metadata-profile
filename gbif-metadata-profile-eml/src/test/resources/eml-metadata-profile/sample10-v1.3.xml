@@ -166,10 +166,10 @@
           reefs distributed worldwide.
         </geographicDescription>
         <boundingCoordinates>
-          <westBoundingCoordinate>-180</westBoundingCoordinate>
-          <eastBoundingCoordinate>180</eastBoundingCoordinate>
-          <northBoundingCoordinate>90</northBoundingCoordinate>
-          <southBoundingCoordinate>-90</southBoundingCoordinate>
+          <westBoundingCoordinate>-92.373</westBoundingCoordinate>
+          <eastBoundingCoordinate>-88.066</eastBoundingCoordinate>
+          <northBoundingCoordinate>18.563</northBoundingCoordinate>
+          <southBoundingCoordinate>13.539</southBoundingCoordinate>
         </boundingCoordinates>
       </geographicCoverage>
       <taxonomicCoverage>

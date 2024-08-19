@@ -337,10 +337,10 @@
                 <geographicDescription>N/A</geographicDescription>
                 </#if>
                 <boundingCoordinates>
-                    <westBoundingCoordinate>${geocoverage.boundingCoordinates.min.longitude!}</westBoundingCoordinate>
-                    <eastBoundingCoordinate>${geocoverage.boundingCoordinates.max.longitude!}</eastBoundingCoordinate>
-                    <northBoundingCoordinate>${geocoverage.boundingCoordinates.max.latitude!}</northBoundingCoordinate>
-                    <southBoundingCoordinate>${geocoverage.boundingCoordinates.min.latitude!}</southBoundingCoordinate>
+                    <westBoundingCoordinate>${geocoverage.boundingCoordinates.min.longitude!?string('0.######')?replace(',', '.')}</westBoundingCoordinate>
+                    <eastBoundingCoordinate>${geocoverage.boundingCoordinates.max.longitude!?string('0.######')?replace(',', '.')}</eastBoundingCoordinate>
+                    <northBoundingCoordinate>${geocoverage.boundingCoordinates.max.latitude!?string('0.######')?replace(',', '.')}</northBoundingCoordinate>
+                    <southBoundingCoordinate>${geocoverage.boundingCoordinates.min.latitude!?string('0.######')?replace(',', '.')}</southBoundingCoordinate>
                 </boundingCoordinates>
             </geographicCoverage>
             </#list>
