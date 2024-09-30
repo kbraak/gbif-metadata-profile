@@ -672,7 +672,7 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 <award>
                     <funderName>${award.funderName}</funderName>
                     <#list award.funderIdentifiers! as fi>
-                    <funderIdentifier>${fi}</funderIdentifier>
+                    <#if fi?has_content><funderIdentifier>${fi}</funderIdentifier></#if>
                     </#list>
                     <#if award.awardNumber?has_content>
                     <awardNumber>${award.awardNumber}</awardNumber>
