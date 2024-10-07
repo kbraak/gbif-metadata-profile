@@ -204,15 +204,20 @@ public class EmlFactoryTest {
       assertEquals(cal.getTime(), eml.getPubDate());
 
       assertEquals("en_US", eml.getLanguage());
-      assertEquals("<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>", eml.getAbstract());
-      assertEquals("<div><h1>Introduction</h1><p>Actual introduction</p></div>", eml.getIntroduction());
+      assertEquals(
+          "<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>",
+          eml.getAbstract());
+      assertEquals(
+          "<div><h1>Introduction</h1><p>Actual introduction</p></div>", eml.getIntroduction());
       assertEquals("<p>getting started stuff</p>", eml.getGettingStarted());
-      assertEquals("<p>Test acknowledgements</p><ul><li>First item</li></ul><ol><li>First item</li></ol><p><b>Emphasis</b>\n" +
-          "                CO<sub>2</sub> (or just CO₂)\n" +
-          "                m<sup>3</sup> (or just m³)\n" +
-          "                <pre>\n" +
-          "                    x = fn(y, z)\n" +
-          "                </pre><a href=\"https://example.org\">Example link</a></p>", eml.getAcknowledgements());
+      assertEquals(
+          "<p>Test acknowledgements</p><ul><li>First item</li></ul><ol><li>First item</li></ol><p><b>Emphasis</b>\n"
+              + "                CO<sub>2</sub> (or just CO₂)\n"
+              + "                m<sup>3</sup> (or just m³)\n"
+              + "                <pre>\n"
+              + "                    x = fn(y, z)\n"
+              + "                </pre><a href=\"https://example.org\">Example link</a></p>",
+          eml.getAcknowledgements());
 
       // multiple KeywordSets tests
       assertNotNull(eml.getKeywords());

@@ -16,11 +16,12 @@ package org.gbif.metadata.eml.ipt.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * ProjectAward is used to enter information about a funding award associated with a project. The containing project

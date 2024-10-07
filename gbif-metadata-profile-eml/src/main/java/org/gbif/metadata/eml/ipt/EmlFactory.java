@@ -61,34 +61,34 @@ public class EmlFactory {
 
   // Define pairs of DocBook tags. MUST MATCH HTML tags!
   private static final String[] DOCBOOK_TAGS = {
-      "<section>", "</section>",
-      "<title>", "</title>",
-      "<para><itemizedlist>", "</itemizedlist></para>",
-      "<para><orderedlist>", "</orderedlist></para>",
-      "<listitem><para>", "</para></listitem>",
-      "<itemizedlist>", "</itemizedlist>",
-      "<orderedlist>", "</orderedlist>",
-      "<para>", "</para>",
-      "<emphasis>", "</emphasis>",
-      "<subscript>", "</subscript>",
-      "<superscript>", "</superscript>",
-      "<literalLayout>", "</literalLayout>"
+    "<section>", "</section>",
+    "<title>", "</title>",
+    "<para><itemizedlist>", "</itemizedlist></para>",
+    "<para><orderedlist>", "</orderedlist></para>",
+    "<listitem><para>", "</para></listitem>",
+    "<itemizedlist>", "</itemizedlist>",
+    "<orderedlist>", "</orderedlist>",
+    "<para>", "</para>",
+    "<emphasis>", "</emphasis>",
+    "<subscript>", "</subscript>",
+    "<superscript>", "</superscript>",
+    "<literalLayout>", "</literalLayout>"
   };
 
   // Define pairs of HTML tags. MUST MATCH DocBook tags!
   private static final String[] HTML_TAGS = {
-      "<div>", "</div>",
-      "<h1>", "</h1>",
-      "<ul>", "</ul>",
-      "<ol>", "</ol>",
-      "<li>", "</li>",
-      "<ul>", "</ul>",
-      "<ol>", "</ol>",
-      "<p>", "</p>",
-      "<b>", "</b>",
-      "<sub>", "</sub>",
-      "<sup>", "</sup>",
-      "<pre>", "</pre>"
+    "<div>", "</div>",
+    "<h1>", "</h1>",
+    "<ul>", "</ul>",
+    "<ol>", "</ol>",
+    "<li>", "</li>",
+    "<ul>", "</ul>",
+    "<ol>", "</ol>",
+    "<p>", "</p>",
+    "<b>", "</b>",
+    "<sub>", "</sub>",
+    "<sup>", "</sup>",
+    "<pre>", "</pre>"
   };
 
   /**
@@ -140,9 +140,12 @@ public class EmlFactory {
 
     // DocBook description, gettingStarted, introduction, acknowledgements, purpose
     digester.addRule("eml/dataset/abstract", new DocBookRule("setDescription", "abstract"));
-    digester.addRule("eml/dataset/gettingStarted", new DocBookRule("setGettingStarted", "gettingStarted"));
-    digester.addRule("eml/dataset/introduction", new DocBookRule("setIntroduction", "introduction"));
-    digester.addRule("eml/dataset/acknowledgements", new DocBookRule("setAcknowledgements", "acknowledgements"));
+    digester.addRule(
+        "eml/dataset/gettingStarted", new DocBookRule("setGettingStarted", "gettingStarted"));
+    digester.addRule(
+        "eml/dataset/introduction", new DocBookRule("setIntroduction", "introduction"));
+    digester.addRule(
+        "eml/dataset/acknowledgements", new DocBookRule("setAcknowledgements", "acknowledgements"));
     digester.addRule("eml/dataset/purpose", new DocBookRule("setPurpose", "purpose"));
 
     digester.addBeanPropertySetter("eml/dataset/additionalInfo/para", "additionalInfo");
@@ -562,8 +565,7 @@ public class EmlFactory {
       super(Node.ELEMENT_NODE);
     }
 
-    public DocBookRule(String method, String wrapperElement)
-        throws ParserConfigurationException {
+    public DocBookRule(String method, String wrapperElement) throws ParserConfigurationException {
       this.method = method;
       this.wrapperElement = wrapperElement;
     }
@@ -593,7 +595,7 @@ public class EmlFactory {
         Transformer transformer = transformerFactory.newTransformer();
 
         // Set Transformer output properties
-        transformer.setOutputProperty(OutputKeys.INDENT, "no");  // Disable indentation
+        transformer.setOutputProperty(OutputKeys.INDENT, "no"); // Disable indentation
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");

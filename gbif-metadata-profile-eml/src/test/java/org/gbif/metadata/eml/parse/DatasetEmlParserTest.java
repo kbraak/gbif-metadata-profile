@@ -1135,7 +1135,8 @@ public class DatasetEmlParserTest {
     assertEquals("test-1_3", dataset.getShortName());
     assertEquals("Publishing Organization 1", dataset.getPublishingOrganizationName());
     assertNotNull(dataset.getPublishingOrganizationKey());
-    assertEquals("619a4b95-1a82-4006-be6a-7dbe3c9b33c5", dataset.getPublishingOrganizationKey().toString());
+    assertEquals(
+        "619a4b95-1a82-4006-be6a-7dbe3c9b33c5", dataset.getPublishingOrganizationKey().toString());
 
     assertNotNull(dataset.getHomepage());
     assertEquals("http://reeflifesurvey.com/", dataset.getHomepage().toString());

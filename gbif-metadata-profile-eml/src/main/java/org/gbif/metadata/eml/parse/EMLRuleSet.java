@@ -87,34 +87,34 @@ public class EMLRuleSet extends RuleSetBase {
 
   // Define pairs of DocBook tags. MUST MATCH HTML tags!
   private static final String[] DOCBOOK_TAGS = {
-      "<section>", "</section>",
-      "<title>", "</title>",
-      "<para><itemizedlist>", "</itemizedlist></para>",
-      "<para><orderedlist>", "</orderedlist></para>",
-      "<listitem><para>", "</para></listitem>",
-      "<itemizedlist>", "</itemizedlist>",
-      "<orderedlist>", "</orderedlist>",
-      "<para>", "</para>",
-      "<emphasis>", "</emphasis>",
-      "<subscript>", "</subscript>",
-      "<superscript>", "</superscript>",
-      "<literalLayout>", "</literalLayout>"
+    "<section>", "</section>",
+    "<title>", "</title>",
+    "<para><itemizedlist>", "</itemizedlist></para>",
+    "<para><orderedlist>", "</orderedlist></para>",
+    "<listitem><para>", "</para></listitem>",
+    "<itemizedlist>", "</itemizedlist>",
+    "<orderedlist>", "</orderedlist>",
+    "<para>", "</para>",
+    "<emphasis>", "</emphasis>",
+    "<subscript>", "</subscript>",
+    "<superscript>", "</superscript>",
+    "<literalLayout>", "</literalLayout>"
   };
 
   // Define pairs of HTML tags. MUST MATCH DocBook tags!
   private static final String[] HTML_TAGS = {
-      "<div>", "</div>",
-      "<h1>", "</h1>",
-      "<ul>", "</ul>",
-      "<ol>", "</ol>",
-      "<li>", "</li>",
-      "<ul>", "</ul>",
-      "<ol>", "</ol>",
-      "<p>", "</p>",
-      "<b>", "</b>",
-      "<sub>", "</sub>",
-      "<sup>", "</sup>",
-      "<pre>", "</pre>"
+    "<div>", "</div>",
+    "<h1>", "</h1>",
+    "<ul>", "</ul>",
+    "<ol>", "</ol>",
+    "<li>", "</li>",
+    "<ul>", "</ul>",
+    "<ol>", "</ol>",
+    "<p>", "</p>",
+    "<b>", "</b>",
+    "<sub>", "</sub>",
+    "<sup>", "</sup>",
+    "<pre>", "</pre>"
   };
 
   private void setupTypeConverters() {
@@ -227,8 +227,7 @@ public class EMLRuleSet extends RuleSetBase {
     addDocBookRule(digester, "eml/dataset/gettingStarted", "setGettingStarted", "gettingStarted");
     addDocBookRule(
         digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
-    addDocBookRule(
-        digester, "eml/dataset/purpose", "setPurpose", "purpose");
+    addDocBookRule(digester, "eml/dataset/purpose", "setPurpose", "purpose");
 
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
@@ -599,8 +598,7 @@ public class EMLRuleSet extends RuleSetBase {
       super(Node.ELEMENT_NODE);
     }
 
-    public DocBookRule(String method, String wrapperElement)
-        throws ParserConfigurationException {
+    public DocBookRule(String method, String wrapperElement) throws ParserConfigurationException {
       this.method = method;
       this.wrapperElement = wrapperElement;
     }
@@ -630,7 +628,7 @@ public class EMLRuleSet extends RuleSetBase {
         Transformer transformer = transformerFactory.newTransformer();
 
         // Set Transformer output properties
-        transformer.setOutputProperty(OutputKeys.INDENT, "no");  // Disable indentation
+        transformer.setOutputProperty(OutputKeys.INDENT, "no"); // Disable indentation
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
