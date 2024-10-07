@@ -29,15 +29,13 @@ import org.xml.sax.SAXException;
  */
 public class ValidatorFactory {
 
-  public static final String EML_SCHEMA_URL =
-      "https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1/eml.xsd";
+  public static final String EML_SCHEMA_URL = "https://rs.gbif.org/schema/eml-2.2.0/eml.xsd";
 
   public static final String EML_GBIF_PROFILE_SCHEMA_URL =
-      "http://rs.gbif.org/schema/eml-gbif-profile/1.2/eml-gbif-profile.xsd";
+      "https://rs.gbif.org/schema/eml-gbif-profile/1.3/eml-gbif-profile.xsd";
 
   /**
-   * @return an xml validator based on the official eml 2.1.1 xml schema hosted at GBIF for network performance issues
-   *         only.
+   * @return xml validator based on the official EML 2.2.0 xml schema hosted at GBIF for network performance issues only.
    */
   public static Validator getEmlValidator() throws MalformedURLException, SAXException {
     return getValidator(EML_SCHEMA_URL);

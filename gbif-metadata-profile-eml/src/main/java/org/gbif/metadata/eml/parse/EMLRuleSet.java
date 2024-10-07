@@ -21,6 +21,8 @@ import org.gbif.api.model.registry.eml.Collection;
 import org.gbif.api.model.registry.eml.DataDescription;
 import org.gbif.api.model.registry.eml.KeywordCollection;
 import org.gbif.api.model.registry.eml.Project;
+import org.gbif.api.model.registry.eml.ProjectAward;
+import org.gbif.api.model.registry.eml.RelatedProject;
 import org.gbif.api.model.registry.eml.SamplingDescription;
 import org.gbif.api.model.registry.eml.TaxonomicCoverage;
 import org.gbif.api.model.registry.eml.TaxonomicCoverages;
@@ -48,17 +50,33 @@ import org.gbif.metadata.eml.parse.converter.IdentifierTypeConverter;
 import org.gbif.metadata.eml.parse.converter.MaintenanceUpdateFrequencyConverter;
 import org.gbif.metadata.eml.parse.converter.PreservationMethodTypeConverter;
 
+import java.io.StringWriter;
 import java.net.URI;
 import java.util.Date;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.converters.IntegerConverter;
 import org.apache.commons.digester3.AbstractObjectCreationFactory;
 import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.NodeCreateRule;
 import org.apache.commons.digester3.RuleSetBase;
 import org.apache.commons.digester3.SetNextRule;
 import org.apache.commons.digester3.SetRootRule;
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
 /**
@@ -66,6 +84,38 @@ import org.xml.sax.Attributes;
  * model. The rules here ignore any namespace to be able to work with any eml versions after 2.0.
  */
 public class EMLRuleSet extends RuleSetBase {
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<para><itemizedlist>", "</itemizedlist></para>",
+      "<para><orderedlist>", "</orderedlist></para>",
+      "<listitem><para>", "</para></listitem>",
+      "<itemizedlist>", "</itemizedlist>",
+      "<orderedlist>", "</orderedlist>",
+      "<para>", "</para>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<li>", "</li>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<p>", "</p>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
+  };
 
   private void setupTypeConverters() {
 
@@ -125,6 +175,9 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addBeanPropertySetter("eml/dataset/alternateIdentifier", "type");
     digester.addSetNext("eml/dataset/alternateIdentifier", "addIdentifier");
 
+    // short name
+    digester.addBeanPropertySetter("eml/dataset/shortName", "shortName");
+
     // title (no language support in Dataset)
     digester.addBeanPropertySetter("eml/dataset/title", "title");
 
@@ -133,15 +186,19 @@ public class EMLRuleSet extends RuleSetBase {
 
     // WritableDataset properties
     digester.addBeanPropertySetter("eml/dataset/language", "dataLanguage");
-    digester.addBeanPropertySetter("eml/dataset/distribution/online/url", "homepage");
+
+    // Distribution
+    Class<?>[] setDistributionParamTypes = {URI.class, String.class};
+    digester.addCallMethod(
+        "eml/dataset/distribution/online/url", "setDistribution", 2, setDistributionParamTypes);
+    digester.addCallParam("eml/dataset/distribution/online/url", 0);
+    digester.addCallParam("eml/dataset/distribution/online/url", 1, "function");
+
     digester.addBeanPropertySetter(
         "eml/additionalMetadata/metadata/gbif/resourceLogoUrl", "logoURL");
 
-    // multi paragraph description
-    digester.addObjectCreate("eml/dataset/abstract", ParagraphContainer.class);
-    digester.addCallMethod("eml/dataset/abstract/para", "appendParagraph", 0);
-    digester.addRule(
-        "eml/dataset/abstract", new SetRootRule("addDescription", ParagraphContainer.class));
+    // DocBook description
+    addDocBookRule(digester, "eml/dataset/abstract", "setDescription", "abstract");
 
     // Citation
     addCitationRules(digester, "eml/additionalMetadata/metadata/gbif/citation", "setCitation");
@@ -159,10 +216,19 @@ public class EMLRuleSet extends RuleSetBase {
     addContactRules(digester, "eml/dataset/creator", "addPreferredOriginatorContact");
     addContactRules(digester, "eml/dataset/metadataProvider", "addPreferredMetadataContact");
     addContactRules(digester, "eml/dataset/associatedParty", "addContact");
-
     addContactRules(digester, "eml/dataset/contact", "addPreferredAdministrativeContact");
 
-    digester.addBeanPropertySetter("eml/dataset/purpose/para", "purpose");
+    // Publisher
+    digester.addCallMethod("eml/dataset/publisher", "setPublisher", 2);
+    digester.addCallParam("eml/dataset/publisher/", 0, "id");
+    digester.addCallParam("eml/dataset/publisher/organizationName", 1);
+
+    addDocBookRule(digester, "eml/dataset/introduction", "setIntroduction", "introduction");
+    addDocBookRule(digester, "eml/dataset/gettingStarted", "setGettingStarted", "gettingStarted");
+    addDocBookRule(
+        digester, "eml/dataset/acknowledgements", "setAcknowledgements", "acknowledgements");
+    addDocBookRule(
+        digester, "eml/dataset/purpose", "setPurpose", "purpose");
 
     digester.addBeanPropertySetter(
         "eml/dataset/maintenance/description/para", "maintenanceDescription");
@@ -286,6 +352,7 @@ public class EMLRuleSet extends RuleSetBase {
     digester.addCallParam(prefix + "/userId", 0, "directory");
     digester.addCallParam(prefix + "/userId", 1);
 
+    digester.addBeanPropertySetter(prefix + "/individualName/salutation", "salutation");
     digester.addBeanPropertySetter(prefix + "/individualName/givenName", "firstName");
     digester.addBeanPropertySetter(prefix + "/individualName/surName", "lastName");
     digester.addBeanPropertySetter(prefix + "/organizationName", "organization");
@@ -398,10 +465,34 @@ public class EMLRuleSet extends RuleSetBase {
     addContactRules(digester, prefix + "/personnel", "addContact");
     digester.addBeanPropertySetter(prefix + "/abstract/para", "abstract");
     digester.addBeanPropertySetter(prefix + "/funding/para", "funding");
+    addProjectAwardsRules(digester, prefix + "/award", "addAward");
+    addRelatedProjectsRules(digester, prefix + "/relatedProject", "addRelatedProject");
     digester.addBeanPropertySetter(
         prefix + "/studyAreaDescription/descriptor/descriptorValue", "studyAreaDescription");
     digester.addBeanPropertySetter(
         prefix + "/designDescription/description/para", "designDescription");
+    digester.addSetNext(prefix, parentMethod);
+  }
+
+  private void addProjectAwardsRules(Digester digester, String prefix, String parentMethod) {
+    digester.addObjectCreate(prefix, ProjectAward.class);
+    digester.addBeanPropertySetter(prefix + "/funderName", "funderName");
+    digester.addBeanPropertySetter(prefix + "/awardNumber", "awardNumber");
+    digester.addBeanPropertySetter(prefix + "/title", "title");
+    digester.addBeanPropertySetter(prefix + "/awardUrl", "awardUrl");
+    digester.addCallMethod(prefix + "/funderIdentifier", "addFunderIdentifier", 0);
+
+    digester.addSetNext(prefix, parentMethod);
+  }
+
+  private void addRelatedProjectsRules(Digester digester, String prefix, String parentMethod) {
+    digester.addObjectCreate(prefix, RelatedProject.class);
+    digester.addCallMethod(prefix, "setIdentifier", 1);
+    digester.addCallParam(prefix, 0, "id");
+    digester.addBeanPropertySetter(prefix + "/title", "title");
+    digester.addBeanPropertySetter(prefix + "/abstract", "abstract");
+    addContactRules(digester, prefix + "/personnel", "addContact");
+
     digester.addSetNext(prefix, parentMethod);
   }
 
@@ -487,5 +578,111 @@ public class EMLRuleSet extends RuleSetBase {
         VerbatimTimePeriodType.FORMATION_PERIOD);
     digester.addSetNext(
         "eml/additionalMetadata/metadata/gbif/formationPeriod", "addTemporalCoverage");
+  }
+
+  private void addDocBookRule(
+      Digester digester, String pattern, String method, String wrapperElement) {
+    try {
+      digester.addRule(pattern, new DocBookRule(method, wrapperElement));
+    } catch (ParserConfigurationException e) {
+      // TODO log error, do something
+    }
+  }
+
+  // Converter to literal XML (DocBook) ant then to HTML
+  public static class DocBookRule extends NodeCreateRule {
+
+    private String method;
+    private String wrapperElement;
+
+    public DocBookRule() throws ParserConfigurationException {
+      super(Node.ELEMENT_NODE);
+    }
+
+    public DocBookRule(String method, String wrapperElement)
+        throws ParserConfigurationException {
+      this.method = method;
+      this.wrapperElement = wrapperElement;
+    }
+
+    @Override
+    public void end(String namespace, String name) throws Exception {
+      Element nodeToSerialize = super.getDigester().pop();
+      String serializedNode = serializeNode(nodeToSerialize);
+      invokeMethodOnTopOfStack(method, serializedNode);
+    }
+
+    protected String serializeNode(Element nodeToSerialize) throws Exception {
+      String htmlOutput;
+
+      try (StringWriter writer = new StringWriter()) {
+        // Create a new Document to serialize the node
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+
+        // Import the node to serialize into the new Document
+        Element importedNode = (Element) doc.importNode(nodeToSerialize, true);
+        doc.appendChild(importedNode);
+
+        // Set up the Transformer to handle XML serialization
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        // Set Transformer output properties
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");  // Disable indentation
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+        // Serialize the node to a string
+        DOMSource source = new DOMSource(importedNode);
+        StreamResult result = new StreamResult(writer);
+        transformer.transform(source, result);
+
+        // Get the serialized XML string
+        String serializedDocBookXml = writer.toString();
+
+        // Handle specific whitespace formatting for <pre> tags
+        serializedDocBookXml = preservePreformattedWhitespace(serializedDocBookXml);
+
+        // Unwrap the parent tag
+        String unwrappedDocBookXml = unwrapParentTag(serializedDocBookXml);
+
+        // Convert DocBook XML to HTML
+        htmlOutput = convertDocBookToHtml(unwrappedDocBookXml);
+      }
+
+      return htmlOutput;
+    }
+
+    private String preservePreformattedWhitespace(String xmlString) {
+      // This method preserves whitespace in <pre> tags by restoring line breaks and indentations
+      xmlString = xmlString.replaceAll("(<pre>)(.*?)(</pre>)", "$1\n$2\n$3");
+      return xmlString;
+    }
+
+    private String unwrapParentTag(String str) {
+      return StringUtils.replaceEach(
+          str,
+          new String[] {"<" + wrapperElement + ">", "</" + wrapperElement + ">"},
+          new String[] {"", ""});
+    }
+
+    private String convertDocBookToHtml(String docbookXmlString) {
+      // Replace links
+      String docBookXmlStringWithLinksReplaces =
+          docbookXmlString.replaceAll(
+              "<ulink\\s+url=\"(.*?)\">\\s*<citetitle>(.*?)</citetitle>\\s*</ulink>",
+              "<a href=\"$1\">$2</a>");
+
+      // Perform replacements
+      return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS);
+    }
+
+    protected void invokeMethodOnTopOfStack(String methodName, String param) throws Exception {
+      Object objOnTopOfStack = getDigester().peek();
+      MethodUtils.invokeExactMethod(objOnTopOfStack, methodName, param);
+    }
   }
 }

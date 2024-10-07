@@ -37,6 +37,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,15 +46,52 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT 1.1 In addition to standard Bean
- * encapsulation, additional methods exist to simplify the implementation of an EML XML parser.
+ * The EML model is a POJO representing the GBIF Extended Metadata Profile for the IPT.
+ * In addition to standard Bean encapsulation,
+ * additional methods exist to simplify the implementation of an EML XML parser.
  *
  * @see EmlFactory
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "LombokGetterMayBeUsed", "LombokSetterMayBeUsed"})
 public class Eml implements Serializable {
 
   private static final Logger LOG = LoggerFactory.getLogger(Eml.class);
+
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<para><itemizedlist>", "</itemizedlist></para>",
+      "<para><orderedlist>", "</orderedlist></para>",
+      "<listitem><para>", "</para></listitem>",
+      "<para>", "</para>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<h2>", "</h2>",
+      "<h3>", "</h3>",
+      "<h4>", "</h4>",
+      "<h5>", "</h5>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<li>", "</li>",
+      "<p>", "</p>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
+  };
 
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
   private static final char SEMICOLON = ';';
@@ -71,15 +109,12 @@ public class Eml implements Serializable {
   private static final String CC_BY_NC_DEFAULT =
       "This work is licensed under a <ulink url=\"http://creativecommons.org/licenses/by-nc/4.0/legalcode\"><citetitle>Creative Commons Attribution Non Commercial (CC-BY-NC) 4.0 License</citetitle></ulink>.";
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 770733523572837495L;
 
   /**
    * Description, composed of one or more paragraphs.
    */
-  private List<String> description = new ArrayList<>();
+  private String description;
 
   /**
    * This is not in the GBIF extended metadata document, but seems like a sensible placeholder that can be used to
@@ -100,7 +135,7 @@ public class Eml implements Serializable {
 
   /**
    * A resource that describes a literature citation for the resource, one that might be found in a bibliography. We
-   * cannot use http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml.html#citation because the IPT deals with
+   * cannot use <a href="https://eml.ecoinformatics.org/schema/eml_xsd.html#eml_citation">Citation</a> because the IPT deals with
    * /eml/dataset and not /eml/citation therefore these are found in the additionalMetadata section of the EML.
    */
   private Citation citation;
@@ -114,6 +149,10 @@ public class Eml implements Serializable {
    * to "information".
    */
   private String distributionUrl;
+  /**
+   * Download URL
+   */
+  private String distributionDownloadUrl;
   /**
    * Serialised data
    */
@@ -138,7 +177,7 @@ public class Eml implements Serializable {
    * a data set, rights might include requirements for use, requirements for attribution, or other requirements the
    * owner would like to impose.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#intellectualRights">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_intellectualRights">EML
    *      Resource intellectualRights</a>
    */
   private String intellectualRights;
@@ -152,7 +191,7 @@ public class Eml implements Serializable {
   private List<JGTICuratorialUnit> jgtiCuratorialUnits = new ArrayList<>();
 
   // Note that while Sets would be fine, to ease testing, Lists are
-  // used to preserve ordering. A Set implementation that respects ordering
+  // used to preserve ordering. A Set implementation that respect ordering
   // would also suffice
   // please refer to typed classes for descriptions of the properties and how
   // they map to EML
@@ -163,7 +202,7 @@ public class Eml implements Serializable {
    * codes to be more precise.
    * The IPT will always use ISO language codes.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#language">EML Resource
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_language">EML Resource
    *      language keyword</a>
    */
   private String language = "en";
@@ -198,8 +237,8 @@ public class Eml implements Serializable {
   /**
    * The date that the resource was published. The format should be represented as: CCYY, which represents a 4 digit
    * year, or as CCYY-MM-DD, which denotes the full year, month, and day. Note that month and day are optional
-   * components. Formats must conform to ISO 8601. http://knb.ecoinformatics.org/
-   * software/eml/eml-2.1.0/eml-resource.html#pubDate
+   * components. Formats must conform to ISO 8601.
+   * <a href="https://eml.ecoinformatics.org/schema/eml_xsd.html#eml_citation">pubDate</a>
    */
   private Date pubDate;
 
@@ -210,9 +249,24 @@ public class Eml implements Serializable {
   private String purpose;
 
   /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_introduction">Introduction</a>
+   */
+  private String introduction;
+
+  /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_gettingStarted">Getting started</a>
+   */
+  private String gettingStarted;
+
+  /**
+   * <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_acknowledgements">Acknowledgements</a>
+   */
+  private String acknowledgements;
+
+  /**
    * A text description of the maintenance of this data resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#description">MaintenanceUpdateFrequency description</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_description">MaintenanceUpdateFrequency description</a>
    */
   private String updateFrequencyDescription;
 
@@ -220,15 +274,15 @@ public class Eml implements Serializable {
    * The maintenance update frequency is the frequency with which changes and additions are made to the dataset after
    * the initial dataset is completed.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#MaintUpFreqType">MaintUpFreqType EML ENUM</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_maintenanceUpdateFrequency">MaintUpFreqType EML ENUM</a>
    */
-  private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKOWN;
+  private MaintenanceUpdateFrequency updateFrequency = MaintenanceUpdateFrequency.UNKNOWN;
 
   /**
    * The 'creator' element provides the full name of the person, organization, or position who created the resource.
    * The list of creators for a resource represent the people and organizations who should be cited for the resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#creator">EML Resource creator</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_creator">EML Resource creator</a>
    */
   private List<Agent> creators = new ArrayList<>();
 
@@ -236,7 +290,7 @@ public class Eml implements Serializable {
    * The 'metadataProvider' element provides the full name of the person, organization, or position who created
    * documentation for the resource.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-resource.html#metadataProvider">EML Resource metadataProvider</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_metadataProvider">EML Resource metadataProvider</a>
    */
   private List<Agent> metadataProviders = new ArrayList<>();
 
@@ -244,9 +298,19 @@ public class Eml implements Serializable {
    * The 'contact' field contains contact information for this dataset. This is the person or institution to contact
    * with questions about the use, interpretation of a data set.
    *
-   * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#contact">EML Dataset contact</a>
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_contact">EML Dataset contact</a>
    */
   private List<Agent> contacts = new ArrayList<>();
+
+  /**
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_publisher">EML Dataset publisher</a>
+   */
+  private String publisherId;
+
+  /**
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#DatasetType_publisher">EML Dataset publisher</a>
+   */
+  private String publisherOrganizationName;
 
   /**
    * Picklist keyword indicating the process or technique used to prevent physical deterioration of non-living
@@ -270,12 +334,14 @@ public class Eml implements Serializable {
 
   private String title;
 
+  private String shortName;
+
   /**
    * The coverage field allows for a textual description of the specific sampling area, the sampling frequency
    * (temporal boundaries, frequency of occurrence), and groups of living organisms sampled (taxonomic coverage). This
    * implementation allows only the declaration of the extent description
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#studyExtent">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_MethodsType_sampling_studyExtent">EML Methods
    *      studyExtent keyword</a>
    */
   private String studyExtent;
@@ -285,7 +351,7 @@ public class Eml implements Serializable {
    * in the research project. The content of this element would be similar to a description of sampling procedures found
    * in the methods section of a journal article.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#samplingDescription">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_MethodsType_sampling_samplingDescription">EML
    *      Methods samplingDescription keyword</a>
    */
   private String sampleDescription;
@@ -294,7 +360,7 @@ public class Eml implements Serializable {
    * The qualityControl field provides a location for the description of actions taken to either control or assess the
    * quality of data resulting from the associated method step.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#qualityControl">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_qualityControl">EML Methods
    *      qualityControl keyword</a>
    */
   private String qualityControl;
@@ -305,7 +371,7 @@ public class Eml implements Serializable {
    * instrumentation, source data and any quality control measures taken." This implementation allows only the
    * declaration of the step description
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-methods.html#methodStep">EML Methods
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-methods_xsd.html#MethodsType_methodStep">EML Methods
    *      methodStep keyword</a>
    */
   private List<String> methodSteps = new ArrayList<>();
@@ -420,6 +486,25 @@ public class Eml implements Serializable {
 
   public void setDistributionUrl(String distributionUrl) {
     this.distributionUrl = distributionUrl;
+  }
+
+  public String getDistributionDownloadUrl() {
+    if (distributionDownloadUrl == null || distributionDownloadUrl.isEmpty()) {
+      return null;
+    }
+    return distributionDownloadUrl;
+  }
+
+  public void setDistributionDownloadUrl(String distributionDownloadUrl) {
+    this.distributionDownloadUrl = distributionDownloadUrl;
+  }
+
+  public void setDistribution(String distribution, String function) {
+    if ("information".equals(function)) {
+      setDistributionUrl(distribution);
+    } else if ("download".equals(function)) {
+      setDistributionDownloadUrl(distribution);
+    }
   }
 
   public BigDecimal getEmlVersion() {
@@ -658,6 +743,30 @@ public class Eml implements Serializable {
     this.purpose = purpose;
   }
 
+  public String getIntroduction() {
+    return introduction;
+  }
+
+  public void setIntroduction(String introduction) {
+    this.introduction = introduction;
+  }
+
+  public String getGettingStarted() {
+    return gettingStarted;
+  }
+
+  public void setGettingStarted(String gettingStarted) {
+    this.gettingStarted = gettingStarted;
+  }
+
+  public String getAcknowledgements() {
+    return acknowledgements;
+  }
+
+  public void setAcknowledgements(String acknowledgements) {
+    this.acknowledgements = acknowledgements;
+  }
+
   public String getUpdateFrequencyDescription() {
     if (StringUtils.isEmpty(updateFrequencyDescription)) {
       return null;
@@ -705,6 +814,22 @@ public class Eml implements Serializable {
 
   public void setContacts(List<Agent> contacts) {
     this.contacts = contacts;
+  }
+
+  public String getPublisherId() {
+    return publisherId;
+  }
+
+  public void setPublisherId(String publisherId) {
+    this.publisherId = publisherId;
+  }
+
+  public String getPublisherOrganizationName() {
+    return publisherOrganizationName;
+  }
+
+  public void setPublisherOrganizationName(String publisherOrganizationName) {
+    this.publisherOrganizationName = publisherOrganizationName;
   }
 
   public String getQualityControl() {
@@ -763,6 +888,14 @@ public class Eml implements Serializable {
     this.title = title;
   }
 
+  public String getShortName() {
+    return shortName;
+  }
+
+  public void setShortName(String shortName) {
+    this.shortName = shortName;
+  }
+
   public String getCitationString() {
     if (citation != null) {
       return citation.getCitation();
@@ -772,8 +905,8 @@ public class Eml implements Serializable {
 
   public String getCreatorEmail() {
     Agent creator = getCreator();
-    if (creator != null) {
-      return creator.getEmail();
+    if (creator != null && creator.getEmail() != null && !creator.isEmpty()) {
+      return creator.getEmail().get(0);
     }
     return null;
   }
@@ -786,7 +919,7 @@ public class Eml implements Serializable {
     return null;
   }
 
-  public List<String> getDescription() {
+  public String getDescription() {
     return getAbstract();
   }
 
@@ -809,8 +942,8 @@ public class Eml implements Serializable {
 
   public String getPublisherEmail() {
     Agent publisher = getPublisher();
-    if (publisher != null) {
-      return publisher.getEmail();
+    if (publisher != null && publisher.getEmail() != null && !publisher.getEmail().isEmpty()) {
+      return publisher.getEmail().get(0);
     }
     return null;
   }
@@ -836,15 +969,6 @@ public class Eml implements Serializable {
 
   public void addAlternateIdentifier(String alternateIdentifier) {
     alternateIdentifiers.add(alternateIdentifier);
-  }
-
-  /**
-   * Adds another paragraph to description.
-   *
-   * @param para paragraph
-   */
-  public void addDescriptionPara(String para) {
-    description.add(para);
   }
 
   /**
@@ -1001,7 +1125,7 @@ public class Eml implements Serializable {
     this.intellectualRights = paraXmlToHtml(xmlStr);
   }
 
-  public List<String> getAbstract() {
+  public String getAbstract() {
     return description;
   }
 
@@ -1013,7 +1137,7 @@ public class Eml implements Serializable {
     return guid + "/v" + emlVersion.toPlainString();
   }
 
-  public void setAbstract(List<String> description) {
+  public void setAbstract(String description) {
     this.description = description;
   }
 
@@ -1025,7 +1149,7 @@ public class Eml implements Serializable {
     this.citation = new Citation(citation, identifier);
   }
 
-  public void setDescription(List<String> description) {
+  public void setDescription(String description) {
     this.description = description;
   }
 
@@ -1056,6 +1180,11 @@ public class Eml implements Serializable {
 
   public void setPublished(Date published) {
     pubDate = published;
+  }
+
+  public void setPublisher(String publisherId, String publisherName) {
+    setPublisherId(publisherId);
+    setPublisherOrganizationName(publisherName);
   }
 
   public void setSubject(List<String> keywords) {
@@ -1142,6 +1271,7 @@ public class Eml implements Serializable {
         && Objects.equals(citation, eml.citation)
         && Objects.equals(dateStamp, eml.dateStamp)
         && Objects.equals(distributionUrl, eml.distributionUrl)
+        && Objects.equals(distributionDownloadUrl, eml.distributionDownloadUrl)
         && Objects.equals(emlVersion, eml.emlVersion)
         && Objects.equals(previousEmlVersion, eml.previousEmlVersion)
         && Objects.equals(geospatialCoverages, eml.geospatialCoverages)
@@ -1163,12 +1293,15 @@ public class Eml implements Serializable {
         && Objects.equals(creators, eml.creators)
         && Objects.equals(metadataProviders, eml.metadataProviders)
         && Objects.equals(contacts, eml.contacts)
+        && Objects.equals(publisherId, eml.publisherId)
+        && Objects.equals(publisherOrganizationName, eml.publisherOrganizationName)
         && Objects.equals(specimenPreservationMethods, eml.specimenPreservationMethods)
         && Objects.equals(taxonomicCoverages, eml.taxonomicCoverages)
         && Objects.equals(temporalCoverages, eml.temporalCoverages)
         && Objects.equals(link, eml.link)
         && Objects.equals(guid, eml.guid)
         && Objects.equals(title, eml.title)
+        && Objects.equals(shortName, eml.shortName)
         && Objects.equals(studyExtent, eml.studyExtent)
         && Objects.equals(sampleDescription, eml.sampleDescription)
         && Objects.equals(qualityControl, eml.qualityControl)
@@ -1186,6 +1319,7 @@ public class Eml implements Serializable {
         citation,
         dateStamp,
         distributionUrl,
+        distributionDownloadUrl,
         emlVersion,
         previousEmlVersion,
         majorVersion,
@@ -1209,12 +1343,15 @@ public class Eml implements Serializable {
         creators,
         metadataProviders,
         contacts,
+        publisherId,
+        publisherOrganizationName,
         specimenPreservationMethods,
         taxonomicCoverages,
         temporalCoverages,
         link,
         guid,
         title,
+        shortName,
         studyExtent,
         sampleDescription,
         qualityControl,
@@ -1232,6 +1369,7 @@ public class Eml implements Serializable {
         .add("citation=" + citation)
         .add("dateStamp=" + dateStamp)
         .add("distributionUrl='" + distributionUrl + "'")
+        .add("distributionDownloadUrl='" + distributionDownloadUrl + "'")
         .add("emlVersion=" + emlVersion)
         .add("previousEmlVersion=" + previousEmlVersion)
         .add("majorVersion=" + majorVersion)
@@ -1255,12 +1393,15 @@ public class Eml implements Serializable {
         .add("creators=" + creators)
         .add("metadataProviders=" + metadataProviders)
         .add("contacts=" + contacts)
+        .add("publisherId='" + publisherId + "'")
+        .add("publisherOrganizationName='" + publisherOrganizationName + "'")
         .add("specimenPreservationMethods=" + specimenPreservationMethods)
         .add("taxonomicCoverages=" + taxonomicCoverages)
         .add("temporalCoverages=" + temporalCoverages)
         .add("link='" + link + "'")
         .add("guid='" + guid + "'")
         .add("title='" + title + "'")
+        .add("shortName='" + shortName + "'")
         .add("studyExtent='" + studyExtent + "'")
         .add("sampleDescription='" + sampleDescription + "'")
         .add("qualityControl='" + qualityControl + "'")
@@ -1378,5 +1519,32 @@ public class Eml implements Serializable {
       }
     }
     return licenseUrl;
+  }
+
+  // Value with all HTML tags replaced by DocBook analogues
+  public String getDocBookField(String fieldName) {
+    String result = null;
+
+    try {
+      String value = BeanUtils.getProperty(this, fieldName);
+
+      if (value != null) {
+        result = replaceDocBookElements(value);
+      }
+    } catch (Exception e) {
+      // TODO log exception
+    }
+
+    return result;
+  }
+
+  private String replaceDocBookElements(String value) {
+    String htmlStringWithLinksReplaces =
+        value.replaceAll(
+            "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
+            "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
+
+    // Perform replacements
+    return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);
   }
 }

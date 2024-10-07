@@ -25,15 +25,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class KeywordSet implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -421915165032215809L;
 
   /**
    * The name of the official keyword thesaurus from which keyword was derived.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keywordThesaurus">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_ResourceGroup_keywordSet_keywordThesaurus">EML
    *      Resource
    *      keywordThesaurus element</a>
    */
@@ -43,7 +40,7 @@ public class KeywordSet implements Serializable {
    * A keyword or key phrase that concisely describes the resource or is related to the resource. Each keyword field
    * should contain one and only one keyword (i.e., keywords should not be separated by commas or other delimiters).
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-resource.html#keyword">EML Resource keyword
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-resource_xsd.html#ResourceGroup_ResourceGroup_keywordSet_keyword">EML Resource keyword
    *      element</a>
    */
   private List<String> keywords = new ArrayList<>();

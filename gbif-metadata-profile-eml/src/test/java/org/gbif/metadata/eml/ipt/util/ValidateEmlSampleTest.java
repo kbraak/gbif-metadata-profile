@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * For validation of EML files see also http://knb.ecoinformatics.org/emlparser/.
+ * For validation of EML files see also <a href="http://knb.ecoinformatics.org/emlparser/">EML Parser</a>.
  */
 public class ValidateEmlSampleTest {
 
@@ -43,12 +43,14 @@ public class ValidateEmlSampleTest {
       validator.validate(new StreamSource(sample1));
       System.out.println(sample1.getName() + " validates successfully with GBIF EML profile");
     } catch (Exception e) {
+      System.out.println(e.getMessage());
       fail(sample1.getName() + " validation ERROR with GBIF EML profile");
     }
     try {
       validator.validate(new StreamSource(sample2));
       System.out.println(sample2.getName() + " validates successfully with GBIF EML profile");
     } catch (Exception e) {
+      System.out.println(e.getMessage());
       fail(sample2.getName() + " validation ERROR with GBIF EML profile");
     }
 
@@ -57,12 +59,14 @@ public class ValidateEmlSampleTest {
       validator.validate(new StreamSource(sample1));
       System.out.println(sample1.getName() + " validates successfully with EML schema");
     } catch (Exception e) {
+      System.out.println(e.getMessage());
       fail(sample1.getName() + " validation ERROR with EML schema");
     }
     try {
       validator.validate(new StreamSource(sample2));
       System.out.println(sample2.getName() + " validates successfully with EML schema");
     } catch (Exception e) {
+      System.out.println(e.getMessage());
       fail(sample2.getName() + " validation ERROR with EML schema");
     }
   }

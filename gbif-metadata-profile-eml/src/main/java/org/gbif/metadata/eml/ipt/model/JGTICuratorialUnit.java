@@ -25,9 +25,6 @@ import java.util.StringJoiner;
  */
 public class JGTICuratorialUnit implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 4302214747473277031L;
 
   private String unitType;

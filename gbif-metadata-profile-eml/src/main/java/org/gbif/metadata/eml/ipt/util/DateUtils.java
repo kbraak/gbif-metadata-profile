@@ -63,7 +63,7 @@ public class DateUtils {
    * @return the parsed date
    *
    * @throws ParseException Should it be an erroneous format
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#calendarDate">EML Coverage
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#SingleDateTimeType_calendarDate">EML Coverage
    *      calendarDate keyword</a>
    */
   public static Date calendarDate(String dateString) throws ParseException {

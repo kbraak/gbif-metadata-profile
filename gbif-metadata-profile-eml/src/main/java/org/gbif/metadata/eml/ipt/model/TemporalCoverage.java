@@ -26,15 +26,12 @@ import java.util.StringJoiner;
  */
 public class TemporalCoverage implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 898101764914677290L;
 
   /**
    * A single time stamp signifying the beginning of some time period.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#beginDate">EML Coverage
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TemporalCoverage_TemporalCoverage_rangeOfDates_beginDate">EML Coverage
    *      beginDate keyword</a>
    */
   private Date startDate;
@@ -42,7 +39,7 @@ public class TemporalCoverage implements Serializable {
   /**
    * A single time stamp signifying the end of some time period.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#endDate">EML Coverage endDate
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TemporalCoverage_TemporalCoverage_rangeOfDates_endDate">EML Coverage endDate
    *      keyword</a>
    */
   private Date endDate;
@@ -66,7 +63,7 @@ public class TemporalCoverage implements Serializable {
   public TemporalCoverage() {}
 
   public String getFormationPeriod() {
-    if (formationPeriod == null || formationPeriod.length() == 0) {
+    if (formationPeriod == null || formationPeriod.isEmpty()) {
       return null;
     }
     return formationPeriod;
@@ -78,7 +75,7 @@ public class TemporalCoverage implements Serializable {
   }
 
   public String getLivingTimePeriod() {
-    if (livingTimePeriod == null || livingTimePeriod.length() == 0) {
+    if (livingTimePeriod == null || livingTimePeriod.isEmpty()) {
       return null;
     }
     return livingTimePeriod;

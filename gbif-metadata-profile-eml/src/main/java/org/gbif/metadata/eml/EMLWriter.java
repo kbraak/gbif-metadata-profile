@@ -35,19 +35,56 @@ import java.util.Objects;
 
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
 /**
  * A simple tool to serialize a dataset object into an XML document compliant with the latest
- * version of the GBIF Metadata Profile, currently version 1.2.
+ * version of the GBIF Metadata Profile, currently version 1.3.
  */
 @ThreadSafe
 public class EMLWriter {
 
+  // Define pairs of DocBook tags. MUST MATCH HTML tags!
+  private static final String[] DOCBOOK_TAGS = {
+      "<section>", "</section>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<title>", "</title>",
+      "<para><itemizedlist>", "</itemizedlist></para>",
+      "<para><orderedlist>", "</orderedlist></para>",
+      "<listitem><para>", "</para></listitem>",
+      "<para>", "</para>",
+      "<emphasis>", "</emphasis>",
+      "<subscript>", "</subscript>",
+      "<superscript>", "</superscript>",
+      "<literalLayout>", "</literalLayout>"
+  };
+
+  // Define pairs of HTML tags. MUST MATCH DocBook tags!
+  private static final String[] HTML_TAGS = {
+      "<div>", "</div>",
+      "<h1>", "</h1>",
+      "<h2>", "</h2>",
+      "<h3>", "</h3>",
+      "<h4>", "</h4>",
+      "<h5>", "</h5>",
+      "<ul>", "</ul>",
+      "<ol>", "</ol>",
+      "<li>", "</li>",
+      "<p>", "</p>",
+      "<b>", "</b>",
+      "<sub>", "</sub>",
+      "<sup>", "</sup>",
+      "<pre>", "</pre>"
+  };
+
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
-  private static final String EML_TEMPLATE =
-      String.format("eml-dataset-%s.ftl", EMLProfileVersion.GBIF_1_2.getVersion());
   private final Configuration freemarkerConfig;
   private final boolean useDoiAsIdentifier;
   private final boolean omitXmlDeclaration;
@@ -104,17 +141,31 @@ public class EMLWriter {
   }
 
   /**
-   * Write a document from a Dataset object.
+   * Write a document from a Dataset object for the latest version.
    *
    * @param dataset non null dataset object
    * @param writer where the output document will go. The writer is not closed by this method.
    * @throws IOException if an error occurs while processing the template
    */
   public void writeTo(Dataset dataset, Writer writer) throws IOException {
-    innerWrite(dataset, writer);
+    innerWrite(dataset, writer, EMLProfileVersion.GBIF_1_3);
   }
 
-  private void innerWrite(Dataset dataset, Writer writer) throws IOException {
+  /**
+   * Write a document from a Dataset object for a specific EML version.
+   *
+   * @param dataset non null dataset object
+   * @param writer where the output document will go. The writer is not closed by this method.
+   * @param emlProfileVersion EML profile version
+   * @throws IOException if an error occurs while processing the template
+   */
+  public void writeTo(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion)
+      throws IOException {
+    innerWrite(dataset, writer, emlProfileVersion);
+  }
+
+  private void innerWrite(Dataset dataset, Writer writer, EMLProfileVersion emlProfileVersion)
+      throws IOException {
     Objects.requireNonNull(dataset, "Dataset can't be null");
 
     Map<String, Object> map = new HashMap<>();
@@ -123,8 +174,10 @@ public class EMLWriter {
     map.put("useDoiAsIdentifier", useDoiAsIdentifier);
     map.put("omitXmlDeclaration", omitXmlDeclaration);
 
+    String emlTemplate = String.format("eml-dataset-%s.ftl", emlProfileVersion.getVersion());
+
     try {
-      freemarkerConfig.getTemplate(EML_TEMPLATE).process(Collections.unmodifiableMap(map), writer);
+      freemarkerConfig.getTemplate(emlTemplate).process(Collections.unmodifiableMap(map), writer);
     } catch (TemplateException e) {
       throw new IOException(
           "Error while processing the EML Freemarker template for dataset " + dataset.getKey(), e);
@@ -170,6 +223,33 @@ public class EMLWriter {
 
     public List<String> getDescription() {
       return new ParagraphContainer(dataset.getDescription()).getParagraphs();
+    }
+
+    // Value with all HTML tags replaced by DocBook analogues
+    public String getDocBookField(String fieldName) {
+      String result = null;
+
+      try {
+        String value = BeanUtils.getProperty(dataset, fieldName);
+
+        if (value != null) {
+          result = replaceDocBookElements(value);
+        }
+      } catch (Exception e) {
+        // TODO log exception
+      }
+
+      return result;
+    }
+
+    private String replaceDocBookElements(String value) {
+      String htmlStringWithLinksReplaces =
+          value.replaceAll(
+              "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
+              "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
+
+      // Perform replacements
+      return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);
     }
 
     public Contact getMetadataProvider() {

@@ -26,16 +26,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TaxonomicCoverage implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -1550877218411220807L;
 
   /**
    * A description of the range of taxa addressed in the data set or collection
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage
-   *      .html#generalTaxonomicCoverage">EML
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#TaxonomicCoverage_generalTaxonomicCoverage">EML
    *      Coverage generalTaxonomicCoverage keyword</a>
    */
   private String description;

@@ -23,9 +23,6 @@ import java.util.StringJoiner;
  */
 public class Citation implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 8611377167438888243L;
 
   private String identifier;

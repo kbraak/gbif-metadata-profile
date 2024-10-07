@@ -16,23 +16,27 @@ package org.gbif.metadata.eml.ipt.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A class encapsulating the project information
  */
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
 public class Project implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = 2224956553560612242L;
 
   /**
    * A descriptive title for the research project.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#title">EML Project title
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_title">EML Project title
    *      keyword</a>
    */
   private String title;
@@ -54,17 +58,34 @@ public class Project implements Serializable {
    * The Personnel field extends ResponsibleParty with role information and is used to document people involved in a
    * research project by providing contact information and their role in the project.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#personnel">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_personnel">EML Project
    *      personnel
    *      keyword</a>
    */
   private List<Agent> personnel = new ArrayList<>();
 
   /**
+   * Links to other projects.
+   *
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_relatedProject">
+   *      EML Related Project</a>
+   */
+  private List<Project> relatedProjects = new ArrayList<>();
+
+  /**
+   * The award field is used to provide specific information about the funding awards for a project in a structured
+   * format.
+   *
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_award">
+   *       EML Project Award</a>
+   */
+  private List<ProjectAward> awards = new ArrayList<>();
+
+  /**
    * The funding field is used to provide information about funding sources for the project such as: grant and contract
    * numbers; names and addresses of funding sources.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#funding">EML Project funding
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_funding">EML Project funding
    *      keyword</a>
    */
   private String funding;
@@ -73,7 +94,7 @@ public class Project implements Serializable {
    * The studyAreaDescription field documents the physical area associated with the research project. It can include
    * descriptions of the geographic, temporal, and taxonomic coverage of the research location.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#descriptor">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_ResearchProjectType_studyAreaDescription_descriptor">EML Project
    *      descriptor keyword</a>
    */
   private StudyAreaDescription studyAreaDescription = new StudyAreaDescription();
@@ -82,7 +103,7 @@ public class Project implements Serializable {
    * A general textual description of research design. It can include detailed accounts of goals, motivations, theory,
    * hypotheses, strategy, statistical design, and actual work.
    *
-   * @see <a href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-project.html#designDescription">EML Project
+   * @see <a href="https://eml.ecoinformatics.org/schema/eml-project_xsd.html#ResearchProjectType_designDescription">EML Project
    *      designDescription keyword</a>
    */
   private String designDescription;
@@ -94,104 +115,6 @@ public class Project implements Serializable {
     for (Agent agent : personnel) {
       agent.setRole("pointOfContact");
     }
-  }
-
-  /**
-   * @return the designDescription
-   */
-  public String getDesignDescription() {
-    return designDescription;
-  }
-
-  /**
-   * @param designDescription the designDescription to set
-   */
-  public void setDesignDescription(String designDescription) {
-    this.designDescription = designDescription;
-  }
-
-  /**
-   * @return the funding
-   */
-  public String getFunding() {
-    return funding;
-  }
-
-  /**
-   * @param funding the funding to set
-   */
-  public void setFunding(String funding) {
-    this.funding = funding;
-  }
-
-  /**
-   * @return the personnel
-   */
-  public List<Agent> getPersonnel() {
-    return personnel;
-  }
-
-  /**
-   * @param personnel the personnel to set
-   */
-  public void setPersonnel(List<Agent> personnel) {
-    this.personnel = personnel;
-  }
-
-  /**
-   * @return the studyAreaDescription
-   */
-  public StudyAreaDescription getStudyAreaDescription() {
-    return studyAreaDescription;
-  }
-
-  /**
-   * @param studyAreaDescription the studyAreaDescription to set
-   */
-  public void setStudyAreaDescription(StudyAreaDescription studyAreaDescription) {
-    this.studyAreaDescription = studyAreaDescription;
-  }
-
-  /**
-   * @return project identifier
-   */
-  public String getIdentifier() {
-    return identifier;
-  }
-
-  /**
-   * @param identifier the identifier of the project to set
-   */
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
-  }
-
-  /**
-   * @return project description
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * @param description the description of the project to set
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  /**
-   * @return the title
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   * @param title the title to set
-   */
-  public void setTitle(String title) {
-    this.title = title;
   }
 
   /**
@@ -207,42 +130,15 @@ public class Project implements Serializable {
     getPersonnel().add(agent);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Project project = (Project) o;
-    return Objects.equals(title, project.title)
-        && Objects.equals(identifier, project.identifier)
-        && Objects.equals(description, project.description)
-        && Objects.equals(personnel, project.personnel)
-        && Objects.equals(funding, project.funding)
-        && Objects.equals(studyAreaDescription, project.studyAreaDescription)
-        && Objects.equals(designDescription, project.designDescription);
+  public void addRelatedProject(Project relatedProject) {
+    if (relatedProject != null) {
+      getRelatedProjects().add(relatedProject);
+    }
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(
-        title,
-        identifier,
-        description,
-        personnel,
-        funding,
-        studyAreaDescription,
-        designDescription);
-  }
-
-  @Override
-  public String toString() {
-    return new StringJoiner(", ", Project.class.getSimpleName() + "[", "]")
-        .add("title='" + title + "'")
-        .add("identifier='" + identifier + "'")
-        .add("description='" + description + "'")
-        .add("personnel=" + personnel)
-        .add("funding='" + funding + "'")
-        .add("studyAreaDescription=" + studyAreaDescription)
-        .add("designDescription='" + designDescription + "'")
-        .toString();
+  public void addAward(ProjectAward projectAward) {
+    if (projectAward != null) {
+      getAwards().add(projectAward);
+    }
   }
 }

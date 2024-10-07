@@ -22,9 +22,6 @@ import java.util.StringJoiner;
  */
 public class StudyAreaDescription implements Serializable {
 
-  /**
-   * Generated
-   */
   private static final long serialVersionUID = -625087801176596735L;
 
   private StudyAreaDescriptor name = StudyAreaDescriptor.GENERIC;

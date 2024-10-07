@@ -85,6 +85,7 @@ public class DatasetWrapper {
   private static final Pattern PACKAGE_ID_VERSION_PATTERN =
       Pattern.compile(
           "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/v(\\d+.\\d+)");
+  private static final String DISTRIBUTION_INFORMATION = "information";
   private final Dataset target = new Dataset();
   private final ParagraphContainer description = new ParagraphContainer();
 
@@ -96,7 +97,7 @@ public class DatasetWrapper {
    * @return the parsed date
    * @throws java.text.ParseException Should it be an erroneous format
    * @see <a
-   *     href="http://knb.ecoinformatics.org/software/eml/eml-2.1.0/eml-coverage.html#calendarDate">EML
+   *     href="https://eml.ecoinformatics.org/schema/eml-coverage_xsd.html#SingleDateTimeType_calendarDate">EML
    *     Coverage calendarDate keyword</a>
    */
   private static Date calendarDate(String dateString) throws ParseException {
@@ -243,6 +244,10 @@ public class DatasetWrapper {
     }
   }
 
+  public void addPublisher(String publisherId, String publisherName) {
+    target.setPublishingOrganizationName(publisherName);
+  }
+
   /**
    * Similar to addContact() except that it sets type to ADMINISTRATIVE_POINT_OF_CONTACT, and sets
    * isPrimary flag to true only if this is the first contact of type
@@ -365,6 +370,18 @@ public class DatasetWrapper {
     target.setDescription(description);
   }
 
+  public void setIntroduction(String introduction) {
+    target.setIntroduction(introduction);
+  }
+
+  public void setGettingStarted(String gettingStarted) {
+    target.setGettingStarted(gettingStarted);
+  }
+
+  public void setAcknowledgements(String acknowledgements) {
+    target.setAcknowledgements(acknowledgements);
+  }
+
   public void setGeographicCoverageDescription(String geographicCoverageDescription) {
     target.setGeographicCoverageDescription(geographicCoverageDescription);
   }
@@ -375,6 +392,12 @@ public class DatasetWrapper {
 
   public void setHomepage(URI homepage) throws URISyntaxException {
     target.setHomepage(homepage);
+  }
+
+  public void setDistribution(URI uri, String function) {
+    if (DISTRIBUTION_INFORMATION.equals(function)) {
+      target.setHomepage(uri);
+    }
   }
 
   public void setIdentifiers(List<Identifier> identifiers) {
@@ -451,6 +474,19 @@ public class DatasetWrapper {
 
   public void setPublishingOrganizationKey(UUID publishingOrganizationKey) {
     target.setPublishingOrganizationKey(publishingOrganizationKey);
+  }
+
+  public void setPublishingOrganizationName(String publishingOrganizationName) {
+    target.setPublishingOrganizationName(publishingOrganizationName);
+  }
+
+  public void setPublisher(String publisherId, String publisherName) {
+    try {
+      setPublishingOrganizationKey(UUID.fromString(publisherId));
+    } catch (IllegalArgumentException e) {
+      LOG.error("Publishing organization key {} is an invalid UUID - skipping!", publisherId);
+    }
+    setPublishingOrganizationName(publisherName);
   }
 
   public void setProject(Project project) {
@@ -574,6 +610,10 @@ public class DatasetWrapper {
     // property
 
     target.setTitle(target.getTitle() != null ? target.getTitle() : Objects.requireNonNull(title));
+  }
+
+  public void setShortName(String shortName) {
+    target.setShortName(shortName);
   }
 
   public void setType(DatasetType type) {

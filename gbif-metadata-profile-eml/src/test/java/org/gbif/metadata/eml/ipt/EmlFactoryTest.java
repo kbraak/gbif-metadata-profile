@@ -19,7 +19,9 @@ import org.gbif.metadata.eml.ipt.model.MaintenanceUpdateFrequency;
 import org.gbif.metadata.eml.ipt.model.StudyAreaDescriptor;
 import org.gbif.utils.file.FileUtils;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.SimpleTimeZone;
 
 import org.junit.jupiter.api.Test;
@@ -83,12 +85,17 @@ public class EmlFactoryTest {
       assertEquals("Remsen", firstCreator.getLastName());
       assertNull(firstCreator.getRole());
       assertNotNull(firstCreator.getPosition());
-      assertEquals("ECAT Programme Officer", firstCreator.getPosition());
+      assertEquals(1, firstCreator.getPosition().size());
+      assertEquals("ECAT Programme Officer", firstCreator.getPosition().get(0));
       assertNotNull(firstCreator.getOrganisation());
       assertEquals("GBIF", firstCreator.getOrganisation());
+
       assertNotNull(firstCreator.getAddress());
+      assertFalse(firstCreator.getAddress().isEmpty());
       assertNotNull(firstCreator.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstCreator.getAddress().getAddress());
+      assertEquals(2, firstCreator.getAddress().getAddress().size());
+      assertEquals("Universitestparken 15", firstCreator.getAddress().getAddress().get(0));
+      assertEquals("10 Downing Street", firstCreator.getAddress().getAddress().get(1));
       assertNotNull(firstCreator.getAddress().getCity());
       assertEquals("Copenhagen", firstCreator.getAddress().getCity());
       assertNotNull(firstCreator.getAddress().getProvince());
@@ -97,14 +104,28 @@ public class EmlFactoryTest {
       assertEquals("2100", firstCreator.getAddress().getPostalCode());
       assertNotNull(firstCreator.getAddress().getCountry());
       assertEquals("DK", firstCreator.getAddress().getCountry());
+
       assertNotNull(firstCreator.getPhone());
-      assertEquals("+4528261487", firstCreator.getPhone());
-      assertEquals("dremsen@gbif.org", firstCreator.getEmail());
+      assertEquals(2, firstCreator.getPhone().size());
+      assertEquals(Arrays.asList("+4528261487", "+1234567890"), firstCreator.getPhone());
+
+      assertEquals(2, firstCreator.getEmail().size());
+      assertEquals(
+          Arrays.asList("dremsen@gbif.org", "trobertson@gbif.org"), firstCreator.getEmail());
+
       assertNotNull(firstCreator.getHomepage());
-      assertEquals("http://www.gbif.org", firstCreator.getHomepage());
+      assertEquals(3, firstCreator.getHomepage().size());
+      assertEquals(
+          Arrays.asList(
+              "https://www.gbif.org", "https://regsitry.gbif.org", "https://ipt.gbif.org"),
+          firstCreator.getHomepage());
+
       assertFalse(firstCreator.getUserIds().isEmpty());
-      assertEquals("http://orcid.org/", firstCreator.getUserIds().get(0).getDirectory());
+      assertEquals(2, firstCreator.getUserIds().size());
+      assertEquals("https://orcid.org/", firstCreator.getUserIds().get(0).getDirectory());
       assertEquals("0000-0002-8442-8025", firstCreator.getUserIds().get(0).getIdentifier());
+      assertEquals("https://orcid.org/", firstCreator.getUserIds().get(1).getDirectory());
+      assertEquals("0001-0002-0003-0004", firstCreator.getUserIds().get(1).getIdentifier());
 
       // agent test with some null values
       Agent firstMetadataProvider = eml.getMetadataProviders().get(0);
@@ -115,16 +136,18 @@ public class EmlFactoryTest {
       assertEquals("Robertson", firstMetadataProvider.getLastName());
       assertNotNull(firstMetadataProvider.getAddress());
       assertNotNull(firstMetadataProvider.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstMetadataProvider.getAddress().getAddress());
+      assertEquals("Universitestparken 15", firstMetadataProvider.getAddress().getAddress().get(0));
       assertEquals("Copenhagen", firstMetadataProvider.getAddress().getCity());
       assertEquals("Copenhagen", firstMetadataProvider.getAddress().getProvince());
       assertEquals("2100", firstMetadataProvider.getAddress().getPostalCode());
       assertEquals("DK", firstMetadataProvider.getAddress().getCountry());
       assertNotNull(firstMetadataProvider.getPhone());
-      assertEquals("+4528261487", firstMetadataProvider.getPhone());
-      assertEquals("trobertson@gbif.org", firstMetadataProvider.getEmail());
+      assertEquals(Collections.singletonList("+4528261487"), firstMetadataProvider.getPhone());
+      assertEquals(
+          Collections.singletonList("trobertson@gbif.org"), firstMetadataProvider.getEmail());
       assertNotNull(firstMetadataProvider.getHomepage());
-      assertEquals("http://www.gbif.org", firstMetadataProvider.getHomepage());
+      assertEquals(
+          Collections.singletonList("http://www.gbif.org"), firstMetadataProvider.getHomepage());
       assertFalse(firstMetadataProvider.getUserIds().isEmpty());
       assertEquals(
           "http://www.researcherid.com/rid/",
@@ -140,12 +163,13 @@ public class EmlFactoryTest {
       assertEquals("Remsen", firstContact.getLastName());
       assertNull(firstContact.getRole());
       assertNotNull(firstContact.getPosition());
-      assertEquals("ECAT Programme Officer", firstContact.getPosition());
+      assertEquals(1, firstContact.getPosition().size());
+      assertEquals("ECAT Programme Officer", firstContact.getPosition().get(0));
       assertNotNull(firstContact.getOrganisation());
       assertEquals("GBIF", firstContact.getOrganisation());
       assertNotNull(firstContact.getAddress());
       assertNotNull(firstContact.getAddress().getAddress());
-      assertEquals("Universitestparken 15", firstContact.getAddress().getAddress());
+      assertEquals("Universitestparken 15", firstContact.getAddress().getAddress().get(0));
       assertNotNull(firstContact.getAddress().getCity());
       assertEquals("Copenhagen", firstContact.getAddress().getCity());
       assertNotNull(firstContact.getAddress().getProvince());
@@ -155,10 +179,10 @@ public class EmlFactoryTest {
       assertNotNull(firstContact.getAddress().getCountry());
       assertEquals("DK", firstContact.getAddress().getCountry());
       assertNotNull(firstContact.getPhone());
-      assertEquals("+4528261487", firstContact.getPhone());
-      assertEquals("dremsen@gbif.org", firstContact.getEmail());
+      assertEquals(Collections.singletonList("+4528261487"), firstContact.getPhone());
+      assertEquals(Collections.singletonList("dremsen@gbif.org"), firstContact.getEmail());
       assertNotNull(firstContact.getHomepage());
-      assertEquals("http://www.gbif.org", firstContact.getHomepage());
+      assertEquals(Collections.singletonList("http://www.gbif.org"), firstContact.getHomepage());
       assertFalse(firstContact.getUserIds().isEmpty());
       assertEquals("http://orcid.org/", firstContact.getUserIds().get(0).getDirectory());
       assertEquals("0000-0002-8442-8025", firstContact.getUserIds().get(0).getIdentifier());
@@ -180,7 +204,15 @@ public class EmlFactoryTest {
       assertEquals(cal.getTime(), eml.getPubDate());
 
       assertEquals("en_US", eml.getLanguage());
-      assertEquals("Specimens in jars.", eml.getAbstract().get(0));
+      assertEquals("<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>", eml.getAbstract());
+      assertEquals("<div><h1>Introduction</h1><p>Actual introduction</p></div>", eml.getIntroduction());
+      assertEquals("<p>getting started stuff</p>", eml.getGettingStarted());
+      assertEquals("<p>Test acknowledgements</p><ul><li>First item</li></ul><ol><li>First item</li></ol><p><b>Emphasis</b>\n" +
+          "                CO<sub>2</sub> (or just CO₂)\n" +
+          "                m<sup>3</sup> (or just m³)\n" +
+          "                <pre>\n" +
+          "                    x = fn(y, z)\n" +
+          "                </pre><a href=\"https://example.org\">Example link</a></p>", eml.getAcknowledgements());
 
       // multiple KeywordSets tests
       assertNotNull(eml.getKeywords());
@@ -210,6 +242,14 @@ public class EmlFactoryTest {
       // homepage URL, aka distributionUrl
       assertNotNull(eml.getDistributionUrl());
       assertEquals("http://www.any.org/fauna/coleoptera/beetleList.html", eml.getDistributionUrl());
+
+      // download URL
+      assertNotNull(eml.getDistributionDownloadUrl());
+      assertEquals("https://ipt.gbif.org/archive.do?r=res", eml.getDistributionDownloadUrl());
+
+      // publisher
+      assertNotNull(eml.getPublisherName());
+      assertEquals("Publishing Organization 1", eml.getPublisherOrganizationName());
 
       // geospatial coverages tests
       assertNotNull(eml.getGeospatialCoverages());
@@ -278,7 +318,7 @@ public class EmlFactoryTest {
       assertEquals(
           "Birds", eml.getTaxonomicCoverages().get(1).getTaxonKeywords().get(0).getCommonName());
 
-      assertEquals("Provide data to the whole world.", eml.getPurpose());
+      assertEquals("<p>Provide data to the whole world.</p>", eml.getPurpose());
 
       assertEquals("Changes done as needed.", eml.getUpdateFrequencyDescription());
       assertEquals(MaintenanceUpdateFrequency.AS_NEEDED, eml.getUpdateFrequency());

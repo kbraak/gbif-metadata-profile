@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * This enumeration mirrors the MaintUpFreqType enumeration coming from EML. The maintenance update frequency is
  * the frequency with which changes and additions are made to the dataset after the initial dataset is completed.
  *
- * @see <a href="https://knb.ecoinformatics.org/#external//emlparser/docs/eml-2.1.1/./eml-dataset.html#MaintUpFreqType">MaintUpFreqType
+ * @see <a href="https://eml.ecoinformatics.org/schema/eml-dataset_xsd.html#MaintenanceType_maintenanceUpdateFrequency">MaintUpFreqType
  * EML ENUM</a>
  */
 public enum MaintenanceUpdateFrequency {
@@ -66,8 +66,14 @@ public enum MaintenanceUpdateFrequency {
   /**
    * Further updates may still happen, but it is not known for sure. Not specific enough to use for auto-publishing.
    * Ignore the typo in "unknown", this is exactly how this term is spelt in the EML 2.1.1 specification.
+   * Deprecated in 2.2.0, use UNKNOWN instead.
    */
+  @Deprecated
   UNKOWN("unkown", 0),
+  /**
+   * Further updates may still happen, but it is not known for sure. Not specific enough to use for auto-publishing.
+   */
+  UNKNOWN("unknown", 0),
   /**
    * Updated according to some other interval. Not specific enough to use for auto-publishing.
    */

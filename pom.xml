@@ -26,19 +26,19 @@
   <properties>
     <main.basedir>${project.basedir}</main.basedir>
 
-    <gbif-api.version>0.177</gbif-api.version>
-    <gbif-common.version>0.58</gbif-common.version>
-    <gbif-parsers.version>0.60</gbif-parsers.version>
+    <gbif-api.version>1.16.13</gbif-api.version>
+    <gbif-common.version>0.60</gbif-common.version>
+    <gbif-parsers.version>0.67</gbif-parsers.version>
 
     <commons-beanutils.version>1.9.4</commons-beanutils.version>
     <commons-digester3.version>3.2</commons-digester3.version>
-    <commons-io.version>2.11.0</commons-io.version>
-    <commons-lang.version>3.12.0</commons-lang.version>
-    <freemarker.version>2.3.31</freemarker.version>
-    <junit.version>5.9.1</junit.version>
+    <commons-io.version>2.16.1</commons-io.version>
+    <commons-lang.version>3.14.0</commons-lang.version>
+    <freemarker.version>2.3.32</freemarker.version>
+    <junit.version>5.10.2</junit.version>
     <slf4j.version>1.7.36</slf4j.version>
     <jsr305.version>3.0.2</jsr305.version>
-    <jsoup.version>1.15.3</jsoup.version>
+    <jsoup.version>1.17.2</jsoup.version>
   </properties>
 
   <scm>
