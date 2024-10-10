@@ -481,10 +481,12 @@ public class DatasetWrapper {
   }
 
   public void setPublisher(String publisherId, String publisherName) {
-    try {
-      setPublishingOrganizationKey(UUID.fromString(publisherId));
-    } catch (IllegalArgumentException e) {
-      LOG.error("Publishing organization key {} is an invalid UUID - skipping!", publisherId);
+    if (publisherId != null) {
+      try {
+        setPublishingOrganizationKey(UUID.fromString(publisherId));
+      } catch (IllegalArgumentException e) {
+        LOG.error("Publishing organization key {} is an invalid UUID - skipping!", publisherId);
+      }
     }
     setPublishingOrganizationName(publisherName);
   }
