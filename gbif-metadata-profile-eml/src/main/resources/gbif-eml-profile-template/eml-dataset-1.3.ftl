@@ -798,12 +798,15 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                 </bibliography>
                 </#if>
                 <#list dataset.dataDescriptions![] as pdata>
+                <#if pdata.name?has_content && pdata.format?has_content && pdata.url?has_content>
                 <physical>
-                    <objectName>${pdata.name!}</objectName>
-                    <characterEncoding>${pdata.charset!}</characterEncoding>
+                    <objectName>${pdata.name}</objectName>
+                    <#if pdata.charset?has_content>
+                    <characterEncoding>${pdata.charset}</characterEncoding>
+                    </#if>
                     <dataFormat>
                         <externallyDefinedFormat>
-                            <formatName>${pdata.format!}</formatName>
+                            <formatName>${pdata.format}</formatName>
                             <#if pdata.formatVersion?has_content>
                             <formatVersion>${pdata.formatVersion}</formatVersion>
                             </#if>
@@ -811,10 +814,11 @@ packageId=<#if useDoiAsIdentifier && dataset.doi?has_content>"${dataset.doi.doiN
                     </dataFormat>
                     <distribution>
                         <online>
-                            <url function="download">${pdata.url!}</url>
+                            <url function="download">${pdata.url}</url>
                         </online>
                     </distribution>
                 </physical>
+                </#if>
                 </#list>
                 <#if dataset.logoUrl?has_content>
                 <resourceLogoUrl>${dataset.logoUrl}</resourceLogoUrl>
