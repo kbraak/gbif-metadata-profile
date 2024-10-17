@@ -533,12 +533,11 @@ public class EmlWriterTest {
     System.out.println("Writing temporary test eml file to " + temp.getAbsolutePath());
     IptEmlWriter.writeEmlFile(temp, eml);
 
-    // now read the EML in again and ensure format version is null - remember it's the 3rd Physical
+    // now read the EML in again and ensure the size is still 2
     // Data
     Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
     assertNotNull(eml2);
-    assertNull(eml2.getPhysicalData().get(2).getFormatVersion());
-    assertEquals("UTF-8", eml2.getPhysicalData().get(2).getCharset());
+    assertEquals(2, eml2.getPhysicalData().size());
   }
 
   /**
