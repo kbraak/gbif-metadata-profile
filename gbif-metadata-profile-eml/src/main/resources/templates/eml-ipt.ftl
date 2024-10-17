@@ -674,12 +674,12 @@
                 </#if>
                 <#if (eml.physicalData ? size > 0)>
                 <#list eml.getPhysicalData() as pdata>
+                <#if pdata.name?has_content && pdata.format?has_content && pdata.distributionUrl?has_content>
                 <physical>
-                    <#if pdata.name?has_content><objectName>${pdata.name}</objectName></#if>
+                    <objectName>${pdata.name}</objectName>
                     <#if pdata.charset?has_content>
                     <characterEncoding>${pdata.charset}</characterEncoding>
                     </#if>
-                    <#if pdata.format?has_content>
                     <dataFormat>
                         <externallyDefinedFormat>
                             <formatName>${pdata.format}</formatName>
@@ -688,15 +688,13 @@
                             </#if>
                         </externallyDefinedFormat>
                     </dataFormat>
-                    </#if>
-                    <#if pdata.distributionUrl?has_content>
                     <distribution>
                         <online>
                             <url function="download">${pdata.distributionUrl}</url>
                         </online>
                     </distribution>
-                    </#if>
                 </physical>
+                </#if>
                 </#list>
                 </#if>
                 <#if (eml.getLogoUrl())??>
