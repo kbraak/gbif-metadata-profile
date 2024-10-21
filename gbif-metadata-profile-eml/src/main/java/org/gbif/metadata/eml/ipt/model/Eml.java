@@ -95,8 +95,18 @@ public class Eml implements Serializable {
 
   // List of allowed HTML tags
   private static final String[] ALLOWED_DOCBOOK_TAGS = {
-      "section", "title", "para", "itemizedlist", "orderedlist", "listitem", "emphasis", "subscript", "superscript",
-      "literalLayout", "ulink", "citetitle"
+    "section",
+    "title",
+    "para",
+    "itemizedlist",
+    "orderedlist",
+    "listitem",
+    "emphasis",
+    "subscript",
+    "superscript",
+    "literalLayout",
+    "ulink",
+    "citetitle"
   };
 
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
@@ -1615,11 +1625,14 @@ public class Eml implements Serializable {
       // Check for '&' to identify potential escaped entities
       if (c == '&' && i + 3 < length) {
         // Extract the next few characters after '&' to check if it's already an escaped entity
-        String potentialEntity = input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
+        String potentialEntity =
+            input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
 
-        if (potentialEntity.startsWith("&amp;") || potentialEntity.startsWith("&lt;") ||
-            potentialEntity.startsWith("&gt;") || potentialEntity.startsWith("&quot;") ||
-            potentialEntity.startsWith("&apos;")) {
+        if (potentialEntity.startsWith("&amp;")
+            || potentialEntity.startsWith("&lt;")
+            || potentialEntity.startsWith("&gt;")
+            || potentialEntity.startsWith("&quot;")
+            || potentialEntity.startsWith("&apos;")) {
           // If it's an already escaped entity, append it as-is and skip ahead
           escaped.append(potentialEntity);
           i += potentialEntity.length() - 1; // Skip the already escaped entity

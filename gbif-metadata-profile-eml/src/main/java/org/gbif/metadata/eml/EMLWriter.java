@@ -90,7 +90,7 @@ public class EMLWriter {
 
   // List of allowed HTML tags
   private static final String[] ALLOWED_HTML_TAGS = {
-      "p", "div", "h1", "h2", "h3", "h4", "h5", "ul", "ol", "li", "pre", "b", "sub", "sup", "pre"
+    "p", "div", "h1", "h2", "h3", "h4", "h5", "ul", "ol", "li", "pre", "b", "sub", "sup", "pre"
   };
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
@@ -322,11 +322,14 @@ public class EMLWriter {
         // Check for '&' to identify potential escaped entities
         if (c == '&' && i + 3 < length) {
           // Extract the next few characters after '&' to check if it's already an escaped entity
-          String potentialEntity = input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
+          String potentialEntity =
+              input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
 
-          if (potentialEntity.startsWith("&amp;") || potentialEntity.startsWith("&lt;") ||
-              potentialEntity.startsWith("&gt;") || potentialEntity.startsWith("&quot;") ||
-              potentialEntity.startsWith("&apos;")) {
+          if (potentialEntity.startsWith("&amp;")
+              || potentialEntity.startsWith("&lt;")
+              || potentialEntity.startsWith("&gt;")
+              || potentialEntity.startsWith("&quot;")
+              || potentialEntity.startsWith("&apos;")) {
             // If it's an already escaped entity, append it as-is and skip ahead
             escaped.append(potentialEntity);
             i += potentialEntity.length() - 1; // Skip the already escaped entity
