@@ -1368,9 +1368,9 @@ public class DatasetEmlParserTest {
     assertNotNull(dataset.getDescription());
     String expectedDescription =
         "<div>\n"
-            + "  <h1>A separate section</h1>\n"
-            + "  <p>More text</p>\n"
-            + "  <p>And more text, with</p>\n"
+            + "  <h1>A separate section &amp; \"</h1>\n"
+            + "  <p>More text  &lt; </p>\n"
+            + "  <p>And more text, with  &gt; </p>\n"
             + "    <ul>\n"
             + "      <li>First item</li>\n"
             + "    </ul>\n"

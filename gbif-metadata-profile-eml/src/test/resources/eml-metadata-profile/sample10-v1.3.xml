@@ -98,9 +98,9 @@
     <language>eng</language>
     <abstract>
       <section>
-        <title>A separate section</title>
-        <para>More text</para>
-        <para>And more text, with</para>
+        <title>A separate section &amp; "</title>
+        <para>More text &lt; </para>
+        <para>And more text, with &gt; </para>
         <para>
           <itemizedlist>
             <listitem><para>First item</para></listitem>

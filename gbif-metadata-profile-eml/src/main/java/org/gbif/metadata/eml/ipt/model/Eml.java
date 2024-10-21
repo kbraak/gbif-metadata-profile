@@ -93,6 +93,12 @@ public class Eml implements Serializable {
     "<pre>", "</pre>"
   };
 
+  // List of allowed HTML tags
+  private static final String[] ALLOWED_DOCBOOK_TAGS = {
+      "section", "title", "para", "itemizedlist", "orderedlist", "listitem", "emphasis", "subscript", "superscript",
+      "literalLayout", "ulink", "citetitle"
+  };
+
   private static final Pattern PACKAGED_ID_PATTERN = Pattern.compile("/v([0-9]+(\\.\\d+)?)$");
   private static final char SEMICOLON = ';';
   private static final char COMMA = ',';
@@ -1532,19 +1538,112 @@ public class Eml implements Serializable {
         result = replaceDocBookElements(value);
       }
     } catch (Exception e) {
-      // TODO log exception
+      LOG.error("Error parsing field: {}", fieldName, e);
     }
 
     return result;
   }
 
   private String replaceDocBookElements(String value) {
-    String htmlStringWithLinksReplaces =
+    // Escape special characters except for allowed DocBook tags
+    String escapedValue = escapeExceptAllowedTags(value);
+
+    // Handle <a> to <ulink> conversion
+    String escapedHtmlStringWithLinksReplaced =
         value.replaceAll(
             "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
             "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
 
     // Perform replacements
-    return StringUtils.replaceEach(htmlStringWithLinksReplaces, HTML_TAGS, DOCBOOK_TAGS);
+    return StringUtils.replaceEach(escapedHtmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+  }
+
+  private String escapeExceptAllowedTags(String input) {
+    StringBuilder output = new StringBuilder();
+
+    // Use regex to split input into tags and text segments
+    String[] parts = input.split("(?=<[^>]+>)|(?<=>)");
+
+    for (String part : parts) {
+      // No need to trim whitespace here to preserve leading/trailing spaces
+      if (part.matches("^<[^>]+>$")) {
+        // If it's a tag, check if it's an allowed HTML tag
+        String tagName = getTagName(part);
+        if (isAllowedDocBookTag(tagName) || isDocBookLink(part)) {
+          // Preserve allowed tags as-is
+          output.append(part);
+        } else {
+          // Escape non-allowed tags
+          output.append(customEscape(part));
+        }
+      } else {
+        // Escape special characters in text
+        output.append(customEscape(part));
+      }
+    }
+
+    return output.toString();
+  }
+
+  // Helper method to extract the tag name (without <>)
+  private String getTagName(String tag) {
+    return tag.replaceAll("[<>/]", "").split("\\s+")[0];
+  }
+
+  // Helper method to check if a tag is an allowed DocBook tag
+  private boolean isAllowedDocBookTag(String tagName) {
+    for (String allowedTag : ALLOWED_DOCBOOK_TAGS) {
+      if (allowedTag.equalsIgnoreCase(tagName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Helper method to check if a tag is an DocBook ulink
+  private boolean isDocBookLink(String tag) {
+    return tag.matches("^<ulink\\s+url=\".*?\">.*?</ulink>$");
+  }
+
+  private String customEscape(String input) {
+    StringBuilder escaped = new StringBuilder();
+    int length = input.length();
+
+    for (int i = 0; i < length; i++) {
+      char c = input.charAt(i);
+
+      // Check for '&' to identify potential escaped entities
+      if (c == '&' && i + 3 < length) {
+        // Extract the next few characters after '&' to check if it's already an escaped entity
+        String potentialEntity = input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
+
+        if (potentialEntity.startsWith("&amp;") || potentialEntity.startsWith("&lt;") ||
+            potentialEntity.startsWith("&gt;") || potentialEntity.startsWith("&quot;") ||
+            potentialEntity.startsWith("&apos;")) {
+          // If it's an already escaped entity, append it as-is and skip ahead
+          escaped.append(potentialEntity);
+          i += potentialEntity.length() - 1; // Skip the already escaped entity
+          continue;
+        }
+      }
+
+      // Now escape only unescaped characters
+      switch (c) {
+        case '&':
+          escaped.append("&amp;");
+          break;
+        case '<':
+          escaped.append("&lt;");
+          break;
+        case '>':
+          escaped.append("&gt;");
+          break;
+        default:
+          // Preserve other characters (including Unicode characters)
+          escaped.append(c);
+      }
+    }
+
+    return escaped.toString();
   }
 }
