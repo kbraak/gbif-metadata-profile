@@ -26,7 +26,7 @@
   <properties>
     <main.basedir>${project.basedir}</main.basedir>
 
-    <gbif-api.version>1.16.13</gbif-api.version>
+    <gbif-api.version>1.16.14</gbif-api.version>
     <gbif-common.version>0.60</gbif-common.version>
     <gbif-parsers.version>0.67</gbif-parsers.version>
 
