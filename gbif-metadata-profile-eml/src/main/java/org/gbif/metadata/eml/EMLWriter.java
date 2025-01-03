@@ -90,18 +90,18 @@ public class EMLWriter {
 
   // List of allowed DocBook tags
   private static final String[] ALLOWED_DOCBOOK_TAGS = {
-      "section",
-      "title",
-      "para",
-      "itemizedlist",
-      "orderedlist",
-      "listitem",
-      "emphasis",
-      "subscript",
-      "superscript",
-      "literalLayout",
-      "ulink",
-      "citetitle"
+    "section",
+    "title",
+    "para",
+    "itemizedlist",
+    "orderedlist",
+    "listitem",
+    "emphasis",
+    "subscript",
+    "superscript",
+    "literalLayout",
+    "ulink",
+    "citetitle"
   };
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
@@ -270,7 +270,8 @@ public class EMLWriter {
               "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
 
       // Perform replacements
-      String docBookString = StringUtils.replaceEach(htmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+      String docBookString =
+          StringUtils.replaceEach(htmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
 
       // Escape special characters except for allowed DocBook tags
       return escapeExceptAllowedTags(docBookString);
@@ -333,7 +334,8 @@ public class EMLWriter {
         // Check for '&' to identify potential escaped entities
         if (c == '&' && i + 3 < length) {
           // Extract the next few characters after '&' to check if it's a known escaped entity
-          String potentialEntity = input.substring(i, Math.min(i + 6, length)); // "&nbsp;" is 6 characters
+          String potentialEntity =
+              input.substring(i, Math.min(i + 6, length)); // "&nbsp;" is 6 characters
 
           if (potentialEntity.startsWith("&nbsp;")) {
             // Replace &nbsp; with &#160;

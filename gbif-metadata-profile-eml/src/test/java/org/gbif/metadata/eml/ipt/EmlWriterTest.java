@@ -496,7 +496,9 @@ public class EmlWriterTest {
       // now read the EML in again and ensure pubDate is not null
       Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
-      assertEquals("<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>", eml2.getAbstract());
+      assertEquals(
+          "<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>",
+          eml2.getAbstract());
       assertEquals("GBIF & EOL", eml2.getContacts().get(1).getOrganisation());
       assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
 

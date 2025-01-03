@@ -642,7 +642,8 @@ public class EmlFactory {
               "<a href=\"$1\">$2</a>");
 
       // Perform replacements
-      return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS).trim();
+      return StringUtils.replaceEach(docBookXmlStringWithLinksReplaces, DOCBOOK_TAGS, HTML_TAGS)
+          .trim();
     }
 
     protected void invokeMethodOnTopOfStack(String methodName, String param) throws Exception {
