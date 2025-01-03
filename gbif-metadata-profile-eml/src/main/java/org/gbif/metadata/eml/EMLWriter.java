@@ -88,9 +88,20 @@ public class EMLWriter {
     "<pre>", "</pre>"
   };
 
-  // List of allowed HTML tags
-  private static final String[] ALLOWED_HTML_TAGS = {
-    "p", "div", "h1", "h2", "h3", "h4", "h5", "ul", "ol", "li", "pre", "b", "sub", "sup", "pre"
+  // List of allowed DocBook tags
+  private static final String[] ALLOWED_DOCBOOK_TAGS = {
+      "section",
+      "title",
+      "para",
+      "itemizedlist",
+      "orderedlist",
+      "listitem",
+      "emphasis",
+      "subscript",
+      "superscript",
+      "literalLayout",
+      "ulink",
+      "citetitle"
   };
 
   private static final String TEMPLATE_PATH = "/gbif-eml-profile-template";
@@ -242,7 +253,7 @@ public class EMLWriter {
         String value = BeanUtils.getProperty(dataset, fieldName);
 
         if (value != null) {
-          result = replaceDocBookElements(value);
+          result = replaceDocBookElements(value.trim());
         }
       } catch (Exception e) {
         LOG.error("Error getting document field", e);
@@ -252,17 +263,17 @@ public class EMLWriter {
     }
 
     private String replaceDocBookElements(String value) {
-      // Escape special characters except for allowed DocBook tags
-      String escapedValue = escapeExceptAllowedTags(value);
-
       // Handle <a> to <ulink> conversion
-      String escapedHtmlStringWithLinksReplaced =
-          escapedValue.replaceAll(
+      String htmlStringWithLinksReplaced =
+          value.replaceAll(
               "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
               "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
 
       // Perform replacements
-      return StringUtils.replaceEach(escapedHtmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+      String docBookString = StringUtils.replaceEach(htmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+
+      // Escape special characters except for allowed DocBook tags
+      return escapeExceptAllowedTags(docBookString);
     }
 
     private String escapeExceptAllowedTags(String input) {
@@ -276,7 +287,7 @@ public class EMLWriter {
         if (part.matches("^<[^>]+>$")) {
           // If it's a tag, check if it's an allowed HTML tag
           String tagName = getTagName(part);
-          if (isAllowedHtmlTag(tagName) || isAnchorTag(part)) {
+          if (isAllowedDocBookTag(tagName) || isDocBookLink(part)) {
             // Preserve allowed tags as-is
             output.append(part);
           } else {
@@ -298,8 +309,8 @@ public class EMLWriter {
     }
 
     // Helper method to check if a tag is an allowed DocBook tag
-    private boolean isAllowedHtmlTag(String tagName) {
-      for (String allowedTag : ALLOWED_HTML_TAGS) {
+    private boolean isAllowedDocBookTag(String tagName) {
+      for (String allowedTag : ALLOWED_DOCBOOK_TAGS) {
         if (allowedTag.equalsIgnoreCase(tagName)) {
           return true;
         }
@@ -307,9 +318,9 @@ public class EMLWriter {
       return false;
     }
 
-    // Helper method to check if a tag is an anchor tag
-    private boolean isAnchorTag(String tag) {
-      return tag.matches("^<a\\s+href=\".*?\">$") || tag.matches("^</a>$");
+    // Helper method to check if a tag is an DocBook ulink
+    private boolean isDocBookLink(String tag) {
+      return tag.matches("^<ulink\\s+url=\".*?\">.*?</ulink>$");
     }
 
     private String customEscape(String input) {
@@ -321,11 +332,15 @@ public class EMLWriter {
 
         // Check for '&' to identify potential escaped entities
         if (c == '&' && i + 3 < length) {
-          // Extract the next few characters after '&' to check if it's already an escaped entity
-          String potentialEntity =
-              input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
+          // Extract the next few characters after '&' to check if it's a known escaped entity
+          String potentialEntity = input.substring(i, Math.min(i + 6, length)); // "&nbsp;" is 6 characters
 
-          if (potentialEntity.startsWith("&amp;")
+          if (potentialEntity.startsWith("&nbsp;")) {
+            // Replace &nbsp; with &#160;
+            escaped.append("&#160;");
+            i += 5; // Skip the characters of "&nbsp;"
+            continue;
+          } else if (potentialEntity.startsWith("&amp;")
               || potentialEntity.startsWith("&lt;")
               || potentialEntity.startsWith("&gt;")
               || potentialEntity.startsWith("&quot;")

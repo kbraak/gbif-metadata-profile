@@ -205,7 +205,7 @@ public class EmlFactoryTest {
 
       assertEquals("en_US", eml.getLanguage());
       assertEquals(
-          "<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>",
+          "<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>",
           eml.getAbstract());
       assertEquals(
           "<div><h1>Introduction</h1><p>Actual introduction</p></div>", eml.getIntroduction());

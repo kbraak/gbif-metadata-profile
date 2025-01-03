@@ -485,7 +485,7 @@ public class EmlWriterTest {
       Agent gbif = new Agent();
       gbif.setOrganisation("GBIF & EOL");
       eml.getContacts().add(gbif);
-      eml.setTitle("The <very> important \"resources\" & other things");
+      eml.setTitle("The <very> important \"resources\" & other things");
 
       // write EML
       File temp = File.createTempFile("eml", ".xml");
@@ -496,8 +496,9 @@ public class EmlWriterTest {
       // now read the EML in again and ensure pubDate is not null
       Eml eml2 = EmlFactory.build(Files.newInputStream(temp.toPath()));
       assertNotNull(eml2);
+      assertEquals("<p>Specimens in jars.</p><p>Collected over years.</p><p>Still being curated.</p>", eml2.getAbstract());
       assertEquals("GBIF & EOL", eml2.getContacts().get(1).getOrganisation());
-      assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
+      assertEquals("The <very> important \"resources\" & other things", eml2.getTitle());
 
     } catch (Exception e) {
       e.printStackTrace();

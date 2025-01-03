@@ -93,7 +93,7 @@ public class Eml implements Serializable {
     "<pre>", "</pre>"
   };
 
-  // List of allowed HTML tags
+  // List of allowed DocBook tags
   private static final String[] ALLOWED_DOCBOOK_TAGS = {
     "section",
     "title",
@@ -1545,7 +1545,7 @@ public class Eml implements Serializable {
       String value = BeanUtils.getProperty(this, fieldName);
 
       if (value != null) {
-        result = replaceDocBookElements(value);
+        result = replaceDocBookElements(value.trim());
       }
     } catch (Exception e) {
       LOG.error("Error parsing field: {}", fieldName, e);
@@ -1555,17 +1555,17 @@ public class Eml implements Serializable {
   }
 
   private String replaceDocBookElements(String value) {
-    // Escape special characters except for allowed DocBook tags
-    String escapedValue = escapeExceptAllowedTags(value);
-
     // Handle <a> to <ulink> conversion
-    String escapedHtmlStringWithLinksReplaced =
+    String htmlStringWithLinksReplaced =
         value.replaceAll(
             "<a\\s+href=\"(.*?)\">\\s*(.*?)\\s*</a>",
             "<ulink url=\"$1\"><citetitle>$2</citetitle></ulink>");
 
     // Perform replacements
-    return StringUtils.replaceEach(escapedHtmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+    String docBookString = StringUtils.replaceEach(htmlStringWithLinksReplaced, HTML_TAGS, DOCBOOK_TAGS);
+
+    // Escape special characters except for allowed DocBook tags
+    return escapeExceptAllowedTags(docBookString);
   }
 
   private String escapeExceptAllowedTags(String input) {
@@ -1624,11 +1624,15 @@ public class Eml implements Serializable {
 
       // Check for '&' to identify potential escaped entities
       if (c == '&' && i + 3 < length) {
-        // Extract the next few characters after '&' to check if it's already an escaped entity
-        String potentialEntity =
-            input.substring(i, Math.min(i + 6, length)); // Max length of HTML entity "&quot;"
+        // Extract the next few characters after '&' to check if it's a known escaped entity
+        String potentialEntity = input.substring(i, Math.min(i + 6, length)); // "&nbsp;" is 6 characters
 
-        if (potentialEntity.startsWith("&amp;")
+        if (potentialEntity.startsWith("&nbsp;")) {
+          // Replace &nbsp; with &#160;
+          escaped.append("&#160;");
+          i += 5; // Skip the characters of "&nbsp;"
+          continue;
+        } else if (potentialEntity.startsWith("&amp;")
             || potentialEntity.startsWith("&lt;")
             || potentialEntity.startsWith("&gt;")
             || potentialEntity.startsWith("&quot;")
